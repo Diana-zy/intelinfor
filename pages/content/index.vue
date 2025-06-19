@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <main class="main">
-<!--      <google-ad-small class="small-ad-1" ad-slot="1809420083" />-->
+      <!--      <google-ad-small class="small-ad-1" ad-slot="1809420083" />-->
       <section class="home-search">
         <div class="search-group">
           <input
@@ -16,7 +16,7 @@
         </div>
       </section>
       <div id="relatedsearches1"> </div>
-<!--      <google-ad ad-slot="2955836717" />-->
+      <!--      <google-ad ad-slot="2955836717" />-->
     </main>
     <Footer />
   </div>
@@ -46,24 +46,12 @@ export default {
     addAdSenseScript() {
       // 获取 URL 查询参数
       const searchParams = new URLSearchParams(window.location.search);
-      // const paramKeys = [];
-
-      // // 遍历查询参数并将其添加到 paramKeys 数组中
-      // for (const param of searchParams) {
-      //   paramKeys.push(param[0]);
-      // }
-
-      // const ignoredPageParams = paramKeys.join(",");
       const channelId = searchParams.has("channel") ? searchParams.get("channel") : null;
-      // eslint-disable-next-line camelcase
-      // 配置 AdSense 参数
       const adSenseConfig = {
         channel: channelId,
         pubId: "partner-pub-1853000876464912",
         styleId: "7223178098",
         adsafe: "low",
-        // ignoredPageParams,
-        // relatedSearchTargeting: "query",
         resultsPageBaseUrl: `${window.location.origin}/search/?afs&from=content&partner_param=param&channel=${channelId}`,
         resultsPageQueryParam: "query",
         query: `${this.input}`,

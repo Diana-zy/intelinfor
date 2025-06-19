@@ -124,12 +124,11 @@ export default {
 </script>
 <style lang="scss">
 .home-page .search-box {
-  // visibility: hidden;
   display: none;
 }
 @media screen and (max-width: 750px) {
   .home-page .logo {
-    width: vw(282) !important;
+    width: vw(250) !important;
     background-image: url("~/assets/images/logo.png") !important;
   }
 }
@@ -168,7 +167,7 @@ export default {
   }
 }
 .logo {
-  width: 188px;
+  width: 166px;
   height: 40px;
   @include bg("logo.png");
   margin-right: 56px;
