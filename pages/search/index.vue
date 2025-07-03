@@ -1,11 +1,9 @@
 <template>
   <div v-show="!hide" class="page">
-    <Header v-if="!subdomain" />
+    <Header />
     <main class="main">
-      <div id="relatedsearches1"> </div>
       <div id="afscontainer1"> </div>
-      <div id="relatedstyle2"> </div>
-      <div id="relatedsearches2"> </div>
+      <div id="relatedsearches1"> </div>
       <h3 class="title-h3">ウェブ結果</h3>
       <section class="news-box-3">
         <news-item-3 v-for="(item, i) in news" :key="i" :item="item"> </news-item-3>
@@ -22,7 +20,6 @@ export default {
       news: [], // 新闻列表
       input: "", // 搜索输入
       channelId: "", // 频道 ID
-      subdomain: false,
       hide: true,
       noAd: false,
       noAd2: false
@@ -35,7 +32,6 @@ export default {
       });
     }
 
-    window.location.hostname.includes("s.") && (this.subdomain = true);
     this.hide = false;
 
     const searchParams = new URLSearchParams(window.location.search);
@@ -132,18 +128,10 @@ export default {
       // 根据来源配置 rsblock1
       const rsblock1 = (() => {
         const baseConfig = {
-          container: "",
-          relatedSearches: 0,
+          container: "relatedsearches1",
+          relatedSearches: 5,
           adLoadedCallback: adLoadedCallback("C_AC", { query: queryString })
         };
-
-        if (from === "home" || from === "content") {
-          baseConfig.container = this.subdomain ? "relatedsearches2" : "relatedsearches1";
-          baseConfig.relatedSearches = this.subdomain ? 5 : 4;
-        } else {
-          baseConfig.container = "relatedstyle2";
-          baseConfig.relatedSearches = 6;
-        }
 
         return baseConfig;
       })();
