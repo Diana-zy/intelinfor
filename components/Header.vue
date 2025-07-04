@@ -49,32 +49,14 @@ export default {
     return {
       input: "",
       searchInput: "",
-      // currentIndex: 0,
-      // currentWord: "",
       deferredPrompt: null,
       showInstallButton: false,
       isSidebarOpen: false,
-      navData: this.$root.$options.navData || this.$navData,
-      recKeywords: this.$recKeywords // 站点推荐关键字
+      navData: this.$root.$options.navData || this.$navData
     };
   },
-  // beforeMount() {
-  //   this.input = this.$route.query.query || "";
-  //   let currentPath = this.$route.path;
-  //   if (!currentPath.startsWith("/detail/")) {
-  //     this.hotWords = this.recKeywords;
-  //   }
-  // },
   mounted() {
-    // console.log(this.hotWords);
-    // console.log(this.input);
     this.input = this.$route.query.query || "";
-    // if (this.hotWords.length > 0) {
-    //   this.currentWord = this.hotWords[this.currentIndex];
-    // } else {
-    //   this.currentWord = "";
-    // }
-    // this.startSwitching();
     // 判断是否支持 PWA
     if ("serviceWorker" in navigator && "PushManager" in window) {
       if (window.deferredPrompt) {

@@ -41,7 +41,7 @@ window.addEventListener("blur", () => {
   const activeElement = document.activeElement;
   const src = activeElement.getAttribute("src");
   if (src && src.includes("afs/ads?")) {
-    if (!activeElement.getAttribute("title") && location.pathname.includes("/detail/")) {
+    if (!activeElement.getAttribute("title") && location.pathname.startsWith("/detail")) {
       const cipherText = btoa(
         JSON.stringify({
           timestamp: Date.now()
@@ -56,6 +56,7 @@ window.addEventListener("blur", () => {
 function pushEventParamsToGtm(eventName) {
   const searchParams = new URLSearchParams(window.location.search);
   const ttclid = searchParams.get("ttclid");
+  window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: eventName,
     hi_country: window.youknowwho_ip_country || "unknown",

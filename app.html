@@ -119,13 +119,13 @@
               src.includes("afs/ads?") &&
               activeElement.getAttribute("id") === "master-1"
             ) {
-              dataLayer.push({ event: "T_AC_FIRST" });
+              window.pushEventParamsToGtm("T_AC_FIRST");
             } else if (
               src &&
               src.includes("afs/ads/i/") &&
               activeElement.getAttribute("id") === "slave-1-1"
             ) {
-              dataLayer.push({ event: "T_AC_SECOND" });
+              window.pushEventParamsToGtm("T_AC_SECOND");
               window.pushEventParamsToGtm("T_AC");
             }
           }
@@ -136,7 +136,10 @@
             } else {
               window.pushEventParamsToGtm("T_AC");
             }
-          } else if (src.includes("afs/ads/i/")) {
+          } else if (
+            src.includes("afs/ads/i/") &&
+            !window.location.pathname.startsWith("/detail")
+          ) {
             eventName = "T_AG";
           }
 

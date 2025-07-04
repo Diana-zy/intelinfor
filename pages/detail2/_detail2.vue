@@ -108,7 +108,7 @@ export default {
       this.setChannelId();
       /* 确保dom更新后调用广告请求 */
       this.$nextTick(() => {
-        this.addAdSenseScript();
+        this.newInfo.no_entry !== 1 && this.addAdSenseScript();
       });
     },
     setChannelId() {
