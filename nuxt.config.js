@@ -20,7 +20,7 @@ export default {
       const path = await pathData.json();
       const categoryPaths = path.data.category.map((item) => `/category/${item}/`);
       const detailPaths = path.data.detail.map((item) => `/detail/${item}/`);
-      const urls = [...categoryPaths, ...detailPaths];
+      const urls = [...categoryPaths, ...detailPaths, "/detail2/1/"];
       return urls;
     }
   },

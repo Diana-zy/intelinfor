@@ -113,6 +113,23 @@
           const src = activeElement?.getAttribute("src") || "";
           let eventName = "";
 
+          if (window.location.pathname.startsWith("/detail")) {
+            if (
+              src &&
+              src.includes("afs/ads?") &&
+              activeElement.getAttribute("id") === "master-1"
+            ) {
+              dataLayer.push({ event: "T_AC_FIRST" });
+            } else if (
+              src &&
+              src.includes("afs/ads/i/") &&
+              activeElement.getAttribute("id") === "slave-1-1"
+            ) {
+              dataLayer.push({ event: "T_AC_SECOND" });
+              window.pushEventParamsToGtm("T_AC");
+            }
+          }
+
           if (src.includes("afs/ads?")) {
             if (activeElement.getAttribute("title")) {
               window.pushEventParamsToGtm("T_AR");
