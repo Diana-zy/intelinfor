@@ -44,6 +44,7 @@ export default {
   methods: {
     addAdSense() {
       setTimeout(() => {
+        window.pushEventParamsToGtm("Q_AR");
         this.addAdSenseScript();
       }, 0);
     },

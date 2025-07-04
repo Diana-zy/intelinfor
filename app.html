@@ -90,7 +90,7 @@
     {{ APP }}
     <script>
       window.done = false;
-
+      window.done1 = false;
       // 监听失去焦点事件
       window.addEventListener("blur", () => {
         const activeElement = document.activeElement;
@@ -156,6 +156,27 @@
             window.done = false;
             window.focus();
           }, 0);
+        }
+      });
+
+      function HandleMessageTACANDTAR(e) {
+        if (window.done1) {
+          return;
+        }
+        const activeElement = document.activeElement;
+        const src = activeElement?.getAttribute("src") || "";
+        if (src.includes("afs/ads?")) {
+          if (!activeElement.getAttribute("title")) {
+            dataLayer.push({ event: "T_AC_MSG" });
+            window.done1 = true;
+          }
+        }
+      }
+
+      //TAC和TAR埋点监听消息
+      window.addEventListener("message", (e) => {
+        if (typeof e.data === "string" && e?.data?.startsWith("FSXDC,.aCS:")) {
+          HandleMessageTACANDTAR();
         }
       });
     </script>
