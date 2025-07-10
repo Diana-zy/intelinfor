@@ -63,7 +63,7 @@ export default {
   props: {
     lang: {
       type: String,
-      default: "ja"
+      default: "en"
     },
     channelId: {
       type: String,

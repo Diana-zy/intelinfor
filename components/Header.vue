@@ -7,11 +7,11 @@
       </div>
 
       <div class="category"
-        >カテゴリー
+        >Category
         <ul class="dropdown">
           <li v-for="(item, i) in navData.list" :key="i"
             ><CustomLink :to="`/category/${item.path}/`">{{
-              capitalizeFirstLetter(item.locale_name.ja)
+              capitalizeFirstLetter(item.locale_name.en)
             }}</CustomLink></li
           >
         </ul>
@@ -19,7 +19,7 @@
 
       <div class="search-box">
         <!-- <transition name="slide"> -->
-        <input v-model="input" placeholder="ウェブ検索" class="search" @keyup.enter="search" />
+        <input v-model="input" placeholder="Search..." class="search" @keyup.enter="search" />
         <!-- </transition> -->
         <i v-show="input != ''" class="icon-clear" @click="clear"></i>
         <i class="icon-search" @click="search"></i>

@@ -32,7 +32,7 @@ export default {
     trailingSlash: true
   },
   head: {
-    title: "Intelinfor - 世界のニュースが手のひらで！",
+    title: "Intelinfor - world news in the palm of your hand!",
     meta: [
       {
         name: "version",
@@ -55,13 +55,12 @@ export default {
         hid: "description",
         name: "description",
         content:
-          "私たちは、政治、経済、技術、文化、スポーツなど、さまざまな分野における最新の発展をお届けすることにコミットしています!"
+          "We are committed to delivering the latest developments in various fields such as politics, economy, technology, culture and sports!"
       },
       {
         hid: "keywords",
         name: "keywords",
-        content:
-          "ニュース,フロンティアニュース,最新ニュース,ITニュース,スポーツニュース,ファッションニュース,車ニュース,健康ニュース"
+        content: "Frontier news, news IT K news, sports news, fashion news, car news, health news"
       },
       {
         hid: "og:site_name",

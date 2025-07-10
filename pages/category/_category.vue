@@ -2,7 +2,7 @@
   <div class="page">
     <Header />
     <main class="main">
-      <h2 class="title-h2">{{ capitalizeFirstLetter(categoryInfo.category.locale_name.ja) }}</h2>
+      <h2 class="title-h2">{{ capitalizeFirstLetter(categoryInfo.category.locale_name.en) }}</h2>
       <section class="news-box-4">
         <news-item-4
           v-for="(item, index) in categoryInfo.list"

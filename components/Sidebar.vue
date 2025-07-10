@@ -5,35 +5,27 @@
       <div class="close" @click="closeSidebar"></div>
 
       <div class="search-box">
-        <input v-model="input" placeholder="" class="search" name="search" @keyup.enter="search" />
+        <input
+          v-model="input"
+          placeholder="Search..."
+          class="search"
+          name="search"
+          @keyup.enter="search"
+        />
         <i v-show="input != ''" class="icon-clear" @click="clear"></i>
         <i class="icon-search" @click="search"></i>
       </div>
 
-      <!-- <div class="words-container">
-        <div class="marquee">
-          <div v-for="count in 2" :key="count" class="marquee-group">
-            <div
-              v-for="(word, index) in hotWords"
-              :key="index"
-              class="hot-words"
-              @click="clickWord(word)"
-              ><i class="icon-arrow" />{{ word }}</div
-            >
-          </div>
-        </div>
-      </div> -->
-
-      <h2 class="title-h2">カテゴリー</h2>
+      <h2 class="title-h2">Category</h2>
       <ul class="categories">
         <li v-for="(item, i) in navData.list" :key="i">
           <CustomLink :to="`/category/${item.path}/`">{{
-            capitalizeFirstLetter(item.locale_name.ja)
+            capitalizeFirstLetter(item.locale_name.en)
           }}</CustomLink>
         </li>
       </ul>
       <div v-if="showInstallButton" class="download" @click="installPWA"
-        ><i class="icon-download" />ダウンロード</div
+        ><i class="icon-download" />Download</div
       >
     </div>
   </div>
@@ -52,11 +44,6 @@ export default {
       type: Object,
       default: () => ({})
     }
-    // hotWords: {
-    //   type: Array,
-    //   default: () => [],
-    //   required: false
-    // }
   },
   data() {
     return {
@@ -105,9 +92,6 @@ export default {
     clear() {
       this.input = "";
     }
-    // clickWord(words) {
-    //   simulateAFSSearch(words);
-    // }
   }
 };
 </script>

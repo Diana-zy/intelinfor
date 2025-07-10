@@ -1,10 +1,10 @@
 <template>
-  <div v-show="!hide" class="page">
+  <div class="page">
     <Header />
     <main class="main">
       <div id="afscontainer1"> </div>
       <div id="relatedsearches1"> </div>
-      <h3 class="title-h3">ウェブ結果</h3>
+      <h3 class="title-h3">Web Results</h3>
       <section class="news-box-3">
         <news-item-3 v-for="(item, i) in news" :key="i" :item="item"> </news-item-3>
       </section>
@@ -19,10 +19,7 @@ export default {
     return {
       news: [], // 新闻列表
       input: "", // 搜索输入
-      channelId: "", // 频道 ID
-      hide: true,
-      noAd: false,
-      noAd2: false
+      channelId: "" // 频道 ID
     };
   },
   mounted() {
@@ -31,8 +28,6 @@ export default {
         event: "S_PL"
       });
     }
-
-    this.hide = false;
 
     const searchParams = new URLSearchParams(window.location.search);
     this.channelId = searchParams.has("channel") ? searchParams.get("channel") : "";
@@ -116,10 +111,6 @@ export default {
               console.error(error);
             }
           } else {
-            this.noAd = true;
-            setTimeout(() => {
-              this.noAd2 = true;
-            }, 50);
             // eslint-disable-next-line no-undef
             dataLayer.push({ event: "FF_AR", query: queryString });
           }
@@ -137,7 +128,6 @@ export default {
         return baseConfig;
       })();
 
-      // 加载 Google AdSense
       // eslint-disable-next-line no-undef
       _googCsa("ads", adSenseConfig, adblock1, rsblock1);
     }

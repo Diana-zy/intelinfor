@@ -6,7 +6,7 @@
         <div class="search-group">
           <input
             v-model="input"
-            placeholder="ウェブ検索"
+            placeholder="Search..."
             class="search"
             name="search"
             @keyup.enter="search"
@@ -14,20 +14,6 @@
           <i v-show="input != ''" class="icon-clear" @click="clear"></i>
           <i class="icon-search" @click="search"></i>
         </div>
-        <!-- <div class="rec">人気の選択</div>
-        <div class="words-container">
-          <div class="marquee">
-            <div v-for="count in 2" :key="count" class="marquee-group">
-              <div
-                v-for="(word, index) in hotWords"
-                :key="index"
-                class="hot-words"
-                @click="clickWord(word)"
-                >{{ word }}</div
-              >
-            </div>
-          </div>
-        </div> -->
       </section>
 
       <section v-swiper:mySwiper="swiperOption" class="swiper-box">
@@ -37,12 +23,12 @@
         </div>
       </section>
 
-      <h2 class="title-h2">トレンド</h2>
+      <h2 class="title-h2">Trending</h2>
       <section class="news-box-2">
         <news-item-2 v-for="(item, i) in trendingNews.list" :key="i" :item="item"> </news-item-2>
       </section>
 
-      <h2 class="title-h2">すべての記事</h2>
+      <h2 class="title-h2">All Articles</h2>
       <section>
         <InfiniteScrollList
           api-endpoint="/api/article/menu"
