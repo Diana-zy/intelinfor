@@ -4,6 +4,25 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     {{ HEAD }}
+    <!-- Taboola Pixel Code -->
+    <script type="text/javascript">
+      window._tfa = window._tfa || [];
+      window._tfa.push({ notify: "event", name: "page_view", id: 1887948 });
+      !(function (t, f, a, x) {
+        if (!document.getElementById(x)) {
+          t.async = 1;
+          t.src = a;
+          t.id = x;
+          f.parentNode.insertBefore(t, f);
+        }
+      })(
+        document.createElement("script"),
+        document.getElementsByTagName("script")[0],
+        "//cdn.taboola.com/libtrc/unip/1887948/tfa.js",
+        "tb_tfa_script"
+      );
+    </script>
+    <!-- End of Taboola Pixel Code -->
     <script src="/linkMarking.js"></script>
     <script>
       const searchParams = new URLSearchParams(window.location.search);
@@ -33,6 +52,30 @@
           }),
           (g[o]["t"] = 1 * new Date());
       })(window, "_googCsa");
+    </script>
+
+    <script
+      async
+      src="https://fundingchoicesmessages.google.com/i/pub-1853000876464912?ers=1"
+    ></script>
+    <script>
+      (function () {
+        function signalGooglefcPresent() {
+          if (!window.frames["googlefcPresent"]) {
+            if (document.body) {
+              const iframe = document.createElement("iframe");
+              iframe.style =
+                "width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;";
+              iframe.style.display = "none";
+              iframe.name = "googlefcPresent";
+              document.body.appendChild(iframe);
+            } else {
+              setTimeout(signalGooglefcPresent, 0);
+            }
+          }
+        }
+        signalGooglefcPresent();
+      })();
     </script>
 
     <!-- Google tag (gtag.js) -->
@@ -132,6 +175,9 @@
 
           if (src.includes("afs/ads?")) {
             if (activeElement.getAttribute("title")) {
+              window._tfa = window._tfa || [];
+              window._tfa.push({ notify: "event", name: "make_purchase", id: 1887948 });
+
               window.pushEventParamsToGtm("T_AR");
             } else {
               window.pushEventParamsToGtm("T_AC");
@@ -167,6 +213,9 @@
         const src = activeElement?.getAttribute("src") || "";
         if (src.includes("afs/ads?")) {
           if (!activeElement.getAttribute("title")) {
+            window._tfa = window._tfa || [];
+            window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1887948 });
+
             dataLayer.push({ event: "T_AC_MSG" });
             window.done1 = true;
           }

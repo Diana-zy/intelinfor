@@ -165,8 +165,10 @@ export default {
           adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
             console.log("adLoadedCallback", loaded, response, isExperimentVariant, callbackOptions);
             if (response) {
-              // eslint-disable-next-line no-undef
-              dataLayer.push({ event: "C_AC" }); // 事件推送到 dataLayer
+              window._tfa = window._tfa || [];
+              window._tfa.push({ notify: "event", name: "lead", id: 1887948 });
+
+              window.dataLayer.push({ event: "C_AC" }); // 事件推送到 dataLayer
               try {
                 let numberOfKeys = 0;
                 let concatenatedKeys = "miss";

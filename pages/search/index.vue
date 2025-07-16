@@ -39,6 +39,9 @@ export default {
   methods: {
     addAdSense() {
       setTimeout(() => {
+        window._tfa = window._tfa || [];
+        window._tfa.push({ notify: "event", name: "view_content", id: 1887948 });
+
         window.pushEventParamsToGtm("Q_AR");
         this.addAdSenseScript();
       }, 0);
@@ -95,6 +98,9 @@ export default {
         number: 8,
         adLoadedCallback: (loaded, e) => {
           if (e) {
+            window._tfa = window._tfa || [];
+            window._tfa.push({ notify: "event", name: "start_checkout", id: 1887948 });
+
             window.pushEventParamsToGtm("C_AR");
             if (window.getDetailIsClickAc()) {
               window.dataLayer.push({

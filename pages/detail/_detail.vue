@@ -220,6 +220,8 @@ export default {
           adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
             console.log("adLoadedCallback", loaded, response, isExperimentVariant, callbackOptions);
             if (response) {
+              window._tfa = window._tfa || [];
+              window._tfa.push({ notify: "event", name: "lead", id: 1887948 });
               window.pushEventParamsToGtm("C_AC");
               try {
                 let numberOfKeys = 0;
