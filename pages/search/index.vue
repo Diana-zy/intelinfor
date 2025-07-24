@@ -41,7 +41,12 @@ export default {
       setTimeout(() => {
         window._tfa = window._tfa || [];
         window._tfa.push({ notify: "event", name: "view_content", id: 1887948 });
-
+        if (window?.ttq?.track) {
+          window.ttq?.track?.("ViewContent");
+        } else {
+          window.taskList = window.taskList || [];
+          window.taskList.push("ViewContent");
+        }
         window.pushEventParamsToGtm("Q_AR");
         this.addAdSenseScript();
       }, 0);
@@ -100,7 +105,12 @@ export default {
           if (e) {
             window._tfa = window._tfa || [];
             window._tfa.push({ notify: "event", name: "start_checkout", id: 1887948 });
-
+            if (window?.ttq?.track) {
+              window.ttq?.track?.("Download");
+            } else {
+              window.taskList = window.taskList || [];
+              window.taskList.push("Download");
+            }
             window.pushEventParamsToGtm("C_AR");
             if (window.getDetailIsClickAc()) {
               window.dataLayer.push({

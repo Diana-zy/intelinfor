@@ -223,6 +223,12 @@ export default {
               window._tfa = window._tfa || [];
               window._tfa.push({ notify: "event", name: "lead", id: 1887948 });
               window.pushEventParamsToGtm("C_AC");
+              if (window?.ttq?.track) {
+                window.ttq?.track?.("Lead");
+              } else {
+                window.taskList = window.taskList || [];
+                window.taskList.push("Lead");
+              }
               try {
                 let numberOfKeys = 0;
                 let concatenatedKeys = "miss";
