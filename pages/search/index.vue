@@ -41,7 +41,6 @@ export default {
       setTimeout(() => {
         window._tfa = window._tfa || [];
         window._tfa.push({ notify: "event", name: "view_content", id: 1887948 });
-        window._tfa.push({ notify: "event", name: "view_content", id: 1891183 });
         if (window?.ttq?.track) {
           window.ttq?.track?.("ViewContent");
         } else {
@@ -106,7 +105,6 @@ export default {
           if (e) {
             window._tfa = window._tfa || [];
             window._tfa.push({ notify: "event", name: "start_checkout", id: 1887948 });
-            window._tfa.push({ notify: "event", name: "start_checkout", id: 1891183 });
             if (window?.ttq?.track) {
               window.ttq?.track?.("Download");
             } else {
