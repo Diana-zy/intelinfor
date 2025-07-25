@@ -23,6 +23,27 @@
       );
     </script>
     <!-- End of Taboola Pixel Code -->
+
+    <!-- Taboola Pixel Code -->
+    <script type="text/javascript">
+      window._tfa = window._tfa || [];
+      window._tfa.push({ notify: "event", name: "page_view", id: 1891183 });
+      !(function (t, f, a, x) {
+        if (!document.getElementById(x)) {
+          t.async = 1;
+          t.src = a;
+          t.id = x;
+          f.parentNode.insertBefore(t, f);
+        }
+      })(
+        document.createElement("script"),
+        document.getElementsByTagName("script")[0],
+        "//cdn.taboola.com/libtrc/unip/1891183/tfa.js",
+        "tb_tfa_script"
+      );
+    </script>
+    <!-- End of Taboola Pixel Code -->
+
     <!-- TikTok Pixel Code Start -->
     <script>
       window.taskList = window.taskList || [];
@@ -227,6 +248,7 @@
             if (activeElement.getAttribute("title")) {
               window._tfa = window._tfa || [];
               window._tfa.push({ notify: "event", name: "make_purchase", id: 1887948 });
+              window._tfa.push({ notify: "event", name: "make_purchase", id: 1891183 });
 
               window.pushEventParamsToGtm("T_AR");
               if (window?.ttq?.track) {
@@ -274,6 +296,7 @@
           if (!activeElement.getAttribute("title")) {
             window._tfa = window._tfa || [];
             window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1887948 });
+            window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1891183 });
 
             dataLayer.push({ event: "T_AC_MSG" });
             window.done1 = true;
@@ -286,6 +309,7 @@
         ) {
           window._tfa = window._tfa || [];
           window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1887948 });
+          window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1891183 });
           if (window?.ttq?.track) {
             window.ttq?.track?.("AddToWishlist");
           } else {

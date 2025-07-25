@@ -222,6 +222,7 @@ export default {
             if (response) {
               window._tfa = window._tfa || [];
               window._tfa.push({ notify: "event", name: "lead", id: 1887948 });
+              window._tfa.push({ notify: "event", name: "lead", id: 1891183 });
               window.pushEventParamsToGtm("C_AC");
               if (window?.ttq?.track) {
                 window.ttq?.track?.("Lead");
