@@ -39,6 +39,8 @@ export default {
   methods: {
     addAdSense() {
       setTimeout(() => {
+        // window.trackEventToPixel("Q_AR");
+
         window._tfa = window._tfa || [];
         window._tfa.push({ notify: "event", name: "view_content", id: 1887948 });
         if (window?.ttq?.track) {
@@ -66,15 +68,16 @@ export default {
 
     addAdSenseScript() {
       const queryString = this.input;
-      const searchParams = new URLSearchParams(window.location.search);
 
-      // 获取 URL 查询参数的工具函数
-      const getParam = (key) => (searchParams.has(key) ? searchParams.get(key) : "");
-
-      const from = getParam("from");
-      const channelId = getParam("channel");
-
-      // 配置 AdSense 参数
+      const channelId = window.getParam("channel");
+      const hiSource = window.getParam("hi_source");
+      const hiPc = window.getParam("hi_pc");
+      const resultsPageBaseUrl = window.getResultsPageUrl({
+        channel: channelId,
+        from: "search",
+        hi_source: hiSource,
+        hi_pc: hiPc
+      });
       const adSenseConfig = {
         channel: channelId,
         pubId: "partner-pub-1853000876464912",
@@ -82,10 +85,9 @@ export default {
         styleId: "7223178098",
         adsafe: "low",
         ivt: false,
-        resultsPageBaseUrl: `${window.location.origin}/search/?afs&channel=${channelId}${
-          from ? `&from=${from}` : ""
-        }`,
-        resultsPageQueryParam: "query"
+        resultsPageBaseUrl,
+        resultsPageQueryParam: "query",
+        adtest: "on"
       };
 
       // AdSense 加载回调函数
@@ -103,6 +105,8 @@ export default {
         number: 8,
         adLoadedCallback: (loaded, e) => {
           if (e) {
+            // window.trackEventToPixel("C_AR");
+
             window._tfa = window._tfa || [];
             window._tfa.push({ notify: "event", name: "start_checkout", id: 1887948 });
             if (window?.ttq?.track) {

@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     {{ HEAD }}
+    <script src="/trackEvent.js"></script>
+
     <!-- Taboola Pixel Code -->
     <script type="text/javascript">
       window._tfa = window._tfa || [];
@@ -226,6 +228,9 @@
 
           if (src.includes("afs/ads?")) {
             if (activeElement.getAttribute("title")) {
+              // window.trackEventToPixel("T_AR");
+              // window.trackEventToPixel("T_AR_2");
+
               window._tfa = window._tfa || [];
               window._tfa.push({ notify: "event", name: "make_purchase", id: 1887948 });
 
@@ -273,8 +278,16 @@
         const src = activeElement?.getAttribute("src") || "";
         if (src.includes("afs/ads?")) {
           if (!activeElement.getAttribute("title")) {
+            // window.trackEventToPixel("T_AC_MSG");
+
             window._tfa = window._tfa || [];
             window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1887948 });
+            if (window?.ttq?.track) {
+              window.ttq?.track?.("AddToWishlist");
+            } else {
+              window.taskList = window.taskList || [];
+              window.taskList.push("AddToWishlist");
+            }
 
             dataLayer.push({ event: "T_AC_MSG" });
             window.done1 = true;
@@ -285,6 +298,8 @@
           activeElement.getAttribute("id") === "slave-1-1" &&
           window.location.pathname.startsWith("/detail")
         ) {
+          // window.trackEventToPixel("T_AC_MSG");
+
           window._tfa = window._tfa || [];
           window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1887948 });
           if (window?.ttq?.track) {

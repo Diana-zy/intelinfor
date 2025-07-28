@@ -115,12 +115,6 @@ export default {
         });
         return;
       }
-      try {
-        // eslint-disable-next-line no-undef
-        bge("event", "ec_register", { configId: "904803718856417024" });
-      } catch (error) {
-        console.error("Error tracking search event:", error);
-      }
 
       simulateAFSSearch(this.input);
     },
