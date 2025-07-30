@@ -5,101 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     {{ HEAD }}
     <script src="/trackEvent.js"></script>
-
-    <!-- Taboola Pixel Code -->
-    <script type="text/javascript">
-      window._tfa = window._tfa || [];
-      window._tfa.push({ notify: "event", name: "page_view", id: 1887948 });
-      !(function (t, f, a, x) {
-        if (!document.getElementById(x)) {
-          t.async = 1;
-          t.src = a;
-          t.id = x;
-          f.parentNode.insertBefore(t, f);
-        }
-      })(
-        document.createElement("script"),
-        document.getElementsByTagName("script")[0],
-        "//cdn.taboola.com/libtrc/unip/1887948/tfa.js",
-        "tb_tfa_script"
-      );
-    </script>
-    <!-- End of Taboola Pixel Code -->
-
-    <!-- TikTok Pixel Code Start -->
-    <script>
-      window.taskList = window.taskList || [];
-      window.dataLayer = window.dataLayer || [];
-      !(function (w, d, t) {
-        w.TiktokAnalyticsObject = t;
-        var ttq = (w[t] = w[t] || []);
-        (ttq.methods = [
-          "page",
-          "track",
-          "identify",
-          "instances",
-          "debug",
-          "on",
-          "off",
-          "once",
-          "ready",
-          "alias",
-          "group",
-          "enableCookie",
-          "disableCookie",
-          "holdConsent",
-          "revokeConsent",
-          "grantConsent"
-        ]),
-          (ttq.setAndDefer = function (t, e) {
-            t[e] = function () {
-              t.push([e].concat(Array.prototype.slice.call(arguments, 0)));
-            };
-          });
-        for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
-        (ttq.instance = function (t) {
-          for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)
-            ttq.setAndDefer(e, ttq.methods[n]);
-          return e;
-        }),
-          (ttq.load = function (e, n) {
-            var r = "https://analytics.tiktok.com/i18n/pixel/events.js",
-              o = n && n.partner;
-            (ttq._i = ttq._i || {}),
-              (ttq._i[e] = []),
-              (ttq._i[e]._u = r),
-              (ttq._t = ttq._t || {}),
-              (ttq._t[e] = +new Date()),
-              (ttq._o = ttq._o || {}),
-              (ttq._o[e] = n || {});
-            n = document.createElement("script");
-            (n.type = "text/javascript"), (n.async = !0), (n.src = r + "?sdkid=" + e + "&lib=" + t);
-            e = document.getElementsByTagName("script")[0];
-            e.parentNode.insertBefore(n, e);
-          });
-
-        ttq.load("D20SUKBC77U6OAPOSJUG");
-        if (w.location.pathname.startsWith("/detail")) {
-          ttq.page(); //Pageview
-        }
-        if (window?.taskList?.length) {
-          let buffer = window.taskList;
-          buffer.forEach((item) => {
-            try {
-              ttq.track(item);
-              window.dataLayer.push({
-                event: "pixel_supplement",
-                pixel_event: item
-              });
-            } catch (error) {
-              console.log(error);
-            }
-          });
-          window.taskList = [];
-        }
-      })(window, document, "ttq");
-    </script>
-    <!-- TikTok Pixel Code End -->
     <script src="/linkMarking.js"></script>
     <script>
       const searchParams = new URLSearchParams(window.location.search);
@@ -228,21 +133,10 @@
 
           if (src.includes("afs/ads?")) {
             if (activeElement.getAttribute("title")) {
-              // window.trackEventToPixel("T_AR");
-              // window.trackEventToPixel("T_AR_2");
-
-              window._tfa = window._tfa || [];
-              window._tfa.push({ notify: "event", name: "make_purchase", id: 1887948 });
+              window.trackEventToPixel("T_AR");
+              window.trackEventToPixel("T_AR_2");
 
               window.pushEventParamsToGtm("T_AR");
-              if (window?.ttq?.track) {
-                window.ttq?.track?.("Purchase");
-                window.ttq?.track?.("ClickButton");
-              } else {
-                window.taskList = window.taskList || [];
-                window.taskList.push("Purchase");
-                window.taskList.push("ClickButton");
-              }
             } else {
               window.pushEventParamsToGtm("T_AC");
             }
@@ -278,16 +172,7 @@
         const src = activeElement?.getAttribute("src") || "";
         if (src.includes("afs/ads?")) {
           if (!activeElement.getAttribute("title")) {
-            // window.trackEventToPixel("T_AC_MSG");
-
-            window._tfa = window._tfa || [];
-            window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1887948 });
-            if (window?.ttq?.track) {
-              window.ttq?.track?.("AddToWishlist");
-            } else {
-              window.taskList = window.taskList || [];
-              window.taskList.push("AddToWishlist");
-            }
+            window.trackEventToPixel("T_AC_MSG");
 
             dataLayer.push({ event: "T_AC_MSG" });
             window.done1 = true;
@@ -298,16 +183,8 @@
           activeElement.getAttribute("id") === "slave-1-1" &&
           window.location.pathname.startsWith("/detail")
         ) {
-          // window.trackEventToPixel("T_AC_MSG");
+          window.trackEventToPixel("T_AC_MSG");
 
-          window._tfa = window._tfa || [];
-          window._tfa.push({ notify: "event", name: "add_to_wishlist", id: 1887948 });
-          if (window?.ttq?.track) {
-            window.ttq?.track?.("AddToWishlist");
-          } else {
-            window.taskList = window.taskList || [];
-            window.taskList.push("AddToWishlist");
-          }
           dataLayer.push({ event: "T_AC_MSG" });
           window.done1 = true;
         }

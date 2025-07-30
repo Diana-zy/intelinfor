@@ -39,16 +39,8 @@ export default {
   methods: {
     addAdSense() {
       setTimeout(() => {
-        // window.trackEventToPixel("Q_AR");
+        window.trackEventToPixel("Q_AR");
 
-        window._tfa = window._tfa || [];
-        window._tfa.push({ notify: "event", name: "view_content", id: 1887948 });
-        if (window?.ttq?.track) {
-          window.ttq?.track?.("ViewContent");
-        } else {
-          window.taskList = window.taskList || [];
-          window.taskList.push("ViewContent");
-        }
         window.pushEventParamsToGtm("Q_AR");
         this.addAdSenseScript();
       }, 0);
@@ -86,8 +78,7 @@ export default {
         adsafe: "low",
         ivt: false,
         resultsPageBaseUrl,
-        resultsPageQueryParam: "query",
-        adtest: "on"
+        resultsPageQueryParam: "query"
       };
 
       // AdSense 加载回调函数
@@ -105,16 +96,8 @@ export default {
         number: 8,
         adLoadedCallback: (loaded, e) => {
           if (e) {
-            // window.trackEventToPixel("C_AR");
+            window.trackEventToPixel("C_AR");
 
-            window._tfa = window._tfa || [];
-            window._tfa.push({ notify: "event", name: "start_checkout", id: 1887948 });
-            if (window?.ttq?.track) {
-              window.ttq?.track?.("Download");
-            } else {
-              window.taskList = window.taskList || [];
-              window.taskList.push("Download");
-            }
             window.pushEventParamsToGtm("C_AR");
             if (window.getDetailIsClickAc()) {
               window.dataLayer.push({

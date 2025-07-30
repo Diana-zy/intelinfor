@@ -13,7 +13,7 @@ function getParam(queryKey) {
   }
 }
 const initPixels = {
-  TikTok: function (b) {
+  tiktok: function (b) {
     !(function (w, d, t) {
       w.TiktokAnalyticsObject = t;
       var ttq = (w[t] = w[t] || []);
@@ -68,7 +68,7 @@ const initPixels = {
       }
     })(window, document, "ttq");
   },
-  Taboola: function (pixelId) {
+  taboola: function (pixelId) {
     window._tfa = window._tfa || [];
     window._tfa.push({
       notify: "event",
@@ -91,43 +91,43 @@ const initPixels = {
   }
 };
 
-// (function () {
-//   const source = getParam("hi_source"),
-//     pixelId = getParam("hi_pc");
-//   if (source && initPixels[source]) initPixels[source](pixelId);
-// })();
+(function () {
+  const source = getParam("hi_source"),
+    pixelId = getParam("hi_pc");
+  if (source && initPixels[source]) initPixels[source](pixelId);
+})();
 
 function trackEventToPixel(eventKey) {
   const eventNameObj = {
     // 触发词条
     D_C_AC: {
-      Taboola: "lead",
-      TikTok: "Lead"
+      taboola: "lead",
+      tiktok: "Lead"
     },
     // 点击词条
     T_AC_MSG: {
-      Taboola: "add_to_wishlist",
-      TikTok: "AddToWishlist"
+      taboola: "add_to_wishlist",
+      tiktok: "AddToWishlist"
     },
     // 请求广告
     Q_AR: {
-      Taboola: "view_content",
-      TikTok: "ViewContent"
+      taboola: "view_content",
+      tiktok: "ViewContent"
     },
     // 触发广告
     C_AR: {
-      Taboola: "start_checkout",
-      TikTok: "Download"
+      taboola: "start_checkout",
+      tiktok: "Download"
     },
     // 点击广告
     T_AR: {
-      Taboola: "make_purchase",
-      TikTok: "Purchase"
+      taboola: "make_purchase",
+      tiktok: "Purchase"
     },
     // 点击广告2
     T_AR_2: {
-      Taboola: "",
-      TikTok: "ClickButton"
+      taboola: "",
+      tiktok: "ClickButton"
     }
   };
 
@@ -135,9 +135,9 @@ function trackEventToPixel(eventKey) {
     pixelId = getParam("hi_pc"),
     eventName = eventNameObj[eventKey][source];
   if (source && pixelId && eventName) {
-    if (source === "Taboola") {
+    if (source === "taboola") {
       window._tfa.push({ notify: "event", name: eventName, id: pixelId });
-    } else if (source === "TikTok") {
+    } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
     }
   }
@@ -147,7 +147,6 @@ function trackEventToPixel(eventKey) {
 function getResultsPageUrl(queryParams) {
   let url = `${window.location.origin}/search/?afs`;
   for (const [key, value] of Object.entries(queryParams)) {
-    console.log(key, value);
     if (value) {
       url += `&${key}=${value}`;
     }

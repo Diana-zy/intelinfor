@@ -174,16 +174,8 @@ export default {
           adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
             console.log("adLoadedCallback", loaded, response, isExperimentVariant, callbackOptions);
             if (response) {
-              // window.trackEventToPixel("D_C_AC");
+              window.trackEventToPixel("D_C_AC");
 
-              window._tfa = window._tfa || [];
-              window._tfa.push({ notify: "event", name: "lead", id: 1887948 });
-              if (window?.ttq?.track) {
-                window.ttq?.track?.("Lead");
-              } else {
-                window.taskList = window.taskList || [];
-                window.taskList.push("Lead");
-              }
               window.dataLayer.push({ event: "C_AC" }); // 事件推送到 dataLayer
               try {
                 let numberOfKeys = 0;
