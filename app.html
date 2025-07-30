@@ -8,14 +8,22 @@
     <script src="/linkMarking.js"></script>
     <script>
       const searchParams = new URLSearchParams(window.location.search);
-      const ttclid = searchParams.get("ttclid");
-      if (ttclid) {
-        window.setCookie("hi_ttclid", ttclid);
-      }
+      const ttclid = searchParams.get("ttclid"); //TikTok
+      const tblci = searchParams.get("tblci"); //Taboola
+      ttclid && window.setCookie("hi_ttclid", ttclid);
+      tblci && window.setCookie("hi_tblci", tblci);
+
       const script = document.createElement("script");
       script.src = "https://wc.bunchthings.com/youknowwho.js?" + Date.now();
       document.head.appendChild(script);
       script.onload = function () {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "Page_View_Ip",
+          hi_ip: window.youknowwho_ip || "unknown",
+          hi_country: window.youknowwho_ip_country || "unknown"
+        });
+
         const pathname = window.location.pathname;
         if (pathname.startsWith("/detail")) {
           window.pushEventParamsToGtm("D_PV");
