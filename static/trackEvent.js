@@ -88,6 +88,36 @@ const initPixels = {
       `//cdn.taboola.com/libtrc/unip/${pixelId}/tfa.js`,
       "tb_tfa_script"
     );
+  },
+  outbrain: function (pixelId) {
+    /** DO NOT MODIFY THIS CODE**/
+    !(function (_window, _document) {
+      var OB_ADV_ID = pixelId;
+      if (_window.obApi) {
+        var toArray = function (object) {
+          return Object.prototype.toString.call(object) === "[object Array]" ? object : [object];
+        };
+        _window.obApi.marketerId = toArray(_window.obApi.marketerId).concat(toArray(OB_ADV_ID));
+        return;
+      }
+      var api = (_window.obApi = function () {
+        api.dispatch ? api.dispatch.apply(api, arguments) : api.queue.push(arguments);
+      });
+      api.version = "1.1";
+      api.loaded = true;
+      api.marketerId = OB_ADV_ID;
+      api.queue = [];
+      var tag = _document.createElement("script");
+      tag.async = true;
+      tag.src = "//amplify.outbrain.com/cp/obtp.js";
+      tag.type = "text/javascript";
+      var script = _document.getElementsByTagName("script")[0];
+      script.parentNode.insertBefore(tag, script);
+    })(window, document);
+
+    if (window.location.pathname.startsWith("/detail")) {
+      window.obApi("track", "PAGE_VIEW");
+    }
   }
 };
 
@@ -102,32 +132,38 @@ function trackEventToPixel(eventKey) {
     // 触发词条
     D_C_AC: {
       taboola: "lead",
-      tiktok: "Lead"
+      tiktok: "Lead",
+      outbrain: "Lead"
     },
     // 点击词条
     T_AC_MSG: {
       taboola: "add_to_wishlist",
-      tiktok: "AddToWishlist"
+      tiktok: "AddToWishlist",
+      outbrain: "Add to cart"
     },
     // 请求广告
     Q_AR: {
       taboola: "view_content",
-      tiktok: "ViewContent"
+      tiktok: "ViewContent",
+      outbrain: "Content view"
     },
     // 触发广告
     C_AR: {
       taboola: "start_checkout",
-      tiktok: "Download"
+      tiktok: "Download",
+      outbrain: "Download"
     },
     // 点击广告
     T_AR: {
       taboola: "make_purchase",
-      tiktok: "Purchase"
+      tiktok: "Purchase",
+      outbrain: "Purchase"
     },
     // 点击广告2
     T_AR_2: {
       taboola: "",
-      tiktok: "ClickButton"
+      tiktok: "ClickButton",
+      outbrain: ""
     }
   };
 
@@ -139,6 +175,8 @@ function trackEventToPixel(eventKey) {
       window._tfa.push({ notify: "event", name: eventName, id: pixelId });
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
+    } else if (source === "outbrain") {
+      window.obApi?.("track", eventName);
     }
   }
 }
