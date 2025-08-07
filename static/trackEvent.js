@@ -172,7 +172,17 @@ function trackEventToPixel(eventKey) {
     eventName = eventNameObj[eventKey][source];
   if (source && pixelId && eventName) {
     if (source === "taboola") {
-      window._tfa.push({ notify: "event", name: eventName, id: pixelId });
+      // TODO /* 账户Pixel Id待替换 */
+      if (pixelId === "987654321" && eventName === "make_purchase") {
+        window._tfa.push({
+          notify: "event",
+          name: eventName,
+          id: pixelId,
+          revenue: window.purchaseValue || 0.3
+        });
+      } else {
+        window._tfa.push({ notify: "event", name: eventName, id: pixelId });
+      }
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
     } else if (source === "outbrain") {
