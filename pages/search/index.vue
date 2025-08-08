@@ -47,17 +47,20 @@ export default {
     },
     async searchNews() {
       try {
-        const purchaseValueResponse = await this.$axios.$get("/api/common/qdhzhygz", {
-          params: {
-            site_id: process.env.SITE_ID,
-            qdh: this.channelId
-          }
-        });
+        if (this.channelId) {
+          const purchaseValueResponse = await this.$axios.$get("/api/common/qdhzhygz", {
+            params: {
+              site_id: process.env.SITE_ID,
+              qdh: this.channelId
+            }
+          });
+          window.purchaseValue = purchaseValueResponse.ygz;
+        }
+
         const response = await this.$axios.$post("/api/article/search", {
           site_id: process.env.SITE_ID,
           key: this.input
         });
-        window.purchaseValue = purchaseValueResponse.ygz;
         this.news = response.list;
       } catch (error) {
         console.error("Error fetching data:", error);

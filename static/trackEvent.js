@@ -173,7 +173,7 @@ function trackEventToPixel(eventKey) {
   if (source && pixelId && eventName) {
     if (source === "taboola") {
       // TODO /* 账户Pixel Id待替换 */
-      if (pixelId === "987654321" && eventName === "make_purchase") {
+      if (pixelId === "1900126" && eventName === "make_purchase") {
         window._tfa.push({
           notify: "event",
           name: eventName,
