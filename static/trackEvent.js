@@ -180,6 +180,13 @@ function trackEventToPixel(eventKey) {
           id: pixelId,
           revenue: window.purchaseValue || 0.3
         });
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "Push_Tb_Purchase_Revenue",
+          apiRevenue: window.purchaseValue || "unknown",
+          actualRevenue: window.purchaseValue || 0.3
+        });
       } else {
         window._tfa.push({ notify: "event", name: eventName, id: pixelId });
       }
