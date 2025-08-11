@@ -132,6 +132,8 @@ export default {
     addAdSenseScript() {
       // 获取 URL 查询参数
       const searchParams = new URLSearchParams(window.location.search);
+      let terms = searchParams.has("terms") ? searchParams.get("terms") : "";
+      terms = terms.replace(/[，]/g, ",");
       const paramKeys = [];
       // 遍历查询参数并将其添加到 paramKeys 数组中
       for (const param of searchParams) {
@@ -157,6 +159,8 @@ export default {
         relatedSearchTargeting: "content",
         resultsPageBaseUrl,
         resultsPageQueryParam: "query",
+        terms: terms || this.newInfo.terms,
+        referrerAdCreative: terms || this.newInfo.referrer_ad_creative,
         ivt: false
       };
 
