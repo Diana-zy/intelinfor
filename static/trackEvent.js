@@ -62,7 +62,8 @@ const initPixels = {
           e.parentNode.insertBefore(n, e);
         });
 
-      ttq.load(b);
+      // ttq.load(b);
+      ttq.load('D0FCRBRC77U0DNP5P7HG');
       if (w.location.pathname.startsWith("/detail")) {
         ttq.page();
       }
@@ -168,8 +169,11 @@ function trackEventToPixel(eventKey) {
   };
 
   const source = getParam("hi_source"),
-    pixelId = getParam("hi_pc"),
     eventName = eventNameObj[eventKey][source];
+  let pixelId = getParam("hi_pc")
+  if(source=== "tiktok"){
+    pixelId = 'D0FCRBRC77U0DNP5P7HG'
+  }
   if (source && pixelId && eventName) {
     if (source === "taboola") {
       // TODO /* 账户Pixel Id待替换 */
@@ -191,7 +195,7 @@ function trackEventToPixel(eventKey) {
         window._tfa.push({ notify: "event", name: eventName, id: pixelId });
       }
     } else if (source === "tiktok") {
-      window.ttq?.track?.(eventName);
+      window.ttq?.instance(pixelId)?.track?.(eventName);
     } else if (source === "outbrain") {
       window.obApi?.("track", eventName);
     }
