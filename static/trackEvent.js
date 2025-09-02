@@ -202,8 +202,8 @@ function trackEventToPixel(eventKey) {
         window._tfa.push({ notify: "event", name: eventName, id: pixelId });
       }
       // 如果渠道为taboola，则同步推送事件给tiktok和outbrain
-      window.ttq?.track?.(eventName);
-      window.obApi?.("track", eventName);
+      window.ttq?.track?.(eventNameObj[eventKey].tiktok);
+      window.obApi?.("track", eventNameObj[eventKey].outbrain);
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
     } else if (source === "outbrain") {
