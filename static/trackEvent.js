@@ -63,7 +63,7 @@ const initPixels = {
         });
 
       // ttq.load(b);
-      ttq.load('D0FCRBRC77U0DNP5P7HG');
+      ttq.load("D0FCRBRC77U0DNP5P7HG");
       if (w.location.pathname.startsWith("/detail")) {
         ttq.page();
       }
@@ -158,7 +158,7 @@ function trackEventToPixel(eventKey) {
     T_AR: {
       taboola: "make_purchase",
       tiktok: "Purchase",
-      outbrain: "Purchase"
+      outbrain: "Registration"
     },
     // 点击广告2
     T_AR_2: {
@@ -170,9 +170,9 @@ function trackEventToPixel(eventKey) {
 
   const source = getParam("hi_source"),
     eventName = eventNameObj[eventKey][source];
-  let pixelId = getParam("hi_pc")
-  if(source=== "tiktok"){
-    pixelId = 'D0FCRBRC77U0DNP5P7HG'
+  let pixelId = getParam("hi_pc");
+  if (source === "tiktok") {
+    pixelId = "D0FCRBRC77U0DNP5P7HG";
   }
   if (source && pixelId && eventName) {
     if (source === "taboola") {
