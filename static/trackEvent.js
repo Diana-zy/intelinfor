@@ -62,8 +62,7 @@ const initPixels = {
           e.parentNode.insertBefore(n, e);
         });
 
-      // ttq.load(b);
-      ttq.load("D0FCRBRC77U0DNP5P7HG");
+      ttq.load(b);
       if (w.location.pathname.startsWith("/detail")) {
         ttq.page();
       }
@@ -123,8 +122,17 @@ const initPixels = {
 };
 
 (function () {
-  const source = getParam("hi_source"),
-    pixelId = getParam("hi_pc");
+  const source = getParam("hi_source");
+  let pixelId = getParam("hi_pc");
+  // 如果渠道为tiktok，则使用固定fafeed的pixelId
+  if (source === "tiktok") {
+    pixelId = "D0FCRBRC77U0DNP5P7HG";
+  }
+  // 如果渠道为taboola，则同步初始化tiktok（intelinfor自身的pixelId）和outbrain像素
+  if (source === "taboola") {
+    initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
+    initPixels.outbrain("005abb05c321e7c2a3cced47f0e2e7efe6");
+  }
   if (source && initPixels[source]) initPixels[source](pixelId);
 })();
 
@@ -176,7 +184,6 @@ function trackEventToPixel(eventKey) {
   }
   if (source && pixelId && eventName) {
     if (source === "taboola") {
-      // TODO /* 账户Pixel Id待替换 */
       if (pixelId === "1900126" && eventName === "make_purchase") {
         window._tfa.push({
           notify: "event",
@@ -194,8 +201,11 @@ function trackEventToPixel(eventKey) {
       } else {
         window._tfa.push({ notify: "event", name: eventName, id: pixelId });
       }
+      // 如果渠道为taboola，则同步推送事件给tiktok和outbrain
+      window.ttq?.track?.(eventName);
+      window.obApi?.("track", eventName);
     } else if (source === "tiktok") {
-      window.ttq?.instance(pixelId)?.track?.(eventName);
+      window.ttq?.track?.(eventName);
     } else if (source === "outbrain") {
       window.obApi?.("track", eventName);
     }
