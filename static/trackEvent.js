@@ -130,7 +130,7 @@ const initPixels = {
   }
   // 如果渠道为taboola，则同步初始化tiktok（intelinfor自身的pixelId）和outbrain像素
   if (source === "taboola") {
-    initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
+    // initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
     initPixels.outbrain("005abb05c321e7c2a3cced47f0e2e7efe6");
   }
   if (source && initPixels[source]) initPixels[source](pixelId);
@@ -202,7 +202,7 @@ function trackEventToPixel(eventKey) {
         window._tfa.push({ notify: "event", name: eventName, id: pixelId });
       }
       // 如果渠道为taboola，则同步推送事件给tiktok和outbrain
-      window.ttq?.track?.(eventNameObj[eventKey].tiktok);
+      // window.ttq?.track?.(eventNameObj[eventKey].tiktok);
       window.obApi?.("track", eventNameObj[eventKey].outbrain);
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
