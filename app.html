@@ -10,8 +10,10 @@
       const searchParams = new URLSearchParams(window.location.search);
       const ttclid = searchParams.get("ttclid"); //TikTok
       const tblci = searchParams.get("tblci"); //Taboola
+      const dicbo = searchParams.get("dicbo"); //Outbrain
       ttclid && window.setCookie("hi_ttclid", ttclid);
       tblci && window.setCookie("hi_tblci", tblci);
+      dicbo && window.setCookie("hi_dicbo", dicbo);
 
       const script = document.createElement("script");
       script.src = "https://wc.bunchthings.com/youknowwho.js?" + Date.now();
