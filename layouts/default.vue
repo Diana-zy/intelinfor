@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import Storage from "@/utils/storage";
 export default {
   data() {
     return {
@@ -13,6 +14,8 @@ export default {
   },
   mounted() {
     this.handleListenerScroll();
+    // 判断用户是否使用vpn
+    this.getUserIsVpn();
   },
   methods: {
     handleListenerScroll() {
@@ -53,6 +56,38 @@ export default {
         return "81_100%";
       } else {
         return `${Math.floor(val / 20) * 2}1_${Math.floor(val / 20) * 2 + 2}0%`;
+      }
+    },
+    async getUserIsVpn() {
+      const badNetworkArr = [
+        "is_datacenter", // 托管提供商
+        "is_tor", // TOR 出口节点
+        "is_proxy", // 代理服务器出口节点
+        "is_vpn", // VPN 出口节点
+        "is_abuser", // 链接到已参与滥用行为的 IP 地址
+        "is_crawler" // 爬虫
+      ];
+
+      const isQueriedVpn = Storage.getCookie("hi_vpn_queried");
+      if (isQueriedVpn !== null) return;
+      try {
+        const res = await fetch("https://api.ipapi.is/?key=f9f124f6b4cbd81c24cb");
+        const data = await res.json();
+        if (data?.ip) {
+          const trackKeyArr = [];
+          badNetworkArr.forEach((item) => {
+            if (data[item] === true) {
+              trackKeyArr.push(item);
+            }
+          });
+          Storage.setCookie("hi_vpn_queried", "ok");
+          window.dataLayer.push({
+            event: "Page_View_First_Network",
+            bad_network: trackKeyArr.join("|")
+          });
+        }
+      } catch (e) {
+        console.log("error");
       }
     }
   }
