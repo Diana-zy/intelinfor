@@ -71,7 +71,9 @@ export default {
       const isQueriedVpn = Storage.getCookie("hi_vpn_queried");
       if (isQueriedVpn !== null) return;
       try {
-        const res = await fetch("https://api.ipapi.is/?key=f9f124f6b4cbd81c24cb");
+        // f9f124f6b4cbd81c24cb  samlili0715@gmail.com
+        // 98d9be0d2e66cc3db2db  pengzhengang@himobi.cc
+        const res = await fetch("https://api.ipapi.is/?key=98d9be0d2e66cc3db2db");
         const data = await res.json();
         if (data?.ip) {
           const trackKeyArr = [];
@@ -83,7 +85,8 @@ export default {
           Storage.setCookie("hi_vpn_queried", "ok");
           window.dataLayer.push({
             event: "Page_View_First_Network",
-            bad_network: trackKeyArr.join("|")
+            bad_network: trackKeyArr.join("|") || "unknown",
+            hi_ip: data.ip
           });
         }
       } catch (e) {
