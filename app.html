@@ -7,6 +7,24 @@
     <script src="/trackEvent.js"></script>
     <script src="/linkMarking.js"></script>
     <script>
+      async function getUserNetWork() {
+        try {
+          // f9f124f6b4cbd81c24cb  samlili0715@gmail.com
+          // 98d9be0d2e66cc3db2db  pengzhengang@himobi.cc
+          const res = await fetch("https://api.ipapi.is/?key=f9f124f6b4cbd81c24cb");
+          const data = await res.json();
+          if (data?.ip) {
+            window.dataLayer.push({
+              event: "Page_View_IP_Api",
+              hi_ip: data.ip,
+              hi_country: data.location.country_code
+            });
+          }
+        } catch (e) {
+          console.log("error");
+        }
+      }
+
       const searchParams = new URLSearchParams(window.location.search);
       const ttclid = searchParams.get("ttclid"); //TikTok
       const tblci = searchParams.get("tblci"); //Taboola
@@ -25,12 +43,10 @@
           hi_ip: window.youknowwho_ip || "unknown",
           hi_country: window.youknowwho_ip_country || "unknown"
         });
-
-        const pathname = window.location.pathname;
-        if (pathname.startsWith("/detail")) {
-          window.pushEventParamsToGtm("D_PV");
-        } else if (pathname.startsWith("/search/")) {
-          window.pushEventParamsToGtm("S_PV");
+        const channel = searchParams.get("channel");
+        // 搜索结果页获取用户的ip
+        if (channel && channel == 4060649373 && window.location.pathname.startsWith("/search")) {
+          getUserNetWork();
         }
       };
     </script>
