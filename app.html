@@ -41,7 +41,8 @@
         window.dataLayer.push({
           event: "Page_View_Ip",
           hi_ip: window.youknowwho_ip || "unknown",
-          hi_country: window.youknowwho_ip_country || "unknown"
+          hi_country: window.youknowwho_ip_country || "unknown",
+          hi_language: navigator.languages.join("|") || "unknown"
         });
 
         /* ipapi获取用户ip start */
