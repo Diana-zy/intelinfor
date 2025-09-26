@@ -217,8 +217,11 @@ function trackEventToPixel(eventKey) {
 // 封装构建URL的公用函数
 function getResultsPageUrl(queryParams) {
   let url = `${window.location.origin}/search/?afs`;
-  for (const [key, value] of Object.entries(queryParams)) {
+  for (let [key, value] of Object.entries(queryParams)) {
     if (value) {
+      if (value) {
+        value = value.replace(/[{}]/g, "");
+      }
       url += `&${key}=${value}`;
     }
   }
