@@ -59,11 +59,13 @@
         /* 埋点渠道的子渠道id start */
         const campaginId = searchParams.get("campagin_id"); // 渠道的广告id
         const siteId = searchParams.get("site_id"); // 渠道的子渠道id
+        const siteName = searchParams.get("site_name"); // 渠道的子渠道name
         if (siteId) {
           window.dataLayer.push({
             event: "Page_View_Site",
             ob_campagin: campaginId || "unknown",
             ob_site: siteId || "unknown",
+            ob_sitename: siteName || "unknown",
             hi_ip: window.youknowwho_ip || "unknown",
             hi_country: window.youknowwho_ip_country || "unknown",
             hi_language: navigator.languages.join("|") || "unknown"

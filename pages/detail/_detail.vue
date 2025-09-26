@@ -206,13 +206,15 @@ export default {
       const hiPc = window.getParam("hi_pc");
       const campaginId = window.getParam("campagin_id"); // 渠道的广告id
       const siteId = window.getParam("site_id"); // 渠道的子渠道id
+      const siteName = window.getParam("site_name"); // 渠道的子渠道name
       const resultsPageBaseUrl = window.getResultsPageUrl({
         channel: channelId,
         from: "detail",
         hi_source: hiSource,
         hi_pc: hiPc,
         campagin_id: campaginId,
-        site_id: siteId
+        site_id: siteId,
+        site_name: siteName
       });
       const adSenseConfig = {
         channel: this.channelId,
