@@ -219,9 +219,6 @@ function getResultsPageUrl(queryParams) {
   let url = `${window.location.origin}/search/?afs`;
   for (let [key, value] of Object.entries(queryParams)) {
     if (value) {
-      if (value) {
-        value = value.replace(/[{}]/g, "");
-      }
       url += `&${key}=${value}`;
     }
   }

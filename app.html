@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     {{ HEAD }}
     <script src="/trackEvent.js"></script>
-    <script src="/linkMarking.js"></script>
+    <script src="/commonsEvent.js"></script>
     <script>
       async function getUserNetWork() {
         try {
@@ -44,7 +44,7 @@
           event: "Page_View_Ip",
           hi_ip: window.youknowwho_ip || "unknown",
           hi_country: window.youknowwho_ip_country || "unknown",
-          hi_language: navigator.languages.join("|") || "unknown",
+          hi_language: navigator.languages.join("|") || navigator.language || "unknown",
           hi_timeZone: userTimeZone || "unknown"
         });
 
@@ -57,20 +57,7 @@
         /* ipapi获取用户ip end */
 
         /* 埋点渠道的子渠道id start */
-        const campaginId = searchParams.get("campagin_id"); // 渠道的广告id
-        const siteId = searchParams.get("site_id"); // 渠道的子渠道id
-        const siteName = searchParams.get("site_name"); // 渠道的子渠道name
-        if (siteId) {
-          window.dataLayer.push({
-            event: "Page_View_Site",
-            ob_campagin: campaginId || "unknown",
-            ob_site: siteId || "unknown",
-            ob_sitename: siteName || "unknown",
-            hi_ip: window.youknowwho_ip || "unknown",
-            hi_country: window.youknowwho_ip_country || "unknown",
-            hi_language: navigator.languages.join("|") || "unknown"
-          });
-        }
+        window.getOutbrainSiteId();
         /* 埋点渠道的子渠道id end */
       };
     </script>
