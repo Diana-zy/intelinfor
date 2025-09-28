@@ -118,6 +118,26 @@ const initPixels = {
     if (window.location.pathname.startsWith("/detail")) {
       window.obApi("track", "PAGE_VIEW");
     }
+  },
+  facebook: function (pixelId) {
+    !(function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = "2.0";
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", pixelId);
+    window.fbq("track", "PageView");
   }
 };
 
@@ -133,10 +153,11 @@ const initPixels = {
     initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
     initPixels.outbrain("005abb05c321e7c2a3cced47f0e2e7efe6");
   }
-  // 如果渠道为outbrain，则同步初始化tiktok（intelinfor自身的pixelId）和taboola新账户（BVSIor - Smsinfor - RSOC - SC）像素
+  // 如果渠道为outbrain，则同步初始化tiktok（intelinfor自身的pixelId）和taboola新账户（BVSIor - Smsinfor - RSOC - SC）像素和facebook
   if (source === "outbrain") {
     initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
     initPixels.taboola("1920852");
+    initPixels.facebook("1875563969657075");
   }
   if (source && initPixels[source]) initPixels[source](pixelId);
 })();
@@ -147,31 +168,36 @@ function trackEventToPixel(eventKey) {
     D_C_AC: {
       taboola: "lead",
       tiktok: "Lead",
-      outbrain: "Lead"
+      outbrain: "Lead",
+      facebook: "Lead"
     },
     // 点击词条
     T_AC_MSG: {
       taboola: "add_to_wishlist",
       tiktok: "AddToWishlist",
-      outbrain: "Add to cart"
+      outbrain: "Add to cart",
+      facebook: "AddToWishlist"
     },
     // 请求广告
     Q_AR: {
       taboola: "view_content",
       tiktok: "ViewContent",
-      outbrain: "Content view"
+      outbrain: "Content view",
+      facebook: "ViewContent"
     },
     // 触发广告
     C_AR: {
       taboola: "start_checkout",
       tiktok: "Download",
-      outbrain: "Download"
+      outbrain: "Download",
+      facebook: "InitiateCheckout"
     },
     // 点击广告
     T_AR: {
       taboola: "make_purchase",
       tiktok: "Purchase",
-      outbrain: "Registration"
+      outbrain: "Registration",
+      facebook: "Purchase"
     }
   };
 
@@ -210,6 +236,9 @@ function trackEventToPixel(eventKey) {
       // 如果渠道为outbrain，则同步推送事件给tiktok和taboola
       window.ttq?.track?.(eventNameObj[eventKey].tiktok);
       window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1920852 });
+      window.fbq?.("track", eventNameObj[eventKey].facebook);
+    } else if (source === "facebook") {
+      window.fbq?.("track", eventName);
     }
   }
 }
