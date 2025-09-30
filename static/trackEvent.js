@@ -69,6 +69,7 @@ const initPixels = {
     })(window, document, "ttq");
   },
   taboola: function (pixelId) {
+    console.log("init taboola pixel:", pixelId);
     window._tfa = window._tfa || [];
     window._tfa.push({
       notify: "event",
@@ -86,7 +87,7 @@ const initPixels = {
       document.createElement("script"),
       document.getElementsByTagName("script")[0],
       `//cdn.taboola.com/libtrc/unip/${pixelId}/tfa.js`,
-      "tb_tfa_script"
+      `tb_tfa_script_${pixelId}`
     );
   },
   outbrain: function (pixelId) {
@@ -157,6 +158,7 @@ const initPixels = {
   if (source === "outbrain") {
     initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
     initPixels.taboola("1920852");
+    initPixels.taboola("1934078");
     initPixels.facebook("1875563969657075");
   }
   if (source && initPixels[source]) initPixels[source](pixelId);
@@ -236,6 +238,7 @@ function trackEventToPixel(eventKey) {
       // 如果渠道为outbrain，则同步推送事件给tiktok和taboola
       window.ttq?.track?.(eventNameObj[eventKey].tiktok);
       window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1920852 });
+      window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1934078 });
       window.fbq?.("track", eventNameObj[eventKey].facebook);
     } else if (source === "facebook") {
       window.fbq?.("track", eventName);
