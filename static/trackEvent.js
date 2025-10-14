@@ -143,6 +143,9 @@ const initPixels = {
 };
 
 (function () {
+  const channelId = getParam("channel");
+  const channelFilterArr = ["5373731044", "3936510380"];
+
   const source = getParam("hi_source");
   let pixelId = getParam("hi_pc");
   // 如果渠道为tiktok，则使用固定fafeed的pixelId
@@ -160,6 +163,11 @@ const initPixels = {
     initPixels.taboola("1920852");
     initPixels.taboola("1934078");
     initPixels.facebook("1875563969657075");
+    // 如果渠道为outbrain且channelId符合要求，则同步初始化outbrain账户2的像素
+    if (channelId && channelFilterArr.includes(channelId)) {
+      pixelId !== "00e782a5a22314cf4f685590099163011b" &&
+        initPixels.outbrain("00e782a5a22314cf4f685590099163011b");
+    }
   }
   if (source && initPixels[source]) initPixels[source](pixelId);
 })();
