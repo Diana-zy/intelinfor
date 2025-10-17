@@ -267,7 +267,8 @@
               pushEventToGTM('T_AR',{
                 hi_country: window.youknowwho_ip_country || "unknown",
                 hi_ip: window.youknowwho_ip || "unknown",
-                hi_ttclid: ttclid || window.getCookie("hi_ttclid") || "unknown"
+                hi_ttclid: ttclid || window.getCookie("hi_ttclid") || "unknown",
+                hi_timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown",
               })
               handleDataMonitor()
             } else {
