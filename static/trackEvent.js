@@ -162,7 +162,7 @@ const initPixels = {
     initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
     initPixels.taboola("1920852");
     initPixels.taboola("1934078");
-    initPixels.facebook("1875563969657075");
+    // initPixels.facebook("1875563969657075");
     // 如果渠道为outbrain且channelId符合要求，则同步初始化outbrain账户2的像素
     if (channelId && channelFilterArr.includes(channelId)) {
       pixelId !== "00e782a5a22314cf4f685590099163011b" &&
@@ -247,7 +247,7 @@ function trackEventToPixel(eventKey) {
       window.ttq?.track?.(eventNameObj[eventKey].tiktok);
       window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1920852 });
       window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1934078 });
-      window.fbq?.("track", eventNameObj[eventKey].facebook);
+      // window.fbq?.("track", eventNameObj[eventKey].facebook);
     } else if (source === "facebook") {
       window.fbq?.("track", eventName);
     }
