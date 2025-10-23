@@ -206,7 +206,7 @@ export default {
             "Manage money easy: digital bank accounts. Tired of in-branch waits? Go digital!"
         };
         const channelId = window.getParam("channel");
-        if (editHeadlineChannels[Number(channelId)]) {
+        if (editHeadlineChannels[channelId]) {
           headline = editHeadlineChannels[channelId];
           window.dataLayer.push({
             event: "Headline_Replace",
