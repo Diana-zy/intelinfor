@@ -190,8 +190,29 @@ export default {
       terms = terms.replace(/[，]/g, ",");
       // 获取Url携带的headline参数
       let headline = searchParams.has("headline") ? searchParams.get("headline") : "";
-      if (headline === "{title}" || headline === "{{ad_title}}") {
+      const errorHeadlines = [
+        "{title}",
+        "{{ad_title}}",
+        "%7B%7Bad_title%7D%7D",
+        "%257B%257Bad_title%257D%257D"
+      ];
+      if (errorHeadlines.includes(headline)) {
         headline = "";
+        // 单独对以下两个渠道号，有问题的headline进行替换
+        const editHeadlineChannels = {
+          5373731044:
+            "Don’t Let Payment Issues Disrupt Your Service – Update Now! Your Card Payment Has Failed?",
+          6554482555:
+            "Manage money easy: digital bank accounts. Tired of in-branch waits? Go digital!"
+        };
+        const channelId = window.getParam("channel");
+        if (editHeadlineChannels[Number(channelId)]) {
+          headline = editHeadlineChannels[channelId];
+          window.dataLayer.push({
+            event: "Headline_Replace",
+            headline
+          });
+        }
       }
 
       const paramKeys = [];
