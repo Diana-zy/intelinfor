@@ -241,6 +241,9 @@ function trackEventToPixel(eventKey) {
       window.obApi?.("track", eventNameObj[eventKey].outbrain);
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
+      if(eventName === 'Purchase'){
+        window.ttq?.track?.('InitiateCheckout');
+      }
     } else if (source === "outbrain") {
       window.obApi?.("track", eventName);
       // 如果渠道为outbrain，则同步推送事件给tiktok和taboola
