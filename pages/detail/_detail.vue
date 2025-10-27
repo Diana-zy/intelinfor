@@ -209,7 +209,11 @@ export default {
           2740480180:
             "Pro movers do packing, transport. Choose right, relocate worry-free. Moving home/business? Trust pro movers.",
           8715124928:
-            "Use corporate gas cards: save money. Corporate gas cards: cut costs, boost efficiency, plus employee perks."
+            "Use corporate gas cards: save money. Corporate gas cards: cut costs, boost efficiency, plus employee perks.",
+          1028206592:
+            "For lung cancer—understand it, catch signs early, access support. Fight lung cancer better",
+          1427398519:
+            "Bundles bring convenience, cost cuts, and hassle-free single billing. Need essential internet + phone for home or small business?"
         };
         const channelId = window.getParam("channel");
         if (editHeadlineChannels[channelId]) {
