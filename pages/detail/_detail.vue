@@ -103,18 +103,7 @@ export default {
           property: "og:type",
           content: "article"
         }
-      ],
-      script: [
-        {
-          // 使用 innerHTML 插入 JavaScript 代码
-          innerHTML: `
-            window._megoaa = window._megoaa || [];
-            window._megoaa.push({ type: 'event', name: 'need-clickbutton', acid: '29941', pxd: '1163021562772978'});
-          `,
-          type: "text/javascript"
-        }
-      ],
-      __dangerouslyDisableSanitizers: ["script"] // 禁用清理，允许插入内联 JavaScript
+      ]
     };
   },
   computed: {
