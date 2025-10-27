@@ -203,7 +203,13 @@ export default {
           5373731044:
             "Don’t Let Payment Issues Disrupt Your Service – Update Now! Your Card Payment Has Failed?",
           6554482555:
-            "Manage money easy: digital bank accounts. Tired of in-branch waits? Go digital!"
+            "Manage money easy: digital bank accounts. Tired of in-branch waits? Go digital!",
+          1015215411:
+            "Bright teeth, no enamel harm! Want a bright smile safely? Try enamel whitening toothpaste",
+          2740480180:
+            "Pro movers do packing, transport. Choose right, relocate worry-free. Moving home/business? Trust pro movers.",
+          8715124928:
+            "Use corporate gas cards: save money. Corporate gas cards: cut costs, boost efficiency, plus employee perks."
         };
         const channelId = window.getParam("channel");
         if (editHeadlineChannels[channelId]) {
