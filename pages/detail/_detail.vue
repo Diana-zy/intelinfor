@@ -194,13 +194,13 @@ export default {
           6554482555:
             "Manage money easy: digital bank accounts. Tired of in-branch waits? Go digital!",
           1015215411:
-            "Bright teeth, no enamel harm! Want a bright smile safely? Try enamel whitening toothpaste",
+            "Bright teeth, no enamel harm! Want a bright smile safely? Try enamel whitening toothpaste. BEFORE AFTER SMILE BRIGHTER WITH US Advanced Dental Technology. BRIGHT SMILES, HEALTHY TEETH Professional Dental Care for You. Advanced Dental CareFluoride Protection & Fresh Mint",
           2740480180:
             "Pro movers do packing, transport. Choose right, relocate worry-free. Moving home/business? Trust pro movers.",
           8715124928:
             "Use corporate gas cards: save money. Corporate gas cards: cut costs, boost efficiency, plus employee perks.",
           1028206592:
-            "For lung cancer—understand it, catch signs early, access support. Fight lung cancer better",
+            "For lung cancer—understand it, catch signs early, access support. Fight lung cancer better. Normal Tissue Tumor Growth. LUNG CANCER RESEARCH TRIAL INNOVATING TREATMENTS THROUGH SCIENCE Learn more. HEALTHY LUNG VSCANCER LUNG HEALTHY:Normal tissue, Clear airways No abnormalities CANCER:Malignant tumors, Damagedtissue, lrregular growth",
           1427398519:
             "Bundles bring convenience, cost cuts, and hassle-free single billing. Need essential internet + phone for home or small business?"
         };
