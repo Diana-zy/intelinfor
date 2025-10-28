@@ -167,6 +167,8 @@ const initPixels = {
     if (channelId && channelFilterArr.includes(channelId)) {
       pixelId !== "00e782a5a22314cf4f685590099163011b" &&
         initPixels.outbrain("00e782a5a22314cf4f685590099163011b");
+      pixelId !== "00519bec6e0d4630b1d1fd83cbf79ffd3a" &&
+        initPixels.outbrain("00519bec6e0d4630b1d1fd83cbf79ffd3a");
     }
   }
   if (source && initPixels[source]) initPixels[source](pixelId);
@@ -241,8 +243,8 @@ function trackEventToPixel(eventKey) {
       window.obApi?.("track", eventNameObj[eventKey].outbrain);
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
-      if(eventName === 'Purchase'){
-        window.ttq?.track?.('InitiateCheckout');
+      if (eventName === "Purchase") {
+        window.ttq?.track?.("InitiateCheckout");
       }
     } else if (source === "outbrain") {
       window.obApi?.("track", eventName);
