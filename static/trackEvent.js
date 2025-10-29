@@ -153,10 +153,10 @@ const initPixels = {
     pixelId = "D0FCRBRC77U0DNP5P7HG";
   }
   // 如果渠道为taboola，则同步初始化tiktok（intelinfor自身的pixelId）和outbrain像素
-  if (source === "taboola") {
-    initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
-    initPixels.outbrain("005abb05c321e7c2a3cced47f0e2e7efe6");
-  }
+  // if (source === "taboola") {
+  //   initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
+  //   initPixels.outbrain("005abb05c321e7c2a3cced47f0e2e7efe6");
+  // }
   // 如果渠道为outbrain，则同步初始化tiktok（intelinfor自身的pixelId）和taboola新账户（BVSIor - Smsinfor - RSOC - SC）像素和facebook
   if (source === "outbrain") {
     initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
