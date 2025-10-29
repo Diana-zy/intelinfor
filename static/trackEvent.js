@@ -169,6 +169,8 @@ const initPixels = {
         initPixels.outbrain("00e782a5a22314cf4f685590099163011b");
       pixelId !== "00519bec6e0d4630b1d1fd83cbf79ffd3a" &&
         initPixels.outbrain("00519bec6e0d4630b1d1fd83cbf79ffd3a");
+      pixelId !== "008ed880efbdc725aa027160a7991f406e" &&
+        initPixels.outbrain("008ed880efbdc725aa027160a7991f406e");
     }
   }
   if (source && initPixels[source]) initPixels[source](pixelId);
@@ -238,9 +240,6 @@ function trackEventToPixel(eventKey) {
       } else {
         window._tfa.push({ notify: "event", name: eventName, id: pixelId });
       }
-      // 如果渠道为taboola，则同步推送事件给tiktok和outbrain
-      window.ttq?.track?.(eventNameObj[eventKey].tiktok);
-      window.obApi?.("track", eventNameObj[eventKey].outbrain);
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
       if (eventName === "Purchase") {
