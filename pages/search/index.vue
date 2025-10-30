@@ -23,6 +23,15 @@ export default {
     };
   },
   mounted() {
+    if (
+      !window.getCookie("first") &&
+      window.getCookie("mounted") &&
+      window.getCookie("query_ad") &&
+      window.getCookie("click_ad")
+    ) {
+      window.setCookie("first", 999);
+    }
+
     if (window.getDetailIsClickAc()) {
       window.dataLayer.push({
         event: "S_PL"
@@ -38,11 +47,32 @@ export default {
   },
   methods: {
     addAdSense() {
+      const filterArr = [
+        "5818584954",
+        "8221387014",
+        "3839288875",
+        "2526207205",
+        "1213125530",
+        "3397447509"
+      ];
       setTimeout(() => {
-        window.trackEventToPixel("Q_AR");
-
-        window.pushEventParamsToGtm("Q_AR");
-        this.addAdSenseScript();
+        if (filterArr.includes(this.channelId)) {
+          const buffer = window.getCookie("first");
+          if (buffer && buffer !== "ok") {
+            window.trackEventToPixel("Q_AR");
+            window.pushEventParamsToGtm("Q_AR");
+            this.addAdSenseScript();
+            if (Number(buffer) > 1) {
+              window.setCookie("first", Number(buffer) - 1);
+            } else {
+              window.setCookie("first", "ok");
+            }
+          }
+        } else {
+          window.trackEventToPixel("Q_AR");
+          window.pushEventParamsToGtm("Q_AR");
+          this.addAdSenseScript();
+        }
       }, 0);
     },
     async searchNews() {
