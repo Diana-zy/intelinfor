@@ -184,7 +184,8 @@ export default {
         "{title}",
         "{{ad_title}}",
         "%7B%7Bad_title%7D%7D",
-        "%257B%257Bad_title%257D%257D"
+        "%257B%257Bad_title%257D%257D",
+        "%257b%257bad_title%257d%257d"
       ];
       if (errorHeadlines.includes(headline)) {
         headline = "";
