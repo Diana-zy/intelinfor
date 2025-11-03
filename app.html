@@ -83,6 +83,31 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNSBNMQFHT"></script>
     <script>
+      //获取用户属性
+      function getUserProperty() {
+        const hi_user_source = getValueByURLOrCookie("hi_source");
+        const hi_user_sub_site = getHostname();
+        const hi_user_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown";
+        const {
+          hi_source_clid: hi_user_source_clid,
+          hi_source_aid: hi_user_source_aid,
+          hi_source_site: hi_user_source_site,
+          hi_source_site_name: hi_user_source_site_name,
+          hi_section_id: hi_user_section,
+          hi_section_name: hi_user_section_name
+        } = getInfoBySource(hi_user_source);
+        return {
+          hi_user_source,
+          hi_user_sub_site,
+          hi_user_timezone,
+          hi_user_source_clid,
+          hi_user_source_aid,
+          hi_user_source_site,
+          hi_user_source_site_name,
+          hi_user_section,
+          hi_user_section_name
+        };
+      }
       window.dataLayer = window.dataLayer || [];
       function legacyUUID() {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -96,9 +121,13 @@
         uuid = legacyUUID().replace(/-/g, "");
         window.setCookie("hi_user_id", uuid);
       }
-      gtag("set", "user_properties", {
+      const userProperties = {
+        ...getUserProperty(),
         hi_user_id: uuid,
         hi_channel_user: getValueByURLOrCookie("channel")
+      };
+      gtag("set", "user_properties", {
+        ...userProperties
       });
       function gtag() {
         dataLayer.push(arguments);
@@ -112,13 +141,11 @@
         const { fetch: originalFetch } = window;
         window.fetch = async (...args) => {
           let [resource, config] = args;
-          // console.log(args,'args');
           if (resource.includes("https://www.google-analytics.com/g/collect")) {
-            if (!resource.includes("up.hi_user_id=" + uuid)) {
-              resource = resource + "&up.hi_user_id=" + uuid;
-            }
-            if (!resource.includes("up.hi_channel_user=" + getValueByURLOrCookie("channel"))) {
-              resource = resource + "&up.hi_channel_user=" + getValueByURLOrCookie("channel");
+            for (let key in userProperties) {
+              if (!resource.includes(`up.${key}=${userProperties[key]}`)) {
+                resource = resource + `up.${key}=${userProperties[key]}`;
+              }
             }
           }
           // 发送请求
