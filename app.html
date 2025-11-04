@@ -144,7 +144,7 @@
           if (resource.includes("https://www.google-analytics.com/g/collect")) {
             for (let key in userProperties) {
               if (!resource.includes(`up.${key}=${userProperties[key]}`)) {
-                resource = resource + `up.${key}=${userProperties[key]}`;
+                resource = resource + `&up.${key}=${userProperties[key]}`;
               }
             }
           }
