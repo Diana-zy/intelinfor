@@ -145,6 +145,7 @@ const initPixels = {
 (function () {
   const channelId = getParam("channel");
   const channelFilterArr = ["5373731044", "3936510380"];
+  const channelFilterTwoArr = ["8221387014", "3839288875", "1213125530"];
 
   const source = getParam("hi_source");
   let pixelId = getParam("hi_pc");
@@ -171,6 +172,10 @@ const initPixels = {
         initPixels.outbrain("00519bec6e0d4630b1d1fd83cbf79ffd3a");
       pixelId !== "008ed880efbdc725aa027160a7991f406e" &&
         initPixels.outbrain("008ed880efbdc725aa027160a7991f406e");
+    }
+    if (channelId && channelFilterTwoArr.includes(channelId)) {
+      pixelId !== "00b10b51afa95d4b99794d43fd1d59d365" && // Yinchuang 2 (Meetsocial)
+        initPixels.outbrain("00b10b51afa95d4b99794d43fd1d59d365");
     }
   }
   if (source && initPixels[source]) initPixels[source](pixelId);
@@ -253,7 +258,12 @@ function trackEventToPixel(eventKey) {
       window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1934078 });
       // window.fbq?.("track", eventNameObj[eventKey].facebook);
     } else if (source === "facebook") {
-      window.fbq?.("track", eventName);
+      eventName === "Purchase"
+        ? window.fbq?.("track", eventName, {
+            currency: "USD",
+            value: 1
+          })
+        : window.fbq?.("track", eventName);
     }
   }
 }
