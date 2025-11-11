@@ -151,7 +151,7 @@ export default {
     }
   },
   mounted: function () {
-    window.setCookie("mounted", 1);
+    window.handleRequestAdByChannel("mounted", 1);
     // 获取 URL 查询参数
     const searchParams = new URLSearchParams(window.location.search);
     // AdSense 配置参数
@@ -168,9 +168,12 @@ export default {
       }
     }
 
-    setTimeout(() => {
-      this.newInfo.no_entry !== 1 && this.addAdSenseScript();
-    }, 0);
+    const buffer = window.getCookie("pathInfo");
+    if (!buffer || Number(JSON.parse(buffer)[window.location.pathname]) < 3) {
+      setTimeout(() => {
+        this.newInfo.no_entry !== 1 && this.addAdSenseScript();
+      }, 0);
+    }
   },
   methods: {
     addAdSenseScript() {
@@ -259,7 +262,7 @@ export default {
               window.trackEventToPixel("D_C_AC");
 
               window.pushEventParamsToGtm("C_AC");
-              window.setCookie("query_ad", 1);
+              window.handleRequestAdByChannel("query_ad", 1);
               try {
                 let numberOfKeys = 0;
                 let concatenatedKeys = "miss";

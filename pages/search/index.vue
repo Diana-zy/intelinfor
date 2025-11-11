@@ -23,14 +23,7 @@ export default {
     };
   },
   mounted() {
-    if (
-      !window.getCookie("first") &&
-      window.getCookie("mounted") &&
-      window.getCookie("query_ad") &&
-      window.getCookie("click_ad")
-    ) {
-      window.setCookie("first", 999);
-    }
+    window.handleRequestAdByChannel("first", 3, true);
 
     if (window.getDetailIsClickAc()) {
       window.dataLayer.push({
@@ -47,28 +40,8 @@ export default {
   },
   methods: {
     addAdSense() {
-      const filterArr = [
-        "5818584954",
-        "8221387014",
-        "3839288875",
-        "2526207205",
-        "1213125530",
-        "3397447509"
-      ];
       setTimeout(() => {
-        if (filterArr.includes(this.channelId)) {
-          const buffer = window.getCookie("first");
-          if (buffer && buffer !== "ok") {
-            window.trackEventToPixel("Q_AR");
-            window.pushEventParamsToGtm("Q_AR");
-            this.addAdSenseScript();
-            if (Number(buffer) > 1) {
-              window.setCookie("first", Number(buffer) - 1);
-            } else {
-              window.setCookie("first", "ok");
-            }
-          }
-        } else {
+        if (window.handleRequestAdByChannel("", "", true)) {
           window.trackEventToPixel("Q_AR");
           window.pushEventParamsToGtm("Q_AR");
           this.addAdSenseScript();
