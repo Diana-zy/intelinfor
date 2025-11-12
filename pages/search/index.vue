@@ -25,12 +25,6 @@ export default {
   mounted() {
     window.handleRequestAdByChannel("first", 3, true);
 
-    if (window.getDetailIsClickAc()) {
-      window.dataLayer.push({
-        event: "S_PL"
-      });
-    }
-
     const searchParams = new URLSearchParams(window.location.search);
     this.channelId = searchParams.has("channel") ? searchParams.get("channel") : "";
 
@@ -111,11 +105,6 @@ export default {
             window.trackEventToPixel("C_AR");
 
             window.pushEventParamsToGtm("C_AR");
-            if (window.getDetailIsClickAc()) {
-              window.dataLayer.push({
-                event: "C_AR_C"
-              });
-            }
             try {
               const element = document.getElementById("master-1");
               const height = parseFloat(element.style.height);

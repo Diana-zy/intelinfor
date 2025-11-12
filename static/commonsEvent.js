@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-unused-vars */
 function getMainDomain() {
   const url = window.location.hostname;
   const parts = url.split(".");
@@ -52,32 +54,16 @@ function removeSessionStorageItem(key) {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
-function getDetailIsClickAc() {
-  const cipherData = getCookie("hi_act_chain");
-  if (cipherData) {
-    const decoded = JSON.parse(atob(cipherData));
-    if (Date.now() - decoded.timestamp < 3600000) {
-      return true;
+// 封装构建URL的公用函数
+function getResultsPageUrl(queryParams) {
+  let url = `${window.location.origin}/search/?afs`;
+  for (let [key, value] of Object.entries(queryParams)) {
+    if (value) {
+      url += `&${key}=${value}`;
     }
   }
-  return false;
+  return url;
 }
-
-window.addEventListener("blur", () => {
-  const activeElement = document.activeElement;
-  const src = activeElement.getAttribute("src");
-  if (src && src.includes("afs/ads?")) {
-    if (!activeElement.getAttribute("title") && location.pathname.startsWith("/detail")) {
-      const cipherText = btoa(
-        JSON.stringify({
-          timestamp: Date.now()
-        })
-      );
-      setCookie("hi_act_chain", cipherText);
-    }
-  }
-});
 
 function getOutbrainSiteId() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -102,7 +88,7 @@ function getOutbrainSiteId() {
       hi_country: window.youknowwho_ip_country || "unknown",
       hi_language: navigator.languages.join("|") || navigator.language || "unknown"
     });
-  } 
+  }
   // 链接未携带site_id参数，则取sessionStorage中保存的site_id参数
   else if (source === "outbrain" && !siteId && getSessionStorageItem("outbrainSiteData")) {
     const outbrainSiteData = getSessionStorageItem("outbrainSiteData");
@@ -118,7 +104,6 @@ function getOutbrainSiteId() {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
 function pushEventParamsToGtm(eventName) {
   const searchParams = new URLSearchParams(window.location.search);
   const ttclid = searchParams.get("ttclid");

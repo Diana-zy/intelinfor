@@ -143,41 +143,8 @@ const initPixels = {
 };
 
 (function () {
-  const channelId = getParam("channel");
-  const channelFilterArr = ["5373731044", "3936510380"];
-  const channelFilterTwoArr = ["8221387014", "3839288875", "1213125530"];
-
   const source = getParam("hi_source");
   let pixelId = getParam("hi_pc");
-  // 如果渠道为tiktok，则使用固定fafeed的pixelId
-  if (source === "tiktok") {
-    pixelId = "D0FCRBRC77U0DNP5P7HG";
-  }
-  // 如果渠道为taboola，则同步初始化tiktok（intelinfor自身的pixelId）和outbrain像素
-  // if (source === "taboola") {
-  //   initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
-  //   initPixels.outbrain("005abb05c321e7c2a3cced47f0e2e7efe6");
-  // }
-  // 如果渠道为outbrain，则同步初始化tiktok（intelinfor自身的pixelId）和taboola新账户（BVSIor - Smsinfor - RSOC - SC）像素和facebook
-  if (source === "outbrain") {
-    initPixels.tiktok("D20SUKBC77U6OAPOSJUG");
-    initPixels.taboola("1920852");
-    initPixels.taboola("1934078");
-    // initPixels.facebook("1875563969657075");
-    // 如果渠道为outbrain且channelId符合要求，则同步初始化outbrain账户2的像素
-    if (channelId && channelFilterArr.includes(channelId)) {
-      pixelId !== "00e782a5a22314cf4f685590099163011b" &&
-        initPixels.outbrain("00e782a5a22314cf4f685590099163011b");
-      pixelId !== "00519bec6e0d4630b1d1fd83cbf79ffd3a" &&
-        initPixels.outbrain("00519bec6e0d4630b1d1fd83cbf79ffd3a");
-      pixelId !== "008ed880efbdc725aa027160a7991f406e" &&
-        initPixels.outbrain("008ed880efbdc725aa027160a7991f406e");
-    }
-    if (channelId && channelFilterTwoArr.includes(channelId)) {
-      pixelId !== "00b10b51afa95d4b99794d43fd1d59d365" && // Yinchuang 2 (Meetsocial)
-        initPixels.outbrain("00b10b51afa95d4b99794d43fd1d59d365");
-    }
-  }
   if (source && initPixels[source]) initPixels[source](pixelId);
 })();
 
@@ -223,28 +190,9 @@ function trackEventToPixel(eventKey) {
   const source = getParam("hi_source"),
     eventName = eventNameObj[eventKey][source];
   let pixelId = getParam("hi_pc");
-  if (source === "tiktok") {
-    pixelId = "D0FCRBRC77U0DNP5P7HG";
-  }
   if (source && pixelId && eventName) {
     if (source === "taboola") {
-      if (pixelId === "1900126" && eventName === "make_purchase") {
-        window._tfa.push({
-          notify: "event",
-          name: eventName,
-          id: pixelId,
-          revenue: window.purchaseValue || 0.3
-        });
-
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: "Push_Tb_Purchase_Revenue",
-          apiRevenue: window.purchaseValue || "unknown",
-          actualRevenue: window.purchaseValue || 0.3
-        });
-      } else {
-        window._tfa.push({ notify: "event", name: eventName, id: pixelId });
-      }
+      window._tfa.push({ notify: "event", name: eventName, id: pixelId });
     } else if (source === "tiktok") {
       window.ttq?.track?.(eventName);
       if (eventName === "Purchase") {
@@ -252,11 +200,6 @@ function trackEventToPixel(eventKey) {
       }
     } else if (source === "outbrain") {
       window.obApi?.("track", eventName);
-      // 如果渠道为outbrain，则同步推送事件给tiktok和taboola
-      window.ttq?.track?.(eventNameObj[eventKey].tiktok);
-      window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1920852 });
-      window._tfa.push({ notify: "event", name: eventNameObj[eventKey].taboola, id: 1934078 });
-      // window.fbq?.("track", eventNameObj[eventKey].facebook);
     } else if (source === "facebook") {
       eventName === "Purchase"
         ? window.fbq?.("track", eventName, {
@@ -266,15 +209,4 @@ function trackEventToPixel(eventKey) {
         : window.fbq?.("track", eventName);
     }
   }
-}
-
-// 封装构建URL的公用函数
-function getResultsPageUrl(queryParams) {
-  let url = `${window.location.origin}/search/?afs`;
-  for (let [key, value] of Object.entries(queryParams)) {
-    if (value) {
-      url += `&${key}=${value}`;
-    }
-  }
-  return url;
 }
