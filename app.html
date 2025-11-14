@@ -29,10 +29,6 @@
           hi_language: navigator.languages.join("|") || navigator.language || "unknown",
           hi_timeZone: userTimeZone || "unknown"
         });
-
-        /* 埋点渠道的子渠道id start */
-        window.getOutbrainSiteId();
-        /* 埋点渠道的子渠道id end */
       };
 
       // 前端拦截方案2 start
@@ -299,7 +295,6 @@
     <script>
       window.done = false;
       window.done1 = false;
-      window.done2 = false;
       // 监听失去焦点事件
       window.addEventListener("blur", () => {
         const activeElement = document.activeElement;

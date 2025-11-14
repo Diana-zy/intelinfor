@@ -65,45 +65,6 @@ function getResultsPageUrl(queryParams) {
   return url;
 }
 
-function getOutbrainSiteId() {
-  const searchParams = new URLSearchParams(window.location.search);
-  const source = searchParams.get("hi_source"); // 渠道
-  const campaignId = searchParams.get("campaign_id"); // 渠道的广告id
-  const siteId = searchParams.get("site_id"); // 渠道的子渠道id
-  const siteName = searchParams.get("site_name"); // 渠道的子渠道name
-  if (source === "outbrain" && siteId) {
-    const outbrainSiteData = {
-      ob_campaign: campaignId || "unknown",
-      ob_site: siteId || "unknown",
-      ob_sitename: siteName || "unknown"
-    };
-    setSessionStorageItem("outbrainSiteData", outbrainSiteData);
-
-    window.dataLayer.push({
-      event: "Page_View_Site",
-      ob_campaign: campaignId || "unknown",
-      ob_site: siteId || "unknown",
-      ob_sitename: siteName || "unknown",
-      hi_ip: window.youknowwho_ip || "unknown",
-      hi_country: window.youknowwho_ip_country || "unknown",
-      hi_language: navigator.languages.join("|") || navigator.language || "unknown"
-    });
-  }
-  // 链接未携带site_id参数，则取sessionStorage中保存的site_id参数
-  else if (source === "outbrain" && !siteId && getSessionStorageItem("outbrainSiteData")) {
-    const outbrainSiteData = getSessionStorageItem("outbrainSiteData");
-    window.dataLayer.push({
-      event: "Page_View_Site",
-      ob_campaign: outbrainSiteData.ob_campaign,
-      ob_site: outbrainSiteData.ob_site,
-      ob_sitename: outbrainSiteData.ob_sitename,
-      hi_ip: window.youknowwho_ip || "unknown",
-      hi_country: window.youknowwho_ip_country || "unknown",
-      hi_language: navigator.languages.join("|") || navigator.language || "unknown"
-    });
-  }
-}
-
 function pushEventParamsToGtm(eventName) {
   const searchParams = new URLSearchParams(window.location.search);
   const ttclid = searchParams.get("ttclid");
