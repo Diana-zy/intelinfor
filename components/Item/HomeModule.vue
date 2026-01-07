@@ -3,8 +3,8 @@
     <NuxtImg
       format="auto"
       fit="cover"
-      width="658"
-      height="440"
+      width="236"
+      height="156"
       :src="item.cover"
       :alt="item.name"
       loading="lazy"

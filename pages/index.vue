@@ -18,14 +18,20 @@
 
       <section v-swiper:mySwiper="swiperOption" class="swiper-box">
         <div class="swiper-wrapper">
-          <news-item-1 v-for="(item, i) in recNews.list" :key="i" class="swiper-slide" :item="item">
-          </news-item-1>
+          <item-home-swiper
+            v-for="(item, i) in recNews.list"
+            :key="i"
+            class="swiper-slide"
+            :item="item"
+          >
+          </item-home-swiper>
         </div>
       </section>
 
       <h2 class="title-h2">Trending</h2>
       <section class="news-box-2">
-        <news-item-2 v-for="(item, i) in trendingNews.list" :key="i" :item="item"> </news-item-2>
+        <item-home-module v-for="(item, i) in trendingNews.list" :key="i" :item="item">
+        </item-home-module>
       </section>
 
       <h2 class="title-h2">All Articles</h2>
@@ -39,7 +45,7 @@
           class="news-box-2"
         >
           <template #default="{ items }">
-            <news-item-2 v-for="(item, i) in items" :key="i" :item="item"> </news-item-2>
+            <item-home-module v-for="(item, i) in items" :key="i" :item="item"> </item-home-module>
           </template>
         </InfiniteScrollList>
       </section>

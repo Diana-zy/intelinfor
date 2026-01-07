@@ -14,11 +14,11 @@
   font-display: swap;
 }
 
-@font-face {
+/* @font-face {
   font-family: "se3";
   src: url("~assets/fonts/se3.woff2") format("woff2");
   font-display: swap;
-}
+} */
 
 /* @font-face {
   font-family: "seb";

@@ -46,7 +46,6 @@ export default {
   }
   .title {
     font-size: 18px;
-    font-family: "se3";
     line-height: 24px;
     @include ellipsis(3);
     margin: 6px 8px 4px;
