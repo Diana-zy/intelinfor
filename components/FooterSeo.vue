@@ -40,8 +40,15 @@
 
 <script>
 import { validateEmail } from "~/utils/utils";
+import Notification from './Notification.vue';
+import CustomLink from './CustomLink.vue';
+import logo from "@/assets/images/logo.png";
 
 export default {
+  components: {
+    Notification,
+    CustomLink
+  },
   props: {
     lang: {
       type: String,
@@ -58,7 +65,7 @@ export default {
   data() {
     return {
       input: "",
-      icon: require("@/assets/images/logo.png")
+      icon: logo
     };
   },
   computed: {

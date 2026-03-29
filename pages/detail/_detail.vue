@@ -82,10 +82,20 @@
 <script>
 import { shuffleArray } from "../../utils/utils";
 import Breadcrumb from "../../components/Breadcrumb";
+import Header from "../../components/Header";
+import NewsItem5 from "../../components/NewsItem5";
+import RightSideBox from "../../components/RightSideBox";
+import FooterSeo from "../../components/FooterSeo";
 import { processHtmlWithToc, generateNestedToc } from "../../utils/cheerio-toc.js";
 
 export default {
-  components: { Breadcrumb },
+  components: {
+    Breadcrumb,
+    Header,
+    NewsItem5,
+    RightSideBox,
+    FooterSeo
+  },
   async asyncData({ $axios, params, env }) {
     const path = params.detail;
     const lastDashIndex = path.lastIndexOf("-");

@@ -39,22 +39,18 @@ exports.processHtmlWithToc = (html, levels = [1, 2, 3]) => {
     });
   });
 
-  // 按页面中标题出现顺序排序
+  // 按页面中标题出现顺序排序（保持原始顺序）
   toc.sort((a, b) => {
-    // 先按层级，再按出现位置
-    if (a.level !== b.level) {
-      return a.level - b.level;
-    }
     return a.index - b.index;
   });
 
   // 移除 index 字段（无需传递到客户端）
   const cleanToc = toc.map(({ index, ...rest }) => rest);
 
-  // 返回带锚点的 HTML 和目录（旧版 cheerio 用 html() 而非 $.html()）
+  // 返回带锚点的 HTML 和目录
   return {
     toc: cleanToc,
-    htmlWithAnchor: $.html() // 旧版 cheerio 全局 html() 方法
+    htmlWithAnchor: $.html()
   };
 };
 

@@ -46,12 +46,29 @@
 
 <script>
 import { capitalizeFirstLetter } from "~/utils/utils";
+import Header from "~/components/Header";
+import Breadcrumb from "~/components/Breadcrumb";
+import InfiniteLoadList from "~/components/InfiniteLoadList";
+import NewsItem4 from "~/components/NewsItem4";
+import RightSideBox from "~/components/RightSideBox";
+import FooterSeo from "~/components/FooterSeo";
+import CommonPageLabel from "~/components/common/PageLabel";
 
 export default {
+  components: {
+    Header,
+    Breadcrumb,
+    InfiniteLoadList,
+    NewsItem4,
+    RightSideBox,
+    FooterSeo,
+    CommonPageLabel
+  },
   async asyncData({ $axios, params, env }) {
+    let id = "";
     const path = params.slug;
     const lastDashIndex = path.lastIndexOf("-");
-    const id = path.substring(lastDashIndex + 1, path.length);
+    id = path.substring(lastDashIndex + 1, path.length);
 
     try {
       const [recNewsResponse, trendingNewsResponse, categoryInfoResponse] = await Promise.all([

@@ -17,8 +17,13 @@
 </template>
 
 <script>
+import CustomLink from './CustomLink.vue';
+
 export default {
   name: "Breadcrumb",
+  components: {
+    CustomLink
+  },
   props: {
     info: {
       type: Object,
