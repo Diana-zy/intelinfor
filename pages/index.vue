@@ -98,6 +98,12 @@ export default {
       };
     } catch (error) {
       console.error("Error fetching data:", error);
+      // Return empty fallback data during static generation or API errors
+      return {
+        recNews: { list: [] },
+        trendingNews: { list: [] },
+        allNews: { list: [] }
+      };
     }
   },
   data() {

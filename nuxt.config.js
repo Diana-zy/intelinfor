@@ -14,15 +14,21 @@ export default {
     concurrency: 1,
     interval: 2000,
     async routes() {
-      const pathData = await fetch(
-        `${process.env.PROD_API_URL}/api/article/get_all_path_v2?site_id=${process.env.SITE_ID}`
-      );
-      const path = await pathData.json();
-      const categoryPaths = path.data.seo_category.map((item) => `/category/${item}/`);
-      // URL层级优化：保持 /detail/前缀，后端返回的path_v2已包含分类slug
-      const detailPaths = path.data.detail.map((item) => `/${item}/`);
-      const urls = [...categoryPaths, ...detailPaths];
-      return urls;
+      try {
+        const pathData = await fetch(
+          `${process.env.PROD_API_URL}/api/article/get_all_path_v2?site_id=${process.env.SITE_ID}`,
+          { timeout: 5000 }
+        );
+        const path = await pathData.json();
+        const categoryPaths = path.data.seo_category.map((item) => `/category/${item}/`);
+        const detailPaths = path.data.detail.map((item) => `/${item}/`);
+        const urls = [...categoryPaths, ...detailPaths];
+        return urls;
+      } catch (error) {
+        // Fallback: Skip dynamic routes during static generation if API unavailable
+        console.warn("API fetch failed, using root-only routes for testing:", error.message);
+        return [];
+      }
     }
   },
   axios: {
