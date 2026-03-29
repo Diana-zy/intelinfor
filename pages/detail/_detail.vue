@@ -1,226 +1,418 @@
 <template>
   <div class="page">
     <Header />
-    <article class="article">
-      <h1 class="article-title" style="">{{ newInfo.name }}</h1>
-      <div class="news-detail first_paragraph">{{ newInfo.first_paragraph }}</div>
-      <div id="relatedsearches1"> </div>
-      <NuxtImg
-        format="auto"
-        fit="cover"
-        width="600"
-        :src="newInfo.cover"
-        :alt="newInfo.name"
-        class="article-img"
-        preload
-      />
-      <!-- eslint-disable vue/no-v-html -->
-      <!-- <div class="news-detail" v-html="newInfo.content"></div> -->
-      <div class="news-detail">
-        <template v-for="(item, index) in contentItems">
-          <div v-if="item.type === 'content'" :key="`content-${index}`" v-html="item.content"></div>
-          <div v-else id="relatedsearches2" :key="`relatedsearch-${index}`"></div>
-        </template>
+    <main class="main">
+      <div class="layout-left">
+        <div class="page-layout">
+          <breadcrumb :info="newInfo"></breadcrumb>
+          <article class="article" v-if="newInfo">
+            <h1 class="article-title" style="">{{ newInfo.name }}</h1>
+            <div class="news-author">
+              <div>{{ newInfo.author?.name }}</div>
+              <div>{{ newInfo.updated_at }}</div>
+            </div>
+            <div class="news-detail first_paragraph">{{ newInfo.first_paragraph }}</div>
+
+            <!-- 文章摘要框 - SEO+GEO 优化 -->
+            <div class="article-summary" v-if="newInfo.seo_desc">
+              <div class="summary-icon">📋</div>
+              <div class="summary-content">
+                <h3 class="summary-title">Article Summary</h3>
+                <p class="summary-text">{{ newInfo.seo_desc }}</p>
+              </div>
+            </div>
+
+            <div id="relatedsearches1"> </div>
+            <aside class="toc-container" v-if="toc.length">
+              <h3 class="toc-title">Table of Contents</h3>
+              <nav class="toc-nav">
+                <ul class="toc-list">
+                  <li
+                    v-for="item in toc"
+                    :key="item.id"
+                    :class="['toc-item', `toc-level-${item.level}`]"
+                    @click="scrollToAnchor(item.id)"
+                  >
+                    {{ item.text }}
+                  </li>
+                </ul>
+              </nav>
+            </aside>
+            <NuxtImg
+              format="auto"
+              fit="cover"
+              width="600"
+              :src="newInfo.cover"
+              :alt="newInfo.cover_seo_alt"
+              class="article-img"
+              preload
+            />
+            <!-- eslint-disable vue/no-v-html -->
+            <div class="news-detail" v-html="htmlWithAnchor"></div>
+            <!--eslint-enable-->
+
+            <!-- FAQ 区块 - GEO 优化 -->
+            <section class="faq-section" v-if="articleFaqs && articleFaqs.length">
+              <h2 class="faq-title">Related Questions</h2>
+              <div class="faq-list">
+                <div v-for="(faq, index) in articleFaqs" :key="index" class="faq-item">
+                  <h3 class="faq-question">{{ faq.question }}</h3>
+                  <p class="faq-answer">{{ faq.answer }}</p>
+                </div>
+              </div>
+            </section>
+          </article>
+          <section v-if="newInfo?.related_articles?.length">
+            <h3 class="title-h2">Related Articles</h3>
+            <div class="related-articles">
+              <news-item-5 v-for="(item, i) in newInfo.related_articles" :key="i" :item="item">
+              </news-item-5>
+            </div>
+          </section>
+        </div>
       </div>
-    </article>
-    <Footer :lang="newInfo.language" :channel-id="newInfo.channel || ''" />
+      <div class="layout-right">
+        <right-side-box :rec-news="trendingNews?.list" :trending-news="recNews?.list" />
+      </div>
+    </main>
+    <footer-seo :info="newInfo || {}" />
   </div>
 </template>
 
 <script>
+import { shuffleArray } from "../../utils/utils";
+import Breadcrumb from "../../components/Breadcrumb";
+import { processHtmlWithToc, generateNestedToc } from "../../utils/cheerio-toc.js";
+
 export default {
+  components: { Breadcrumb },
   async asyncData({ $axios, params, env }) {
     const path = params.detail;
     const lastDashIndex = path.lastIndexOf("-");
     const id = path.substring(lastDashIndex + 1, path.length);
 
-    const [data] = await Promise.all([
-      $axios.$get("/api/article/detail", {
-        params: {
-          site_id: env.SITE_ID,
-          article_id: id
-        }
-      })
-    ]);
-    data.content = data.content.replace(/font-family:\s*['"]?宋体['"]?;/g, "");
-    data.content = data.content.replace(/<\/h4><p><br><br>|<br><br><\/p><h4>/g, (match) => {
-      return match.includes("</h4><p>") ? "</h4><p>" : "</p><h4>";
-    });
+    try {
+      // 串行请求 API，避免并发触发限流
+      // 首先获取详情数据（最重要）
+      let data = null;
+      try {
+        data = await $axios.$get("/api/article/detail", {
+          params: {
+            site_id: env.SITE_ID,
+            article_id: id,
+            related_num: 3
+          }
+        });
+      } catch (detailError) {
+        console.error(`Failed to fetch detail for ID ${id}:`, detailError);
+        return {
+          newInfo: null,
+          all: null,
+          floatArray: [],
+          toc: [],
+          id,
+          htmlWithAnchor: "",
+          recNews: null,
+          trendingNews: null,
+          articleFaqs: []
+        };
+      }
 
-    return { newInfo: data };
+      // 如果详情数据为空，直接返回
+      if (!data?.content) {
+        console.warn(`No content found for ID ${id}`);
+        return {
+          newInfo: null,
+          all: null,
+          floatArray: [],
+          toc: [],
+          id,
+          htmlWithAnchor: "",
+          recNews: null,
+          trendingNews: null,
+          articleFaqs: []
+        };
+      }
+
+      // 并行获取其他数据（非关键）
+      const [recNewsResponse, trendingNewsResponse, allResponse] = await Promise.all([
+        $axios.$get("/api/article/menu", {
+          params: {
+            site_id: env.SITE_ID,
+            mod_id: "rec"
+          }
+        }).catch(() => null),
+        $axios.$get("/api/article/get_all_articles", {
+          params: {
+            site_id: env.SITE_ID,
+            size: 4,
+            page: 1
+          }
+        }).catch(() => null),
+        $axios.$get("/api/article/menu", {
+          params: {
+            site_id: env.SITE_ID,
+            mod_id: "all",
+            page: 1,
+            size: 20
+          }
+        }).catch(() => null)
+      ]);
+
+      // 处理文章内容
+      data.content = data.content.replace(/font-family:\s*['"]? 宋体 ['"]?;/g, "");
+      data.content = data.content.replace(/<\/h4><p><br><br>|<br><br><\/p><h4>/g, (match) => {
+        return match.includes("</h4><p>") ? "</h4><p>" : "</p><h4>";
+      });
+
+      const { toc: flatToc, htmlWithAnchor } = processHtmlWithToc(data.content, [2]);
+      const toc = generateNestedToc(flatToc);
+
+      const articleFaqs = data.faqs || [
+        {
+          question: "Would you like to know more about this topic?",
+          answer: "Our website provides comprehensive information on various global news topics. You can find more related articles in our categories."
+        },
+        {
+          question: "How can I stay updated with the latest news?",
+          answer: "You can subscribe to our newsletter and follow our social media channels to receive the latest updates on global news and developments."
+        },
+        {
+          question: "Where can I find more information?",
+          answer: "You can explore our category pages and search feature to find more articles related to your interests."
+        }
+      ];
+
+      return {
+        newInfo: data,
+        all: allResponse,
+        floatArray: shuffleArray(allResponse?.list?.slice() || []),
+        toc,
+        id,
+        htmlWithAnchor,
+        recNews: recNewsResponse,
+        trendingNews: trendingNewsResponse,
+        articleFaqs
+      };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return {
+        newInfo: null,
+        all: null,
+        floatArray: [],
+        toc: [],
+        id,
+        htmlWithAnchor: "",
+        recNews: null,
+        trendingNews: null,
+        articleFaqs: []
+      };
+    }
   },
   data() {
     return {
-      channelId: "",
-      splitTextCount: 400,
-      isAdAdded: false
+      channelId: ""
     };
   },
   head() {
     return {
-      htmlAttrs: {
-        lang: this.newInfo.language
-      },
-      title: this.newInfo.name + " - Intelinfor",
+      title: this.newInfo?.name ? this.newInfo.name + " - Intelinfor" : "Intelinfor",
       meta: [
         {
           hid: "description",
           name: "description",
-          content: this.newInfo.first_paragraph
-        },
-        {
-          hid: "keywords",
-          name: "keywords",
-          content: this.newInfo.terms
+          content: this.newInfo?.seo_desc
         },
         {
           hid: "og:title",
           property: "og:title",
-          content: this.newInfo.name
+          content: this.newInfo?.seo_title
         },
         {
           hid: "og:description",
           property: "og:description",
-          content: this.newInfo.first_paragraph
+          content: this.newInfo?.seo_desc
         },
         {
           hid: "og:url",
           property: "og:url",
-          content: `https://intelinfor.com/detail/${this.newInfo.path}/`
+          content: `https://intelinfor.com/${this.newInfo?.path_v2}/`
         },
         {
           hid: "og:locale",
           property: "og:locale",
-          content: this.newInfo.language
+          content: this.newInfo?.language
         },
         {
           hid: "og:image",
           property: "og:image",
-          content: this.newInfo.cover
+          content: `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover}`
         },
         {
           hid: "og:type",
           property: "og:type",
           content: "article"
+        },
+        {
+          hid: "twitter:image",
+          property: "twitter:image",
+          content: `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover}`
+        },
+        {
+          hid: "twitter:title",
+          property: "twitter:title",
+          content: this.newInfo?.seo_title
+        },
+        {
+          hid: "twitter:description",
+          property: "twitter:description",
+          content: this.newInfo?.seo_desc
+        },
+        {
+          hid: "twitter:url",
+          property: "twitter:url",
+          content: `https://intelinfor.com/${this.newInfo?.path_v2}/`
+        },
+        {
+          hid: "twitter:locale",
+          property: "twitter:locale",
+          content: this.newInfo?.language
+        }
+      ],
+      script: [
+        {
+          type: "application/ld+json",
+          json: {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: (this.articleFaqs || []).map(faq => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer
+              }
+            }))
+          }
+        },
+        {
+          type: "application/ld+json",
+          json: {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            articleBody: this.newInfo?.content_text || "",
+            articleSection: `Home, ${
+              this.newInfo?.seo_category_name || this.newInfo?.category_locale_name || ""
+            }, ${this.newInfo?.name || ""}`,
+            headline: this.newInfo?.seo_title || "",
+            description: this.newInfo?.seo_desc || "",
+            datePublished: this.newInfo?.updated_at || "",
+            dateModified: this.newInfo?.updated_at || "",
+            author: [
+              {
+                "@type": "Person",
+                name: this.newInfo?.author?.name || "",
+                description: this.newInfo?.author?.intro || "",
+                image: `https://bunchthings.com/${this.newInfo?.author?.avatar || ""}`
+              }
+            ],
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `https://www.intelinfor.com/${this.newInfo?.path_v2 || ""}/`
+            },
+            publisher: {
+              "@type": "NewsMediaOrganization",
+              name: "Intelinfor",
+              url: "https://www.intelinfor.com",
+              publishingPrinciples: "https://www.intelinfor.com/us/"
+            },
+            image: [
+              `https://bunchthings.com/cdn-cgi/image/f=auto,fit=cover/${this.newInfo?.cover || ""}`,
+              `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover || ""}`
+            ]
+          }
+        },
+        {
+          type: "application/ld+json",
+          json: {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                item: {
+                  "@id": "https://www.intelinfor.com/",
+                  name: "Home"
+                }
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                item: {
+                  "@id": `https://www.intelinfor.com/category/${this.newInfo?.category_id || ""}/`,
+                  name: this.newInfo?.category_name || ""
+                }
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                item: {
+                  "@id": `https://www.intelinfor.com/${this.newInfo?.path_v2 || ""}/`,
+                  name: this.newInfo?.name || ""
+                }
+              }
+            ]
+          }
         }
       ]
     };
   },
-  computed: {
-    contentItems() {
-      const self = this;
-      const parts = this.newInfo.content.split(/(<p[^>]*>.*?<\/p>)/gs);
-      let charCount = 0;
-      const items = [];
 
-      parts.forEach((part, index) => {
-        // 如果是最后一个段落，并且广告还没有添加，则插入到倒数第二段
-        if (parts.length - 1 === index && !self.isAdAdded) {
-          items.push({
-            type: "ad"
-          });
-          self.isAdAdded = true;
-        }
-
-        if (!part.trim()) return; // 跳过空字符串
-
-        // 添加内容
-        items.push({
-          type: "content",
-          content: part
-        });
-
-        // 如果不是p标签，不计算字符数和插入广告
-        if (!part.startsWith("<p")) return;
-
-        if (self.isAdAdded) return;
-        // 计算纯文本长度
-        const textContent = part.replace(/<[^>]+>/g, "");
-        charCount += textContent.length;
-
-        if (charCount >= self.splitTextCount) {
-          items.push({
-            type: "ad"
-          });
-          // 是否已经push过广告
-          self.isAdAdded = true;
-        }
-      });
-
-      return items;
-    }
-  },
   mounted: function () {
-    window.handleRequestAdByChannel("mounted", 1);
-    // 获取 URL 查询参数
+    this.handleCreateTableParentDom();
     const searchParams = new URLSearchParams(window.location.search);
-    // AdSense 配置参数
     if (searchParams.has("channel")) {
       this.channelId = searchParams.get("channel");
     } else {
-      this.channelId = this.newInfo.channel || "";
+      this.channelId = this.newInfo?.channel || "";
       if (this.channelId !== "") {
         searchParams.set("channel", this.channelId);
-        const newUrl = `${window.location.origin}${
-          window.location.pathname
-        }?${searchParams.toString()}`;
+        const newUrl = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
       }
     }
-
-    const buffer = window.getCookie("pathInfo");
-    if (!buffer || Number(JSON.parse(buffer)[window.location.pathname]) < 3) {
-      setTimeout(() => {
-        this.newInfo.no_entry !== 1 && this.addAdSenseScript();
-      }, 0);
-    }
+    setTimeout(() => {
+      this.handleAdsScript();
+    }, 0);
   },
   methods: {
+    scrollToAnchor(anchorId) {
+      const target = document.getElementById(anchorId);
+      if (!target) return;
+      const navbarHeight = 60;
+      const targetTop = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+      window.scrollTo({
+        top: targetTop,
+        behavior: "smooth"
+      });
+      window.history.pushState({}, "", `#${anchorId}`);
+    },
+    handleAdsScript() {
+      if (this.newInfo?.no_entry !== 1) {
+        this.addAdSenseScript();
+      }
+    },
     addAdSenseScript() {
-      // 获取 URL 查询参数
       const searchParams = new URLSearchParams(window.location.search);
       let terms = searchParams.has("terms") ? searchParams.get("terms") : "";
       terms = terms.replace(/[，]/g, ",");
-      // 获取Url携带的headline参数
       let headline = searchParams.has("headline") ? searchParams.get("headline") : "";
-      const errorHeadlines = [
-        "{title}",
-        "{{ad_title}}",
-        "%7B%7Bad_title%7D%7D",
-        "%257B%257Bad_title%257D%257D",
-        "%257b%257bad_title%257d%257d"
-      ];
-      if (errorHeadlines.includes(headline)) {
+      if (headline === "{title}" || headline === "{{ad_title}}") {
         headline = "";
-        // 单独对以下两个渠道号，有问题的headline进行替换
-        const editHeadlineChannels = {
-          5373731044:
-            "Don’t Let Payment Issues Disrupt Your Service – Update Now! Your Card Payment Has Failed?",
-          6554482555:
-            "Manage money easy: digital bank accounts. Tired of in-branch waits? Go digital!",
-          1015215411:
-            "Bright teeth, no enamel harm! Want a bright smile safely? Try enamel whitening toothpaste. BEFORE AFTER SMILE BRIGHTER WITH US Advanced Dental Technology. BRIGHT SMILES, HEALTHY TEETH Professional Dental Care for You. Advanced Dental CareFluoride Protection & Fresh Mint",
-          2740480180:
-            "Pro movers do packing, transport. Choose right, relocate worry-free. Moving home/business? Trust pro movers.",
-          8715124928:
-            "Use corporate gas cards: save money. Corporate gas cards: cut costs, boost efficiency, plus employee perks.",
-          1028206592:
-            "For lung cancer—understand it, catch signs early, access support. Fight lung cancer better. Normal Tissue Tumor Growth. LUNG CANCER RESEARCH TRIAL INNOVATING TREATMENTS THROUGH SCIENCE Learn more. HEALTHY LUNG VSCANCER LUNG HEALTHY:Normal tissue, Clear airways No abnormalities CANCER:Malignant tumors, Damagedtissue, lrregular growth",
-          1427398519:
-            "Bundles bring convenience, cost cuts, and hassle-free single billing. Need essential internet + phone for home or small business?"
-        };
-        const channelId = window.getParam("channel");
-        if (editHeadlineChannels[channelId]) {
-          headline = editHeadlineChannels[channelId];
-          window.dataLayer.push({
-            event: "Headline_Replace",
-            headline
-          });
-        }
       }
 
       const paramKeys = [];
-      // 遍历查询参数并将其添加到 paramKeys 数组中
       for (const param of searchParams) {
         paramKeys.push(param[0]);
       }
@@ -244,96 +436,44 @@ export default {
         relatedSearchTargeting: "content",
         resultsPageBaseUrl,
         resultsPageQueryParam: "query",
-        terms: terms || this.newInfo.terms,
-        referrerAdCreative: headline || terms || this.newInfo.referrer_ad_creative,
+        terms: terms || this.newInfo?.terms,
+        referrerAdCreative: headline || terms || this.newInfo?.referrer_ad_creative,
         ivt: false
       };
 
-      // 初始化 _googCsa 并加载相关搜索广告
       // eslint-disable-next-line no-undef
-      _googCsa(
-        "relatedsearch",
-        adSenseConfig,
-        {
-          container: "relatedsearches1", // 广告容器 ID
-          relatedSearches: 5, // 相关搜索广告数量
-          adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
-            if (response) {
-              window.trackEventToPixel("D_C_AC");
-
-              window.pushEventParamsToGtm("C_AC");
-              window.handleRequestAdByChannel("query_ad", 1);
-              try {
-                let numberOfKeys = 0;
-                let concatenatedKeys = "miss";
-                if (callbackOptions.termPositions) {
-                  const keys = Object.keys(callbackOptions.termPositions);
-                  numberOfKeys = keys.length;
-                  concatenatedKeys = keys.join(",");
-                }
-
-                const element = document.getElementById("master-1");
-                const height = parseFloat(element.style.height);
-                const result = Math.round(height / 105);
-
-                // eslint-disable-next-line no-undef
-                dataLayer.push({
-                  event: "C_AC_IN",
-                  queryNum: 5,
-                  num: result,
-                  key1: numberOfKeys,
-                  key2: concatenatedKeys
-                }); // 事件推送到 dataLayer
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          }
-        },
-        {
-          container: "relatedsearches2", // 广告容器 ID
-          relatedSearches: 5, // 相关搜索广告数量
-          adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
-            if (response) {
-              // eslint-disable-next-line no-undef
-              dataLayer.push({ event: "C_AC_SECOND" }); // 事件推送到 dataLayer
-              try {
-                let numberOfKeys = 0;
-                let concatenatedKeys = "miss";
-                if (callbackOptions.termPositions) {
-                  const keys = Object.keys(callbackOptions.termPositions);
-                  numberOfKeys = keys.length;
-                  concatenatedKeys = keys.join(",");
-                }
-                const element = document.getElementById("relatedsearches2");
-                const height = parseFloat(element.clientHeight);
-                const result = Math.round(height / 105);
-
-                // eslint-disable-next-line no-undef
-                dataLayer.push({
-                  event: "C_AC_IN_SECOND",
-                  queryNum: 5,
-                  num: result,
-                  key1: numberOfKeys,
-                  key2: concatenatedKeys
-                }); // 事件推送到 dataLayer
-              } catch (e) {
-                console.log(e);
-              }
-            }
+      _googCsa("relatedsearch", adSenseConfig, {
+        container: "relatedsearches1",
+        relatedSearches: 10,
+        adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
+          if (response) {
+            window.trackEventToPixel("D_C_AC");
+            window.pushEventParamsToGtm("C_AC");
+            window.handleRequestAdByChannel("query_ad", 1);
           }
         }
-      );
+      });
+    },
+    handleCreateTableParentDom() {
+      const tables = document.querySelectorAll(".news-detail table");
+      if (tables.length) {
+        tables.forEach((table) => {
+          const parentDiv = document.createElement("div");
+          parentDiv.className = "table-container";
+          table.parentNode.insertBefore(parentDiv, table);
+          parentDiv.appendChild(table);
+        });
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.article-img {
+.page-layout {
   width: 100%;
-  margin-bottom: 1em;
 }
+
 .article {
   line-height: 19px;
   font-family: "hem";
@@ -341,45 +481,160 @@ export default {
   border-bottom: 1px solid #ececee;
   min-height: calc(100vh - 72px - 56px - 64px);
 }
+
 .article-title {
   font-size: 26px;
   font-family: "hem";
   line-height: 30px;
   margin-bottom: 24px;
 }
+
+.news-author {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.article-summary {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  border-left: 4px solid #fd9a25;
+
+  .summary-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .summary-content {
+    flex: 1;
+
+    .summary-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .summary-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+
+.toc-container {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+
+  .toc-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  .toc-nav {
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc-item {
+      font-size: 14px;
+      line-height: 1.8;
+      cursor: pointer;
+      color: #0066cc;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #fd9a25;
+      }
+
+      &.toc-level-2 {
+        margin-left: 16px;
+      }
+
+      &.toc-level-3 {
+        margin-left: 32px;
+      }
+    }
+  }
+}
+
+.article-img {
+  width: 100%;
+  margin: 20px 0;
+}
+
 .news-detail {
   p {
     text-indent: 1em;
+    line-height: 1.6;
   }
 }
-.read-more {
-  line-height: 4;
-}
-.hide {
-  display: none;
-  &.show {
-    display: block;
-  }
-}
+
 .first_paragraph {
   text-indent: 1em;
   font-size: 14px;
   line-height: 19px;
 }
-.google-ad-preload {
-  margin-bottom: 4px;
-}
-.news-box-2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+
+.faq-section {
+  margin: 32px 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+
+  .faq-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .faq-list {
+    .faq-item {
+      margin-bottom: 16px;
+
+      .faq-question {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      .faq-answer {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #666;
+        margin: 0;
+      }
+    }
+  }
 }
 
-@media screen and (max-width: 1100px) {
-  .news-box-2 {
-    display: flex;
-    flex-wrap: wrap;
-  }
+.title-h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 24px 0 16px 0;
+  color: #333;
+}
+
+.related-articles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 @media screen and (max-width: 750px) {
@@ -389,27 +644,60 @@ export default {
     border-bottom: vw(2) solid #ececee;
     min-height: calc(100vh - vw(304));
   }
+
   .article-title {
     font-size: vw(40);
     line-height: vw(56);
     margin-bottom: vw(32);
   }
-  .article-desc {
-    margin-bottom: vw(48);
+
+  .article-summary {
+    .summary-icon {
+      font-size: vw(32);
+    }
+
+    .summary-content {
+      .summary-title {
+        font-size: vw(28);
+      }
+
+      .summary-text {
+        font-size: vw(24);
+      }
+    }
   }
+
+  .toc-container {
+    .toc-title {
+      font-size: vw(32);
+    }
+
+    .toc-item {
+      font-size: vw(28);
+
+      &.toc-level-2 {
+        margin-left: vw(32);
+      }
+
+      &.toc-level-3 {
+        margin-left: vw(64);
+      }
+    }
+  }
+
   .first_paragraph {
     font-size: vw(32);
     color: rgba(23, 23, 23, 0.8);
     line-height: vw(44);
   }
-  .google-ad-preload {
-    margin-bottom: vw(10);
-  }
-  .title-h2-margin {
+
+  .title-h2 {
     margin-top: vw(74);
     margin-bottom: vw(32);
   }
-  .news-box-2 {
+
+  .related-articles {
+    grid-template-columns: repeat(1, 1fr);
     gap: vw(32);
   }
 }

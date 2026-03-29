@@ -11,16 +11,17 @@ export default {
   },
   generate: {
     crawler: false,
-    concurrency: 10,
-    interval: 100,
+    concurrency: 1,
+    interval: 2000,
     async routes() {
       const pathData = await fetch(
-        `${process.env.PROD_API_URL}/api/article/get_all_path?site_id=${process.env.SITE_ID}`
+        `${process.env.PROD_API_URL}/api/article/get_all_path_v2?site_id=${process.env.SITE_ID}`
       );
       const path = await pathData.json();
-      const categoryPaths = path.data.category.map((item) => `/category/${item}/`);
-      const detailPaths = path.data.detail.map((item) => `/detail/${item}/`);
-      const urls = [...categoryPaths, ...detailPaths, "/detail2/1/", "/detail3/1/"];
+      const categoryPaths = path.data.seo_category.map((item) => `/category/${item}/`);
+      // URL层级优化：保持 /detail/前缀，后端返回的path_v2已包含分类slug
+      const detailPaths = path.data.detail.map((item) => `/${item}/`);
+      const urls = [...categoryPaths, ...detailPaths];
       return urls;
     }
   },
@@ -66,6 +67,16 @@ export default {
         hid: "og:site_name",
         property: "og:site_name",
         content: "Intelinfor"
+      },
+      {
+        property: "twitter:site_name",
+        content: "Intelinfor"
+      },
+      {
+        hid: "twitter:description",
+        name: "twitter:description",
+        content:
+          "We are committed to delivering the latest developments in various fields such as politics, economy, technology, culture and sports!"
       }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
