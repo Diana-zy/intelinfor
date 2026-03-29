@@ -63,3 +63,91 @@ $font4: rgba(#171717, 0.4);
     display: none;
   }
 }
+
+// 性能优化相关mixins
+
+// 响应式断点
+@mixin media-mobile {
+  @media (max-width: 640px) {
+    @content;
+  }
+}
+
+@mixin media-tablet {
+  @media (min-width: 641px) and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin media-desktop {
+  @media (min-width: 1025px) {
+    @content;
+  }
+}
+
+// 响应式图片容器（避免CLS）
+@mixin img-container($ratio: 16/9) {
+  position: relative;
+  width: 100%;
+  padding-bottom: calc(100% * (#{$ratio}));
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// 延迟加载图片占位符
+@mixin img-placeholder($bg-color: #f0f0f0) {
+  background-color: $bg-color;
+
+  &.lazy-loading {
+    opacity: 0.5;
+  }
+
+  &.lazy-loaded {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+}
+
+// 性能优化：使用transform和will-change
+@mixin gpu-accelerate {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+// 避免布局抖动的固定尺寸
+@mixin fixed-dimensions($width, $height) {
+  width: $width;
+  height: $height;
+  aspect-ratio: $width / $height;
+}
+
+// 关键内容样式优化（最小化重排）
+@mixin critical-content {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+// 淡入动画（用于懒加载图片）
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// 减少动画性能消耗
+@mixin optimize-animation {
+  animation-fill-mode: both;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}

@@ -3,6 +3,7 @@ import OptimizeCSSAssetsPlugin from "optimize-css-assets-webpack-plugin";
 
 export default {
   target: "static",
+  ssr: true,
   server: {
     host: "0.0.0.0"
   },
@@ -85,22 +86,50 @@ export default {
           "We are committed to delivering the latest developments in various fields such as politics, economy, technology, culture and sports!"
       }
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    link: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      // Preload critical fonts
+      {
+        rel: "preload",
+        as: "font",
+        href: "/fonts/heb.woff2",
+        type: "font/woff2",
+        crossorigin: true
+      }
+    ],
+    // Performance & Security Headers
+    noscript: [{ innerHTML: "This site requires JavaScript to be enabled." }]
   },
   image: {
     provider: "cloudflare",
     cloudflare: {
       baseURL: "https://bunchthings.com"
+    },
+    // Image optimization settings
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536
     }
   },
   plugins: [
     { src: "~/plugins/vue-infinite-scroll", ssr: false },
     "~/plugins/axios",
     "~/plugins/global-data",
-    "~/plugins/nav-data"
+    "~/plugins/nav-data",
+    { src: "~/plugins/web-vitals", ssr: false }
   ],
   components: true,
-  buildModules: ["@nuxtjs/style-resources", "@nuxt/image", "@nuxtjs/pwa", "@nuxtjs/sitemap"],
+  buildModules: [
+    "@nuxtjs/style-resources",
+    "@nuxt/image",
+    "@nuxtjs/pwa",
+    "@nuxtjs/sitemap",
+    "@nuxtjs/google-fonts"
+  ],
   css: ["@/assets/css/fonts.css", "@/assets/css/reset.css", "@/assets/css/common.scss"],
   styleResources: {
     scss: ["~/assets/css/_mixins.scss"]
@@ -114,25 +143,64 @@ export default {
       name: "Intelinfor",
       short_name: "Intelinfor",
       description:
-        "We are committed to delivering you the latest developments in various fields, including politics, economy, technology, culture, sports, and more.!"
+        "We are committed to delivering you the latest developments in various fields, including politics, economy, technology, culture, sports, and more.!",
+      display: "standalone",
+      background_color: "#ffffff",
+      theme_color: "#000000"
     },
     icon: {
-      source: "./static/icon.png", // 应用图标路径
-      fileName: "icon.png", // 生成的图标名称
-      sizes: [32, 64, 120, 144, 152, 192, 512] // 自定义生成的图标尺寸
+      source: "./static/icon.png",
+      fileName: "icon.png",
+      sizes: [32, 64, 120, 144, 152, 192, 512]
+    },
+    workbox: {
+      runtimeCaching: [
+        {
+          urlPattern: "^https://bunchthings.com/.*",
+          handler: "CacheFirst",
+          method: "GET",
+          strategyOptions: {
+            cacheName: "images-cache",
+            cacheExpiration: {
+              maxEntries: 100,
+              maxAgeSeconds: 2592000 // 30 days
+            }
+          }
+        },
+        {
+          urlPattern: "^https://api\\.tapmygame\\.com/.*",
+          handler: "NetworkFirst",
+          method: "GET",
+          strategyOptions: {
+            cacheName: "api-cache",
+            cacheExpiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 3600 // 1 hour
+            }
+          }
+        }
+      ]
     }
   },
+  // Performance optimizations
   build: {
+    parallel: true,
+    cache: true,
     html: {
       minify: {
         collapseWhitespace: true,
-        removeComments: true
+        removeComments: true,
+        removeRedundantAttributes: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
       }
     },
     extractCSS: {
       ignoreOrder: true
     },
     optimization: {
+      runtimeChunk: "single",
       splitChunks: {
         chunks: "all",
         automaticNameDelimiter: ".",
@@ -140,18 +208,33 @@ export default {
         minSize: 10000,
         maxSize: 244000,
         cacheGroups: {
+          // Vendor separation for better caching
           vendor: {
             name: "vendors",
             test: /[\\/]node_modules[\\/]/,
             chunks: "all",
             maxSize: 244000,
-            priority: -10
+            priority: 20
           },
+          // Vue related
+          vue: {
+            test: /[\\/]node_modules[\\/](vue|nuxt)[\\/]/,
+            name: "vue",
+            priority: 21,
+            chunks: "all"
+          },
+          // Styles
           styles: {
             name: "styles",
             test: /\.(css|vue)$/,
             chunks: "all",
             enforce: true
+          },
+          // Common used modules
+          common: {
+            minChunks: 2,
+            priority: 10,
+            reuseExistingChunk: true
           }
         }
       },
@@ -160,12 +243,15 @@ export default {
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console: true
+              drop_console: true,
+              drop_debugger: true
             },
             output: {
               comments: false
-            }
-          }
+            },
+            ecma: 6
+          },
+          extractComments: false
         }),
         new OptimizeCSSAssetsPlugin({
           cssProcessorOptions: {
@@ -174,9 +260,21 @@ export default {
           }
         })
       ]
+    },
+    // Webpack bundle analysis for debugging
+    analyze: {
+      analyzerMode: "disabled",
+      generateStatsFile: false
     }
   },
   purgeCSS: {
-    whitelistPatterns: [/^swiper-container/, /^swiper-wrapper/] // 忽略swiper样式
-  }
+    whitelistPatterns: [/^swiper-container/, /^swiper-wrapper/, /^nuxt/]
+  },
+  // Loading behavior
+  loading: {
+    color: "#3B8070",
+    height: "2px"
+  },
+  // Telemetry - disable in production
+  telemetry: false
 };
