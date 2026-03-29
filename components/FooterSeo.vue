@@ -5,8 +5,14 @@
         <img :src="icon" alt="" />
       </div>
       <div class="website-info">
-        <div>Intelinfor is committed to delivering comprehensive world news and information across various domains including politics, economics, technology, culture, and sports.</div>
-        <div>We provide the latest global developments with a focus on accurate reporting and in-depth analysis to help you stay informed about important events worldwide.</div>
+        <div
+          >Intelinfor is committed to delivering comprehensive world news and information across
+          various domains including politics, economics, technology, culture, and sports.</div
+        >
+        <div
+          >We provide the latest global developments with a focus on accurate reporting and in-depth
+          analysis to help you stay informed about important events worldwide.</div
+        >
       </div>
       <div class="link-info">
         <ul>
@@ -39,9 +45,9 @@
 </template>
 
 <script>
+import Notification from "./Notification.vue";
+import CustomLink from "./CustomLink.vue";
 import { validateEmail } from "~/utils/utils";
-import Notification from './Notification.vue';
-import CustomLink from './CustomLink.vue';
 import logo from "@/assets/images/logo.png";
 
 export default {
@@ -59,7 +65,8 @@ export default {
       default: ""
     },
     info: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   data() {

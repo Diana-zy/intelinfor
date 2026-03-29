@@ -1,12 +1,12 @@
 <template>
   <div class="page">
-    <Header />
+    <AppHeader />
     <main class="main">
       <div class="layout-left">
         <div class="page-layout">
           <breadcrumb :info="newInfo"></breadcrumb>
-          <article class="article" v-if="newInfo">
-            <h1 class="article-title" style="">{{ newInfo.name }}</h1>
+          <article v-if="newInfo" class="article">
+            <h1 class="article-title">{{ newInfo.name }}</h1>
             <div class="news-author">
               <div>{{ newInfo.author?.name }}</div>
               <div>{{ newInfo.updated_at }}</div>
@@ -14,7 +14,7 @@
             <div class="news-detail first_paragraph">{{ newInfo.first_paragraph }}</div>
 
             <!-- 文章摘要框 - SEO+GEO 优化 -->
-            <div class="article-summary" v-if="newInfo.seo_desc">
+            <div v-if="newInfo.seo_desc" class="article-summary">
               <div class="summary-icon">📋</div>
               <div class="summary-content">
                 <h3 class="summary-title">Article Summary</h3>
@@ -23,7 +23,7 @@
             </div>
 
             <div id="relatedsearches1"> </div>
-            <aside class="toc-container" v-if="toc.length">
+            <aside v-if="toc.length" class="toc-container">
               <h3 class="toc-title">Table of Contents</h3>
               <nav class="toc-nav">
                 <ul class="toc-list">
@@ -52,7 +52,7 @@
             <!--eslint-enable-->
 
             <!-- FAQ 区块 - GEO 优化 -->
-            <section class="faq-section" v-if="articleFaqs && articleFaqs.length">
+            <section v-if="articleFaqs && articleFaqs.length" class="faq-section">
               <h2 class="faq-title">Related Questions</h2>
               <div class="faq-list">
                 <div v-for="(faq, index) in articleFaqs" :key="index" class="faq-item">
@@ -80,18 +80,18 @@
 </template>
 
 <script>
-import { shuffleArray } from "../../utils/utils";
 import Breadcrumb from "../../components/Breadcrumb";
-import Header from "../../components/Header";
+import AppHeader from "../../components/Header";
 import NewsItem5 from "../../components/NewsItem5";
 import RightSideBox from "../../components/RightSideBox";
 import FooterSeo from "../../components/FooterSeo";
+import { shuffleArray } from "../../utils/utils";
 import { processHtmlWithToc, generateNestedToc } from "../../utils/cheerio-toc.js";
 
 export default {
   components: {
     Breadcrumb,
-    Header,
+    AppHeader,
     NewsItem5,
     RightSideBox,
     FooterSeo
@@ -146,27 +146,33 @@ export default {
 
       // 并行获取其他数据（非关键）
       const [recNewsResponse, trendingNewsResponse, allResponse] = await Promise.all([
-        $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_ID,
-            mod_id: "rec"
-          }
-        }).catch(() => null),
-        $axios.$get("/api/article/get_all_articles", {
-          params: {
-            site_id: env.SITE_ID,
-            size: 4,
-            page: 1
-          }
-        }).catch(() => null),
-        $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_ID,
-            mod_id: "all",
-            page: 1,
-            size: 20
-          }
-        }).catch(() => null)
+        $axios
+          .$get("/api/article/menu", {
+            params: {
+              site_id: env.SITE_ID,
+              mod_id: "rec"
+            }
+          })
+          .catch(() => null),
+        $axios
+          .$get("/api/article/get_all_articles", {
+            params: {
+              site_id: env.SITE_ID,
+              size: 4,
+              page: 1
+            }
+          })
+          .catch(() => null),
+        $axios
+          .$get("/api/article/menu", {
+            params: {
+              site_id: env.SITE_ID,
+              mod_id: "all",
+              page: 1,
+              size: 20
+            }
+          })
+          .catch(() => null)
       ]);
 
       // 处理文章内容
@@ -181,15 +187,18 @@ export default {
       const articleFaqs = data.faqs || [
         {
           question: "Would you like to know more about this topic?",
-          answer: "Our website provides comprehensive information on various global news topics. You can find more related articles in our categories."
+          answer:
+            "Our website provides comprehensive information on various global news topics. You can find more related articles in our categories."
         },
         {
           question: "How can I stay updated with the latest news?",
-          answer: "You can subscribe to our newsletter and follow our social media channels to receive the latest updates on global news and developments."
+          answer:
+            "You can subscribe to our newsletter and follow our social media channels to receive the latest updates on global news and developments."
         },
         {
           question: "Where can I find more information?",
-          answer: "You can explore our category pages and search feature to find more articles related to your interests."
+          answer:
+            "You can explore our category pages and search feature to find more articles related to your interests."
         }
       ];
 
@@ -295,7 +304,7 @@ export default {
           json: {
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            mainEntity: (this.articleFaqs || []).map(faq => ({
+            mainEntity: (this.articleFaqs || []).map((faq) => ({
               "@type": "Question",
               name: faq.question,
               acceptedAnswer: {
@@ -338,7 +347,9 @@ export default {
             },
             image: [
               `https://bunchthings.com/cdn-cgi/image/f=auto,fit=cover/${this.newInfo?.cover || ""}`,
-              `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover || ""}`
+              `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${
+                this.newInfo?.cover || ""
+              }`
             ]
           }
         },
@@ -388,7 +399,9 @@ export default {
       this.channelId = this.newInfo?.channel || "";
       if (this.channelId !== "") {
         searchParams.set("channel", this.channelId);
-        const newUrl = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+        const newUrl = `${window.location.origin}${
+          window.location.pathname
+        }?${searchParams.toString()}`;
         window.history.replaceState({}, "", newUrl);
       }
     }

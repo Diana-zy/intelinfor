@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import CustomLink from './CustomLink.vue';
+import CustomLink from "./CustomLink.vue";
 
 export default {
   name: "Breadcrumb",

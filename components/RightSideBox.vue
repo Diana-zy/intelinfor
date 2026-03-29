@@ -29,17 +29,20 @@
 </template>
 
 <script>
-import { simulateAFSSearch, capitalizeFirstLetter } from "~/utils/utils";
 import CustomLink from "./CustomLink";
+import { capitalizeFirstLetter } from "~/utils/utils";
+
 export default {
   name: "RightSideBox",
   components: { CustomLink },
   props: {
     recNews: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     trendingNews: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -48,7 +51,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.navData,1111);
+    console.log(this.navData, 1111);
   },
   methods: {
     capitalizeFirstLetter

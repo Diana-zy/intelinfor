@@ -3,7 +3,7 @@
     <template v-for="(item, index) in contentItems">
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-if="item.type === 'content'" :key="`content-${index}`" v-html="item.content" />
-<!--      <GoogleAd v-else :key="`ad-${index}`" :ad-slot="item.slot" />-->
+      <!--      <GoogleAd v-else :key="`ad-${index}`" :ad-slot="item.slot" />-->
     </template>
   </div>
 </template>

@@ -101,10 +101,7 @@ export default {
     </div>
     <Loading v-if="loading" class="infinite-loading"></Loading>
     <footer v-show="showMore">
-      <div
-        v-show="!(this.loading || this.endOfList)"
-        class="more-btn color-tip-theme"
-        @click="loadMore"
+      <div v-show="!(loading || endOfList)" class="more-btn color-tip-theme" @click="loadMore"
         >もっと見る</div
       ></footer
     >

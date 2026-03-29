@@ -10,9 +10,15 @@
       loading="lazy"
       class="img"
     />
-    <p class="category btn-tag" v-if="item.seo_category_name || item.category_locale_name || item.category_name">{{
-      capitalizeFirstLetter(item.seo_category_name || item.category_locale_name || item.category_name)
-    }}</p>
+    <p
+      v-if="item.seo_category_name || item.category_locale_name || item.category_name"
+      class="category btn-tag"
+      >{{
+        capitalizeFirstLetter(
+          item.seo_category_name || item.category_locale_name || item.category_name
+        )
+      }}</p
+    >
     <p class="title">{{ item.name }}</p>
     <div class="m-news-author pc-hidden-flex">
       <div>{{ item.author.name }}</div>
@@ -53,7 +59,7 @@ export default {
     font-size: 13px;
     font-family: "hem";
     color: #000;
-    background: $tagColor2;
+    background: $color2;
     border-radius: 4px 4px 4px 4px;
     margin: 16px 0 0;
   }
@@ -86,7 +92,7 @@ export default {
     // &::after {
     //   content: "";
     //   position: absolute;
-    //   right: left;
+    //   right: 0;
     //   bottom: 0;
     //   width: calc(100% - vw(236));
     //   height: vw(2);
@@ -114,7 +120,7 @@ export default {
       font-size: vw(36);
       line-height: vw(48);
       min-height: vw(96);
-      @include ellipsis(2)
+      @include ellipsis(2);
     }
     .m-news-author {
       display: flex;
@@ -123,7 +129,6 @@ export default {
       font-weight: 300;
       font-size: vw(26);
       padding-bottom: vw(10);
-      @include author-icon(vw(26), vw(26));
       div:first-child {
         max-width: vw(256);
         @include ellipsis();

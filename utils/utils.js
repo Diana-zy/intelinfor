@@ -41,7 +41,6 @@ export function generateCustomPath(url) {
   return `${targetPath}?${queryString}${queryString ? "&" : ""}from=${encodeURIComponent(from)}`;
 }
 
-
 // 校验邮箱格式
 export function validateEmail(email) {
   // 使用正则表达式验证邮箱格式

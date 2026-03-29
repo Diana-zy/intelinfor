@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header />
+    <AppHeader />
     <main class="main">
       <div class="layout-left">
         <breadcrumb
@@ -8,7 +8,7 @@
             category_id: id,
             category_locale_name: categoryInfo?.seo_category?.name
           }"
-          isCategory
+          is-category
         ></breadcrumb>
         <common-page-label
           :title="`「${capitalizeFirstLetter(categoryInfo?.seo_category?.name)}」Articles`"
@@ -18,7 +18,7 @@
             api-endpoint="/api/article/get_seo_category_page"
             :initial-page="2"
             :page-size="10"
-            :showMore="false"
+            :show-more="false"
             :query="{
               seo_category_id: id
             }"
@@ -45,18 +45,18 @@
 </template>
 
 <script>
-import { capitalizeFirstLetter } from "~/utils/utils";
-import Header from "~/components/Header";
 import Breadcrumb from "~/components/Breadcrumb";
+import CommonPageLabel from "~/components/common/PageLabel";
 import InfiniteLoadList from "~/components/InfiniteLoadList";
 import NewsItem4 from "~/components/NewsItem4";
 import RightSideBox from "~/components/RightSideBox";
 import FooterSeo from "~/components/FooterSeo";
-import CommonPageLabel from "~/components/common/PageLabel";
+import AppHeader from "~/components/Header";
+import { capitalizeFirstLetter } from "~/utils/utils";
 
 export default {
   components: {
-    Header,
+    AppHeader,
     Breadcrumb,
     InfiniteLoadList,
     NewsItem4,
@@ -113,11 +113,12 @@ export default {
     }
   },
   head() {
-    const itemListElements = this.categoryInfo?.list?.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      url: `https://www.intelinfor.com/${item.path_v2}/`
-    })) || [];
+    const itemListElements =
+      this.categoryInfo?.list?.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `https://www.intelinfor.com/${item.path_v2}/`
+      })) || [];
 
     return {
       script: [
