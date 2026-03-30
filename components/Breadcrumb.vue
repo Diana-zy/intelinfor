@@ -1,18 +1,22 @@
 <template>
   <div class="bread-crumb">
     <CustomLink to="/" class="type">Home</CustomLink>
-    <span> / </span>
-    <span>
-      <CustomLink
-        v-if="info?.is_seo_category_on_site"
-        :to="`/category/${info.seo_category_path}/`"
-        class="type"
-        >{{ info?.seo_category_name || info?.category_locale_name }}</CustomLink
-      >
-      <span v-else class="type">{{ info?.seo_category_name || info?.category_locale_name }}</span>
-    </span>
-    <span v-if="!isCategory"> / </span>
-    <span v-if="!isCategory" class="type">{{ info?.name }}</span>
+    <template v-if="categoryName">
+      <span> / </span>
+      <span>
+        <CustomLink
+          v-if="info?.is_seo_category_on_site && info?.seo_category_path"
+          :to="`/category/${info.seo_category_path}/`"
+          class="type"
+          >{{ categoryName }}</CustomLink
+        >
+        <span v-else class="type">{{ categoryName }}</span>
+      </span>
+    </template>
+    <template v-if="!isCategory && info?.name">
+      <span> / </span>
+      <span class="type">{{ info.name }}</span>
+    </template>
   </div>
 </template>
 
@@ -32,6 +36,11 @@ export default {
     isCategory: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    categoryName() {
+      return this.info?.seo_category_name || this.info?.category_locale_name || "";
     }
   }
 };

@@ -6,7 +6,10 @@
         <breadcrumb
           :info="{
             category_id: id,
-            category_locale_name: categoryInfo?.seo_category?.name
+            seo_category_name: categoryInfo?.seo_category?.name,
+            category_locale_name: categoryInfo?.seo_category?.name,
+            is_seo_category_on_site: true,
+            seo_category_path: slugPath
           }"
           is-category
         ></breadcrumb>
@@ -100,7 +103,8 @@ export default {
         recNews: recNewsResponse,
         trendingNews: trendingNewsResponse,
         categoryInfo: categoryInfoResponse,
-        id
+        id,
+        slugPath: path
       };
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -108,19 +112,46 @@ export default {
         recNews: null,
         trendingNews: null,
         categoryInfo: null,
-        id
+        id,
+        slugPath: path
       };
     }
   },
   head() {
+    const categoryName = this.categoryInfo?.seo_category?.name || "";
+    const categoryUrl = this.slugPath
+      ? `https://www.intelinfor.com/category/${this.slugPath}/`
+      : "https://www.intelinfor.com/";
+
     const itemListElements =
-      this.categoryInfo?.list?.map((item, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        url: `https://www.intelinfor.com/${item.path_v2}/`
-      })) || [];
+      this.categoryInfo?.list
+        ?.filter((item) => item.path_v2)
+        .map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `https://www.intelinfor.com/${item.path_v2}/`,
+          name: item.name || ""
+        })) || [];
 
     return {
+      title: categoryName ? `${categoryName} - Intelinfor` : "Intelinfor",
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: `Read the latest ${categoryName} articles on Intelinfor.`
+        },
+        {
+          hid: "og:title",
+          property: "og:title",
+          content: categoryName ? `${categoryName} - Intelinfor` : "Intelinfor"
+        },
+        {
+          hid: "og:url",
+          property: "og:url",
+          content: categoryUrl
+        }
+      ],
       script: [
         {
           type: "application/ld+json",
@@ -140,21 +171,26 @@ export default {
                 "@type": "ListItem",
                 position: 2,
                 item: {
-                  "@id": `https://www.intelinfor.com/category/${this.id}/`,
-                  name: this.categoryInfo?.seo_category?.name || ""
+                  "@id": categoryUrl,
+                  name: categoryName
                 }
               }
             ]
           }
         },
-        {
-          type: "application/ld+json",
-          json: {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            itemListElement: itemListElements
-          }
-        }
+        ...(itemListElements.length
+          ? [
+              {
+                type: "application/ld+json",
+                json: {
+                  "@context": "https://schema.org",
+                  "@type": "ItemList",
+                  name: categoryName,
+                  itemListElement: itemListElements
+                }
+              }
+            ]
+          : [])
       ]
     };
   },

@@ -117,6 +117,47 @@ export default {
       input: ""
     };
   },
+  head() {
+    const trendingItems =
+      this.trendingNews?.list?.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: item.path_v2 ? `https://www.intelinfor.com/${item.path_v2}/` : undefined,
+        name: item.name || ""
+      })) || [];
+
+    return {
+      script: [
+        {
+          type: "application/ld+json",
+          json: {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Intelinfor",
+            url: "https://www.intelinfor.com/",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "https://www.intelinfor.com/search/?query={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        },
+        ...(trendingItems.length
+          ? [
+              {
+                type: "application/ld+json",
+                json: {
+                  "@context": "https://schema.org",
+                  "@type": "ItemList",
+                  name: "Trending Articles",
+                  itemListElement: trendingItems
+                }
+              }
+            ]
+          : [])
+      ]
+    };
+  },
 
   methods: {
     search() {

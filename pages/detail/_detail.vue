@@ -255,7 +255,9 @@ export default {
         {
           hid: "og:url",
           property: "og:url",
-          content: `https://intelinfor.com/${this.newInfo?.path_v2}/`
+          content: this.newInfo?.path_v2
+            ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
+            : "https://www.intelinfor.com/"
         },
         {
           hid: "og:locale",
@@ -290,7 +292,9 @@ export default {
         {
           hid: "twitter:url",
           property: "twitter:url",
-          content: `https://intelinfor.com/${this.newInfo?.path_v2}/`
+          content: this.newInfo?.path_v2
+            ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
+            : "https://www.intelinfor.com/"
         },
         {
           hid: "twitter:locale",
@@ -337,7 +341,9 @@ export default {
             ],
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `https://www.intelinfor.com/${this.newInfo?.path_v2 || ""}/`
+              "@id": this.newInfo?.path_v2
+                ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
+                : "https://www.intelinfor.com/"
             },
             publisher: {
               "@type": "NewsMediaOrganization",
@@ -367,19 +373,28 @@ export default {
                   name: "Home"
                 }
               },
+              ...(this.newInfo?.seo_category_path
+                ? [
+                    {
+                      "@type": "ListItem",
+                      position: 2,
+                      item: {
+                        "@id": `https://www.intelinfor.com/category/${this.newInfo.seo_category_path}/`,
+                        name:
+                          this.newInfo?.seo_category_name ||
+                          this.newInfo?.category_locale_name ||
+                          ""
+                      }
+                    }
+                  ]
+                : []),
               {
                 "@type": "ListItem",
-                position: 2,
+                position: this.newInfo?.seo_category_path ? 3 : 2,
                 item: {
-                  "@id": `https://www.intelinfor.com/category/${this.newInfo?.category_id || ""}/`,
-                  name: this.newInfo?.category_name || ""
-                }
-              },
-              {
-                "@type": "ListItem",
-                position: 3,
-                item: {
-                  "@id": `https://www.intelinfor.com/${this.newInfo?.path_v2 || ""}/`,
+                  "@id": this.newInfo?.path_v2
+                    ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
+                    : "https://www.intelinfor.com/",
                   name: this.newInfo?.name || ""
                 }
               }
