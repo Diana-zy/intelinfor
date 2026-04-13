@@ -22,6 +22,7 @@
               </div>
             </div>
 
+            <div id="relatedsearches1"> </div>
             <aside v-if="toc.length" class="toc-container">
               <h3 class="toc-title">Table of Contents</h3>
               <nav class="toc-nav">
@@ -37,7 +38,6 @@
                 </ul>
               </nav>
             </aside>
-            <div id="relatedsearches1"> </div>
             <NuxtImg
               format="auto"
               fit="cover"
@@ -102,8 +102,6 @@ export default {
     const id = path.substring(lastDashIndex + 1, path.length);
 
     try {
-      // 串行请求 API，避免并发触发限流
-      // 首先获取详情数据（最重要）
       let data = null;
       try {
         data = await $axios.$get("/api/article/detail", {
@@ -128,7 +126,6 @@ export default {
         };
       }
 
-      // 如果详情数据为空，直接返回
       if (!data?.content) {
         console.warn(`No content found for ID ${id}`);
         return {
@@ -144,7 +141,6 @@ export default {
         };
       }
 
-      // 并行获取其他数据（非关键）
       const [recNewsResponse, trendingNewsResponse, allResponse] = await Promise.all([
         $axios
           .$get("/api/article/menu", {
@@ -175,8 +171,7 @@ export default {
           .catch(() => null)
       ]);
 
-      // 处理文章内容
-      data.content = data.content.replace(/font-family:\s*['"\s]? 宋体 ['"\s]?;/g, "");
+      data.content = data.content.replace(/font-family:\s*['"\s]? \u5b8b\u4f53 ['"\s]?;/g, "");
       data.content = data.content.replace(/<\/h4><p><br><br>|<br><br><\/p><h4>/g, (match) => {
         return match.includes("</h4><p>") ? "</h4><p>" : "</p><h4>";
       });
@@ -237,21 +232,9 @@ export default {
     return {
       title: this.newInfo?.name ? this.newInfo.name + " - Intelinfor" : "Intelinfor",
       meta: [
-        {
-          hid: "description",
-          name: "description",
-          content: this.newInfo?.seo_desc
-        },
-        {
-          hid: "og:title",
-          property: "og:title",
-          content: this.newInfo?.seo_title
-        },
-        {
-          hid: "og:description",
-          property: "og:description",
-          content: this.newInfo?.seo_desc
-        },
+        { hid: "description", name: "description", content: this.newInfo?.seo_desc },
+        { hid: "og:title", property: "og:title", content: this.newInfo?.seo_title },
+        { hid: "og:description", property: "og:description", content: this.newInfo?.seo_desc },
         {
           hid: "og:url",
           property: "og:url",
@@ -259,31 +242,19 @@ export default {
             ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
             : "https://www.intelinfor.com/"
         },
-        {
-          hid: "og:locale",
-          property: "og:locale",
-          content: this.newInfo?.language
-        },
+        { hid: "og:locale", property: "og:locale", content: this.newInfo?.language },
         {
           hid: "og:image",
           property: "og:image",
           content: `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover}`
         },
-        {
-          hid: "og:type",
-          property: "og:type",
-          content: "article"
-        },
+        { hid: "og:type", property: "og:type", content: "article" },
         {
           hid: "twitter:image",
           property: "twitter:image",
           content: `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover}`
         },
-        {
-          hid: "twitter:title",
-          property: "twitter:title",
-          content: this.newInfo?.seo_title
-        },
+        { hid: "twitter:title", property: "twitter:title", content: this.newInfo?.seo_title },
         {
           hid: "twitter:description",
           property: "twitter:description",
@@ -296,115 +267,10 @@ export default {
             ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
             : "https://www.intelinfor.com/"
         },
-        {
-          hid: "twitter:locale",
-          property: "twitter:locale",
-          content: this.newInfo?.language
-        }
-      ],
-      script: [
-        {
-          type: "application/ld+json",
-          json: {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: (this.articleFaqs || []).map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer
-              }
-            }))
-          }
-        },
-        {
-          type: "application/ld+json",
-          json: {
-            "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            articleBody: this.newInfo?.content_text || "",
-            articleSection: `Home, ${
-              this.newInfo?.seo_category_name || this.newInfo?.category_locale_name || ""
-            }, ${this.newInfo?.name || ""}`,
-            headline: this.newInfo?.seo_title || "",
-            description: this.newInfo?.seo_desc || "",
-            datePublished: this.newInfo?.updated_at || "",
-            dateModified: this.newInfo?.updated_at || "",
-            author: [
-              {
-                "@type": "Person",
-                name: this.newInfo?.author?.name || "",
-                description: this.newInfo?.author?.intro || "",
-                image: `https://bunchthings.com/${this.newInfo?.author?.avatar || ""}`
-              }
-            ],
-            mainEntityOfPage: {
-              "@type": "WebPage",
-              "@id": this.newInfo?.path_v2
-                ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-                : "https://www.intelinfor.com/"
-            },
-            publisher: {
-              "@type": "NewsMediaOrganization",
-              name: "Intelinfor",
-              url: "https://www.intelinfor.com",
-              publishingPrinciples: "https://www.intelinfor.com/us/"
-            },
-            image: [
-              `https://bunchthings.com/cdn-cgi/image/f=auto,fit=cover/${this.newInfo?.cover || ""}`,
-              `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${
-                this.newInfo?.cover || ""
-              }`
-            ]
-          }
-        },
-        {
-          type: "application/ld+json",
-          json: {
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                item: {
-                  "@id": "https://www.intelinfor.com/",
-                  name: "Home"
-                }
-              },
-              ...(this.newInfo?.seo_category_path
-                ? [
-                    {
-                      "@type": "ListItem",
-                      position: 2,
-                      item: {
-                        "@id": `https://www.intelinfor.com/category/${this.newInfo.seo_category_path}/`,
-                        name:
-                          this.newInfo?.seo_category_name ||
-                          this.newInfo?.category_locale_name ||
-                          ""
-                      }
-                    }
-                  ]
-                : []),
-              {
-                "@type": "ListItem",
-                position: this.newInfo?.seo_category_path ? 3 : 2,
-                item: {
-                  "@id": this.newInfo?.path_v2
-                    ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-                    : "https://www.intelinfor.com/",
-                  name: this.newInfo?.name || ""
-                }
-              }
-            ]
-          }
-        }
+        { hid: "twitter:locale", property: "twitter:locale", content: this.newInfo?.language }
       ]
     };
   },
-
   mounted: function () {
     this.handleCreateTableParentDom();
     const searchParams = new URLSearchParams(window.location.search);
@@ -430,10 +296,7 @@ export default {
       if (!target) return;
       const navbarHeight = 60;
       const targetTop = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-      window.scrollTo({
-        top: targetTop,
-        behavior: "smooth"
-      });
+      window.scrollTo({ top: targetTop, behavior: "smooth" });
       window.history.pushState({}, "", `#${anchorId}`);
     },
     handleAdsScript() {
@@ -444,7 +307,7 @@ export default {
     addAdSenseScript() {
       const searchParams = new URLSearchParams(window.location.search);
       let terms = searchParams.has("terms") ? searchParams.get("terms") : "";
-      terms = terms.replace(/[，]/g, ",");
+      terms = terms.replace(/[\uff0c]/g, ",");
       let headline = searchParams.has("headline") ? searchParams.get("headline") : "";
       if (headline === "{title}" || headline === "{{ad_title}}") {
         headline = "";
@@ -476,8 +339,7 @@ export default {
         resultsPageQueryParam: "query",
         terms: terms || this.newInfo?.terms,
         referrerAdCreative: headline || terms || this.newInfo?.referrer_ad_creative,
-        ivt: false,
-        adtest: "off"
+        ivt: false
       };
 
       // eslint-disable-next-line no-undef
@@ -488,25 +350,7 @@ export default {
           if (response) {
             window.trackEventToPixel("D_C_AC");
             window.pushEventParamsToGtm("C_AC");
-            window.setCookie("query_ad", 1);
-            try {
-              let numberOfKeys = 0;
-              let concatenatedKeys = "miss";
-              if (callbackOptions && callbackOptions.termPositions) {
-                const keys = Object.keys(callbackOptions.termPositions);
-                numberOfKeys = keys.length;
-                concatenatedKeys = keys.join(",");
-              }
-              // eslint-disable-next-line no-undef
-              dataLayer.push({
-                event: "C_AC_IN",
-                num: numberOfKeys,
-                key1: numberOfKeys,
-                key2: concatenatedKeys
-              });
-            } catch (e) {
-              console.log(e);
-            }
+            window.handleRequestAdByChannel("query_ad", 1);
           }
         }
       });
@@ -527,10 +371,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-layout {
-  width: 100%;
-}
-
+.page-layout { width: 100%; }
 .article {
   line-height: 19px;
   font-family: "hem";
@@ -538,14 +379,12 @@ export default {
   border-bottom: 1px solid #ececee;
   min-height: calc(100vh - 72px - 56px - 64px);
 }
-
 .article-title {
   font-size: 26px;
   font-family: "hem";
   line-height: 30px;
   margin-bottom: 24px;
 }
-
 .news-author {
   display: flex;
   gap: 20px;
@@ -553,7 +392,6 @@ export default {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
 }
-
 .article-summary {
   display: flex;
   gap: 12px;
@@ -562,200 +400,52 @@ export default {
   background-color: #f5f5f5;
   border-radius: 4px;
   border-left: 4px solid #fd9a25;
-
-  .summary-icon {
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-
+  .summary-icon { font-size: 24px; flex-shrink: 0; }
   .summary-content {
     flex: 1;
-
-    .summary-title {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #333;
-    }
-
-    .summary-text {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #666;
-      margin: 0;
-    }
+    .summary-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #333; }
+    .summary-text { font-size: 14px; line-height: 1.6; color: #666; margin: 0; }
   }
 }
-
 .toc-container {
   margin: 20px 0;
   padding: 16px;
   background-color: #f9f9f9;
   border-radius: 4px;
-
-  .toc-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: #333;
-  }
-
+  .toc-title { font-size: 16px; font-weight: bold; margin-bottom: 12px; color: #333; }
   .toc-nav {
-    .toc-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
+    .toc-list { list-style: none; padding: 0; margin: 0; }
     .toc-item {
       font-size: 14px;
       line-height: 1.8;
       cursor: pointer;
       color: #0066cc;
       transition: color 0.2s;
-
-      &:hover {
-        color: #fd9a25;
-      }
-
-      &.toc-level-2 {
-        margin-left: 16px;
-      }
-
-      &.toc-level-3 {
-        margin-left: 32px;
-      }
+      &:hover { color: #fd9a25; }
+      &.toc-level-2 { margin-left: 16px; }
+      &.toc-level-3 { margin-left: 32px; }
     }
   }
 }
-
-.article-img {
-  width: 100%;
-  margin: 20px 0;
-}
-
-.news-detail {
-  p {
-    text-indent: 1em;
-    line-height: 1.6;
-  }
-}
-
-.first_paragraph {
-  text-indent: 1em;
-  font-size: 14px;
-  line-height: 19px;
-}
-
+.article-img { width: 100%; margin: 20px 0; }
+.news-detail { p { text-indent: 1em; line-height: 1.6; } }
+.first_paragraph { text-indent: 1em; font-size: 14px; line-height: 19px; }
 .faq-section {
-  margin: 32px 0;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-
-  .faq-title {
-    font-size: 18px;
-    font-weight: bold;
+  margin: 32px 0; padding: 20px; background-color: #f5f5f5; border-radius: 4px;
+  .faq-title { font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #333; }
+  .faq-list .faq-item {
     margin-bottom: 16px;
-    color: #333;
-  }
-
-  .faq-list {
-    .faq-item {
-      margin-bottom: 16px;
-
-      .faq-question {
-        font-size: 14px;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: #333;
-      }
-
-      .faq-answer {
-        font-size: 14px;
-        line-height: 1.6;
-        color: #666;
-        margin: 0;
-      }
-    }
+    .faq-question { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #333; }
+    .faq-answer { font-size: 14px; line-height: 1.6; color: #666; margin: 0; }
   }
 }
-
-.title-h2 {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 24px 0 16px 0;
-  color: #333;
-}
-
-.related-articles {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
+.title-h2 { font-size: 18px; font-weight: bold; margin: 24px 0 16px 0; color: #333; }
+.related-articles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 @media screen and (max-width: 750px) {
-  .article {
-    line-height: vw(38);
-    padding-bottom: vw(32);
-    border-bottom: vw(2) solid #ececee;
-    min-height: calc(100vh - vw(304));
-  }
-
-  .article-title {
-    font-size: vw(40);
-    line-height: vw(56);
-    margin-bottom: vw(32);
-  }
-
-  .article-summary {
-    .summary-icon {
-      font-size: vw(32);
-    }
-
-    .summary-content {
-      .summary-title {
-        font-size: vw(28);
-      }
-
-      .summary-text {
-        font-size: vw(24);
-      }
-    }
-  }
-
-  .toc-container {
-    .toc-title {
-      font-size: vw(32);
-    }
-
-    .toc-item {
-      font-size: vw(28);
-
-      &.toc-level-2 {
-        margin-left: vw(32);
-      }
-
-      &.toc-level-3 {
-        margin-left: vw(64);
-      }
-    }
-  }
-
-  .first_paragraph {
-    font-size: vw(32);
-    color: rgba(23, 23, 23, 0.8);
-    line-height: vw(44);
-  }
-
-  .title-h2 {
-    margin-top: vw(74);
-    margin-bottom: vw(32);
-  }
-
-  .related-articles {
-    grid-template-columns: repeat(1, 1fr);
-    gap: vw(32);
-  }
+  .article { line-height: vw(38); padding-bottom: vw(32); border-bottom: vw(2) solid #ececee; min-height: calc(100vh - vw(304)); }
+  .article-title { font-size: vw(40); line-height: vw(56); margin-bottom: vw(32); }
+  .first_paragraph { font-size: vw(32); color: rgba(23, 23, 23, 0.8); line-height: vw(44); }
+  .title-h2 { margin-top: vw(74); margin-bottom: vw(32); }
+  .related-articles { grid-template-columns: repeat(1, 1fr); gap: vw(32); }
 }
 </style>
