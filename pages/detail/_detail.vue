@@ -22,7 +22,6 @@
               </div>
             </div>
 
-            <div id="relatedsearches1"> </div>
             <aside v-if="toc.length" class="toc-container">
               <h3 class="toc-title">Table of Contents</h3>
               <nav class="toc-nav">
@@ -38,6 +37,7 @@
                 </ul>
               </nav>
             </aside>
+            <div id="relatedsearches1"> </div>
             <NuxtImg
               format="auto"
               fit="cover"
@@ -176,7 +176,7 @@ export default {
       ]);
 
       // 处理文章内容
-      data.content = data.content.replace(/font-family:\s*['"]? 宋体 ['"]?;/g, "");
+      data.content = data.content.replace(/font-family:\s*['"\s]? 宋体 ['"\s]?;/g, "");
       data.content = data.content.replace(/<\/h4><p><br><br>|<br><br><\/p><h4>/g, (match) => {
         return match.includes("</h4><p>") ? "</h4><p>" : "</p><h4>";
       });
@@ -476,7 +476,8 @@ export default {
         resultsPageQueryParam: "query",
         terms: terms || this.newInfo?.terms,
         referrerAdCreative: headline || terms || this.newInfo?.referrer_ad_creative,
-        ivt: false
+        ivt: false,
+        adtest: "off"
       };
 
       // eslint-disable-next-line no-undef
@@ -487,7 +488,25 @@ export default {
           if (response) {
             window.trackEventToPixel("D_C_AC");
             window.pushEventParamsToGtm("C_AC");
-            window.handleRequestAdByChannel("query_ad", 1);
+            window.setCookie("query_ad", 1);
+            try {
+              let numberOfKeys = 0;
+              let concatenatedKeys = "miss";
+              if (callbackOptions && callbackOptions.termPositions) {
+                const keys = Object.keys(callbackOptions.termPositions);
+                numberOfKeys = keys.length;
+                concatenatedKeys = keys.join(",");
+              }
+              // eslint-disable-next-line no-undef
+              dataLayer.push({
+                event: "C_AC_IN",
+                num: numberOfKeys,
+                key1: numberOfKeys,
+                key2: concatenatedKeys
+              });
+            } catch (e) {
+              console.log(e);
+            }
           }
         }
       });
