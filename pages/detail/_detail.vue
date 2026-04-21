@@ -420,9 +420,9 @@ export default {
         window.history.replaceState({}, "", newUrl);
       }
     }
-    setTimeout(() => {
+    this.$nextTick(() => {
       this.handleAdsScript();
-    }, 0);
+    });
   },
   methods: {
     scrollToAnchor(anchorId) {
@@ -456,11 +456,10 @@ export default {
       }
       const ignoredPageParams = paramKeys.join(",");
 
-      const channelId = window.getParam("channel");
       const hiSource = window.getParam("hi_source");
       const hiPc = window.getParam("hi_pc");
       const resultsPageBaseUrl = window.getResultsPageUrl({
-        channel: channelId,
+        channel: this.channelId,
         from: "detail",
         hi_source: hiSource,
         hi_pc: hiPc
