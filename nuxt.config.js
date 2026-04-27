@@ -26,7 +26,6 @@ export default {
         const urls = [...categoryPaths, ...detailPaths];
         return urls;
       } catch (error) {
-        // Fallback: Skip dynamic routes during static generation if API unavailable
         console.warn("API fetch failed, using root-only routes for testing:", error.message);
         return [];
       }
@@ -88,7 +87,6 @@ export default {
     ],
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-      // Preload critical fonts
       {
         rel: "preload",
         as: "font",
@@ -97,7 +95,6 @@ export default {
         crossorigin: true
       }
     ],
-    // Performance & Security Headers
     noscript: [{ innerHTML: "This site requires JavaScript to be enabled." }]
   },
   image: {
@@ -105,7 +102,6 @@ export default {
     cloudflare: {
       baseURL: "https://bunchthings.com"
     },
-    // Image optimization settings
     screens: {
       xs: 320,
       sm: 640,
@@ -127,7 +123,6 @@ export default {
     "@nuxtjs/style-resources",
     "@nuxt/image",
     "@nuxtjs/pwa",
-    "@nuxtjs/sitemap",
     "@nuxtjs/google-fonts"
   ],
   css: ["@/assets/css/fonts.css", "@/assets/css/reset.css", "@/assets/css/common.scss"],
@@ -135,8 +130,29 @@ export default {
     scss: ["~/assets/css/_mixins.scss"]
   },
   modules: ["@nuxtjs/axios"],
-  sitemap: {
-    hostname: "https://intelinfor.com/"
+  hooks: {
+    "generate:done"(generator) {
+      const nodePath = require("path");
+      const fs = require("fs");
+      const hostname = "https://intelinfor.com";
+      const today = new Date().toISOString().split("T")[0];
+      const routes = [...generator.generatedRoutes].filter(
+        (r) => r && typeof r === "string" && !r.includes(":")
+      );
+      const urlEntries = routes
+        .map(
+          (r) =>
+            `  <url>\n    <loc>${hostname}${r}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
+        )
+        .join("\n");
+      const xml =
+        `<?xml version="1.0" encoding="UTF-8"?>\n` +
+        `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+        urlEntries +
+        `\n</urlset>`;
+      const outputPath = nodePath.join(generator.options.generate.dir, "sitemap.xml");
+      fs.writeFileSync(outputPath, xml, "utf8");
+    }
   },
   pwa: {
     manifest: {
@@ -163,7 +179,7 @@ export default {
             cacheName: "images-cache",
             cacheExpiration: {
               maxEntries: 100,
-              maxAgeSeconds: 2592000 // 30 days
+              maxAgeSeconds: 2592000
             }
           }
         },
@@ -175,14 +191,13 @@ export default {
             cacheName: "api-cache",
             cacheExpiration: {
               maxEntries: 50,
-              maxAgeSeconds: 3600 // 1 hour
+              maxAgeSeconds: 3600
             }
           }
         }
       ]
     }
   },
-  // Performance optimizations
   build: {
     parallel: true,
     cache: true,
@@ -208,7 +223,6 @@ export default {
         minSize: 10000,
         maxSize: 244000,
         cacheGroups: {
-          // Vendor separation for better caching
           vendor: {
             name: "vendors",
             test: /[\\/]node_modules[\\/]/,
@@ -216,21 +230,18 @@ export default {
             maxSize: 244000,
             priority: 20
           },
-          // Vue related
           vue: {
             test: /[\\/]node_modules[\\/](vue|nuxt)[\\/]/,
             name: "vue",
             priority: 21,
             chunks: "all"
           },
-          // Styles
           styles: {
             name: "styles",
             test: /\.(css|vue)$/,
             chunks: "all",
             enforce: true
           },
-          // Common used modules
           common: {
             minChunks: 2,
             priority: 10,
@@ -261,7 +272,6 @@ export default {
         })
       ]
     },
-    // Webpack bundle analysis for debugging
     analyze: {
       analyzerMode: "disabled",
       generateStatsFile: false
@@ -270,11 +280,9 @@ export default {
   purgeCSS: {
     whitelistPatterns: [/^swiper-container/, /^swiper-wrapper/, /^nuxt/]
   },
-  // Loading behavior
   loading: {
     color: "#3B8070",
     height: "2px"
   },
-  // Telemetry - disable in production
   telemetry: false
 };
