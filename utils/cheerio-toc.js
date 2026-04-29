@@ -47,6 +47,13 @@ exports.processHtmlWithToc = (html, levels = [1, 2, 3]) => {
   // 移除 index 字段（无需传递到客户端）
   const cleanToc = toc.map(({ index, ...rest }) => rest);
 
+  // 给所有表格加 class 并套滚动容器
+  $("table").each((i, el) => {
+    const $el = $(el);
+    $el.addClass("table-container");
+    $el.wrap('<div class="table-container-parent"></div>');
+  });
+
   // 返回带锚点的 HTML 和目录
   return {
     toc: cleanToc,
