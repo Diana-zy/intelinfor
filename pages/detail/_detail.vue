@@ -102,8 +102,6 @@ export default {
     const id = path.substring(lastDashIndex + 1, path.length);
 
     try {
-      // 串行请求 API，避免并发触发限流
-      // 首先获取详情数据（最重要）
       let data = null;
       try {
         data = await $axios.$get("/api/article/detail", {
@@ -128,7 +126,6 @@ export default {
         };
       }
 
-      // 如果详情数据为空，直接返回
       if (!data?.content) {
         console.warn(`No content found for ID ${id}`);
         return {
@@ -144,7 +141,6 @@ export default {
         };
       }
 
-      // 并行获取其他数据（非关键）
       const [recNewsResponse, trendingNewsResponse, allResponse] = await Promise.all([
         $axios
           .$get("/api/article/menu", {
@@ -175,14 +171,16 @@ export default {
           .catch(() => null)
       ]);
 
-      // 处理文章内容
       data.content = data.content.replace(/font-family:\s*['"]? 宋体 ['"]?;/g, "");
       data.content = data.content.replace(/<\/h4><p><br><br>|<br><br><\/p><h4>/g, (match) => {
         return match.includes("</h4><p>") ? "</h4><p>" : "</p><h4>";
       });
 
-      const { toc: flatToc, htmlWithAnchor } = processHtmlWithToc(data.content, [2]);
+      const { toc: flatToc, htmlWithAnchor: rawHtml } = processHtmlWithToc(data.content, [2]);
       const toc = generateNestedToc(flatToc);
+      const htmlWithAnchor = rawHtml
+        .replace(/(<table)/g, '<div class="table-scroll-wrapper">$1')
+        .replace(/<\/table>/g, "</table></div>");
 
       const articleFaqs = data.faqs || [
         {
@@ -492,15 +490,14 @@ export default {
       });
     },
     handleCreateTableParentDom() {
-      const tables = document.querySelectorAll(".news-detail table");
-      if (tables.length) {
-        tables.forEach((table) => {
-          const parentDiv = document.createElement("div");
-          parentDiv.className = "table-container";
-          table.parentNode.insertBefore(parentDiv, table);
-          parentDiv.appendChild(table);
-        });
-      }
+      document.querySelectorAll("table.table-container").forEach((dom) => {
+        if (!dom.parentNode.classList.contains("table-container-parent")) {
+          const newParent = document.createElement("div");
+          newParent.setAttribute("class", "table-container-parent");
+          dom.parentNode.insertBefore(newParent, dom);
+          newParent.appendChild(dom);
+        }
+      });
     }
   }
 };
