@@ -87,6 +87,7 @@ import RightSideBox from "../../components/RightSideBox";
 import FooterSeo from "../../components/FooterSeo";
 import { shuffleArray } from "../../utils/utils";
 import { processHtmlWithToc, generateNestedToc } from "../../utils/cheerio-toc.js";
+import tableScrollMixin from "../../mixins/tableScroll";
 
 export default {
   components: {
@@ -96,6 +97,7 @@ export default {
     RightSideBox,
     FooterSeo
   },
+  mixins: [tableScrollMixin],
   async asyncData({ $axios, params, env }) {
     const path = params.detail;
     const lastDashIndex = path.lastIndexOf("-");
@@ -144,29 +146,17 @@ export default {
       const [recNewsResponse, trendingNewsResponse, allResponse] = await Promise.all([
         $axios
           .$get("/api/article/menu", {
-            params: {
-              site_id: env.SITE_ID,
-              mod_id: "rec"
-            }
+            params: { site_id: env.SITE_ID, mod_id: "rec" }
           })
           .catch(() => null),
         $axios
           .$get("/api/article/get_all_articles", {
-            params: {
-              site_id: env.SITE_ID,
-              size: 4,
-              page: 1
-            }
+            params: { site_id: env.SITE_ID, size: 4, page: 1 }
           })
           .catch(() => null),
         $axios
           .$get("/api/article/menu", {
-            params: {
-              site_id: env.SITE_ID,
-              mod_id: "all",
-              page: 1,
-              size: 20
-            }
+            params: { site_id: env.SITE_ID, mod_id: "all", page: 1, size: 20 }
           })
           .catch(() => null)
       ]);
@@ -175,12 +165,12 @@ export default {
       data.content = data.content.replace(/<\/h4><p><br><br>|<br><br><\/p><h4>/g, (match) => {
         return match.includes("</h4><p>") ? "</h4><p>" : "</p><h4>";
       });
-
-      const { toc: flatToc, htmlWithAnchor: rawHtml } = processHtmlWithToc(data.content, [2]);
-      const toc = generateNestedToc(flatToc);
-      const htmlWithAnchor = rawHtml
+      data.content = data.content
         .replace(/(<table)/g, '<div class="table-scroll-wrapper">$1')
         .replace(/<\/table>/g, "</table></div>");
+
+      const { toc: flatToc, htmlWithAnchor } = processHtmlWithToc(data.content, [2]);
+      const toc = generateNestedToc(flatToc);
 
       const articleFaqs = data.faqs || [
         {
@@ -235,21 +225,9 @@ export default {
     return {
       title: this.newInfo?.name ? this.newInfo.name + " - Intelinfor" : "Intelinfor",
       meta: [
-        {
-          hid: "description",
-          name: "description",
-          content: this.newInfo?.seo_desc
-        },
-        {
-          hid: "og:title",
-          property: "og:title",
-          content: this.newInfo?.seo_title
-        },
-        {
-          hid: "og:description",
-          property: "og:description",
-          content: this.newInfo?.seo_desc
-        },
+        { hid: "description", name: "description", content: this.newInfo?.seo_desc },
+        { hid: "og:title", property: "og:title", content: this.newInfo?.seo_title },
+        { hid: "og:description", property: "og:description", content: this.newInfo?.seo_desc },
         {
           hid: "og:url",
           property: "og:url",
@@ -257,31 +235,19 @@ export default {
             ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
             : "https://www.intelinfor.com/"
         },
-        {
-          hid: "og:locale",
-          property: "og:locale",
-          content: this.newInfo?.language
-        },
+        { hid: "og:locale", property: "og:locale", content: this.newInfo?.language },
         {
           hid: "og:image",
           property: "og:image",
           content: `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover}`
         },
-        {
-          hid: "og:type",
-          property: "og:type",
-          content: "article"
-        },
+        { hid: "og:type", property: "og:type", content: "article" },
         {
           hid: "twitter:image",
           property: "twitter:image",
           content: `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover}`
         },
-        {
-          hid: "twitter:title",
-          property: "twitter:title",
-          content: this.newInfo?.seo_title
-        },
+        { hid: "twitter:title", property: "twitter:title", content: this.newInfo?.seo_title },
         {
           hid: "twitter:description",
           property: "twitter:description",
@@ -294,11 +260,7 @@ export default {
             ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
             : "https://www.intelinfor.com/"
         },
-        {
-          hid: "twitter:locale",
-          property: "twitter:locale",
-          content: this.newInfo?.language
-        }
+        { hid: "twitter:locale", property: "twitter:locale", content: this.newInfo?.language }
       ],
       script: [
         {
@@ -309,10 +271,7 @@ export default {
             mainEntity: (this.articleFaqs || []).map((faq) => ({
               "@type": "Question",
               name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer
-              }
+              acceptedAnswer: { "@type": "Answer", text: faq.answer }
             }))
           }
         },
@@ -351,9 +310,7 @@ export default {
             },
             image: [
               `https://bunchthings.com/cdn-cgi/image/f=auto,fit=cover/${this.newInfo?.cover || ""}`,
-              `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${
-                this.newInfo?.cover || ""
-              }`
+              `https://bunchthings.com/cdn-cgi/image/w=600,f=auto,fit=cover/${this.newInfo?.cover || ""}`
             ]
           }
         },
@@ -366,10 +323,7 @@ export default {
               {
                 "@type": "ListItem",
                 position: 1,
-                item: {
-                  "@id": "https://www.intelinfor.com/",
-                  name: "Home"
-                }
+                item: { "@id": "https://www.intelinfor.com/", name: "Home" }
               },
               ...(this.newInfo?.seo_category_path
                 ? [
@@ -402,7 +356,6 @@ export default {
       ]
     };
   },
-
   mounted: function () {
     this.handleCreateTableParentDom();
     const searchParams = new URLSearchParams(window.location.search);
@@ -428,10 +381,7 @@ export default {
       if (!target) return;
       const navbarHeight = 60;
       const targetTop = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-      window.scrollTo({
-        top: targetTop,
-        behavior: "smooth"
-      });
+      window.scrollTo({ top: targetTop, behavior: "smooth" });
       window.history.pushState({}, "", `#${anchorId}`);
     },
     handleAdsScript() {
@@ -447,13 +397,11 @@ export default {
       if (headline === "{title}" || headline === "{{ad_title}}") {
         headline = "";
       }
-
       const paramKeys = [];
       for (const param of searchParams) {
         paramKeys.push(param[0]);
       }
       const ignoredPageParams = paramKeys.join(",");
-
       const hiSource = window.getParam("hi_source");
       const hiPc = window.getParam("hi_pc");
       const resultsPageBaseUrl = window.getResultsPageUrl({
@@ -475,27 +423,16 @@ export default {
         referrerAdCreative: headline || terms || this.newInfo?.referrer_ad_creative,
         ivt: false
       };
-
       // eslint-disable-next-line no-undef
       _googCsa("relatedsearch", adSenseConfig, {
         container: "relatedsearches1",
         relatedSearches: 10,
-        adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
+        adLoadedCallback: function (loaded, response) {
           if (response) {
             window.trackEventToPixel("D_C_AC");
             window.pushEventParamsToGtm("C_AC");
             window.handleRequestAdByChannel("query_ad", 1);
           }
-        }
-      });
-    },
-    handleCreateTableParentDom() {
-      document.querySelectorAll("table.table-container").forEach((dom) => {
-        if (!dom.parentNode.classList.contains("table-container-parent")) {
-          const newParent = document.createElement("div");
-          newParent.setAttribute("class", "table-container-parent");
-          dom.parentNode.insertBefore(newParent, dom);
-          newParent.appendChild(dom);
         }
       });
     }
