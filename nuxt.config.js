@@ -36,7 +36,14 @@ export default {
       process.env.NODE_ENV === "production" ? process.env.PROD_API_URL : process.env.TEST_API_URL
   },
   router: {
-    trailingSlash: true
+    trailingSlash: true,
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: "category-detail",
+        path: "/:category/:detail",
+        component: resolve(__dirname, "pages/detail/_detail.vue")
+      });
+    }
   },
   head: {
     title: "Intelinfor - world news in the palm of your hand!",

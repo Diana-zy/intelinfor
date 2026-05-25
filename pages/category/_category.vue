@@ -9,7 +9,7 @@
             seo_category_name: categoryInfo?.seo_category?.name,
             category_locale_name: categoryInfo?.seo_category?.name,
             is_seo_category_on_site: true,
-            seo_category_path: slugPath
+            seo_category_path: categoryPath
           }"
           is-category
         ></breadcrumb>
@@ -49,30 +49,13 @@
 </template>
 
 <script>
-import Breadcrumb from "~/components/Breadcrumb";
-import CommonPageLabel from "~/components/common/PageLabel";
-import InfiniteLoadList from "~/components/InfiniteLoadList";
-import NewsItem4 from "~/components/NewsItem4";
-import RightSideBox from "~/components/RightSideBox";
-import FooterSeo from "~/components/FooterSeo";
-import AppHeader from "~/components/Header";
 import { capitalizeFirstLetter } from "~/utils/utils";
 
 export default {
-  components: {
-    AppHeader,
-    Breadcrumb,
-    InfiniteLoadList,
-    NewsItem4,
-    RightSideBox,
-    FooterSeo,
-    CommonPageLabel
-  },
   async asyncData({ $axios, params, env }) {
-    let id = "";
-    const path = params.slug;
+    const path = params.category;
     const lastDashIndex = path.lastIndexOf("-");
-    id = path.substring(lastDashIndex + 1, path.length);
+    const id = path.substring(lastDashIndex + 1, path.length);
 
     try {
       const [recNewsResponse, trendingNewsResponse, categoryInfoResponse] = await Promise.all([
@@ -81,14 +64,14 @@ export default {
             site_id: env.SITE_ID,
             mod_id: "rec"
           }
-        }),
+        }).catch(() => null),
         $axios.$get("/api/article/get_all_articles", {
           params: {
             site_id: env.SITE_ID,
             size: 4,
             page: 1
           }
-        }),
+        }).catch(() => null),
         $axios.$get("/api/article/get_seo_category_page", {
           params: {
             site_id: env.SITE_ID,
@@ -96,16 +79,14 @@ export default {
             size: 10,
             page: 1
           }
-        })
+        }).catch(() => null)
       ]);
-      // console.log(categoryInfoResponse, "categoryInfoResponse");
-      // 返回多个接口的数据
       return {
         recNews: recNewsResponse,
         trendingNews: trendingNewsResponse,
         categoryInfo: categoryInfoResponse,
         id,
-        slugPath: path
+        categoryPath: path
       };
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -114,14 +95,14 @@ export default {
         trendingNews: null,
         categoryInfo: null,
         id,
-        slugPath: path
+        categoryPath: path
       };
     }
   },
   head() {
     const categoryName = this.categoryInfo?.seo_category?.name || "";
-    const categoryUrl = this.slugPath
-      ? `https://www.intelinfor.com/category/${this.slugPath}/`
+    const categoryUrl = this.categoryPath
+      ? `https://www.intelinfor.com/category/${this.categoryPath}/`
       : "https://www.intelinfor.com/";
 
     const itemListElements =
@@ -205,7 +186,7 @@ export default {
     if (searchParams.has("channel")) {
       this.channelId = searchParams.get("channel");
     } else {
-      this.channelId = this.categoryInfo?.channel || "";
+      this.channelId = this.categoryInfo?.seo_category?.channel || "";
     }
     this.$nextTick(() => {
       this.addAdSenseScript();
@@ -228,11 +209,10 @@ export default {
       }
       const ignoredPageParams = paramKeys.join(",");
 
-      const channelId = this.channelId;
       const hiSource = window.getParam("hi_source");
       const hiPc = window.getParam("hi_pc");
       const resultsPageBaseUrl = window.getResultsPageUrl({
-        channel: channelId,
+        channel: this.channelId,
         from: "detail",
         hi_source: hiSource,
         hi_pc: hiPc

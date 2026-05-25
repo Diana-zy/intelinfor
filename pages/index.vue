@@ -16,6 +16,8 @@
         </div>
       </section>
 
+      <h1 class="site-h1">高齢者の暮らしとお金ガイド</h1>
+
       <section v-swiper:mySwiper="swiperOption" class="swiper-box">
         <div class="swiper-wrapper">
           <item-home-swiper
@@ -65,7 +67,7 @@ export default {
   },
   async asyncData({ $axios, env }) {
     try {
-      // 并行处理多个异步请求
+      // 並行処理で複数の非同期リクエストを処理
       const [recNewsResponse, trendingNewsResponse, allNewsResponse] = await Promise.all([
         $axios.$get("/api/article/menu", {
           params: {
@@ -90,7 +92,6 @@ export default {
         })
       ]);
 
-      // 返回多个接口的数据
       return {
         recNews: recNewsResponse,
         trendingNews: trendingNewsResponse,
@@ -98,7 +99,6 @@ export default {
       };
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Return empty fallback data during static generation or API errors
       return {
         recNews: { list: [] },
         trendingNews: { list: [] },
@@ -127,13 +127,21 @@ export default {
       })) || [];
 
     return {
+      title: '高齢者ライフ | シニアの経済と暮らしを支える情報サイト',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: '老後のお金や暮らしの不安を解消！保険、年金、相続の最新情報を専門家が解説します。後悔しないための準備を今すぐ始めましょう。'
+        }
+      ],
       script: [
         {
           type: "application/ld+json",
           json: {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "Intelinfor",
+            name: "高齢者ライフ",
             url: "https://www.intelinfor.com/",
             potentialAction: {
               "@type": "SearchAction",
@@ -174,9 +182,6 @@ export default {
     clear() {
       this.input = "";
     }
-    // clickWord(words) {
-    //   simulateAFSSearch(words);
-    // }
   }
 };
 </script>
@@ -184,6 +189,14 @@ export default {
 .main {
   padding-bottom: 32px;
   border-bottom: 1px solid #ececee;
+}
+
+.site-h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: $font1;
+  margin: 24px 0 16px;
+  padding: 0;
 }
 
 .home-search {
@@ -314,6 +327,11 @@ export default {
   .main {
     padding-bottom: vw(32);
     border-bottom: none;
+  }
+
+  .site-h1 {
+    font-size: vw(32);
+    margin: vw(24) 0 vw(16);
   }
 
   .home-search {
