@@ -17,9 +17,9 @@
 export default {
   data() {
     return {
-      news: [], // 新闻列表
-      input: "", // 搜索输入
-      channelId: "" // 频道 ID
+      news: [],
+      input: "",
+      channelId: ""
     };
   },
   mounted() {
@@ -27,6 +27,10 @@ export default {
 
     const searchParams = new URLSearchParams(window.location.search);
     this.channelId = searchParams.has("channel") ? searchParams.get("channel") : "";
+    if (searchParams.has("from") && searchParams.get("from") === "detail") {
+      window.fromDetailId = window.getCookie("SEO_detail");
+    }
+    window.setCookie("SEO_detail", "");
 
     this.input = this.$route.query.query || "";
     this.input && this.addAdSense();
@@ -58,7 +62,12 @@ export default {
           site_id: process.env.SITE_ID,
           key: this.input
         });
-        this.news = response.list;
+        this.news = response.list
+          .filter(item => item.seo_category_path)
+          .map(item => ({
+            ...item,
+            path_v2: `${item.seo_category_path}/${item.path_v2.replace(/^\//, "")}`
+          }));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -68,11 +77,12 @@ export default {
       const queryString = this.input;
 
       const channelId = window.getParam("channel");
+      const from = window.getParam("from");
       const hiSource = window.getParam("hi_source");
       const hiPc = window.getParam("hi_pc");
       const resultsPageBaseUrl = window.getResultsPageUrl({
         channel: channelId,
-        from: "search",
+        from,
         hi_source: hiSource,
         hi_pc: hiPc
       });
@@ -87,7 +97,6 @@ export default {
         resultsPageQueryParam: "query"
       };
 
-      // AdSense 加载回调函数
       const adLoadedCallback =
         (eventName, additionalData = {}) =>
         (loaded, response) => {
@@ -103,8 +112,14 @@ export default {
         adLoadedCallback: (loaded, e) => {
           if (e) {
             window.trackEventToPixel("C_AR");
-
             window.pushEventParamsToGtm("C_AR");
+            const hi_user_source = window.getValueByURLOrCookie("hi_source");
+            if (hi_user_source === "unknown") {
+              window.dataLayer.push({
+                event: "Detail_C_AR_C_SEO",
+                SEO_detail: window.fromDetailId || ""
+              });
+            }
             try {
               const element = document.getElementById("master-1");
               const height = parseFloat(element.style.height);
@@ -121,14 +136,12 @@ export default {
         }
       };
 
-      // 根据来源配置 rsblock1
       const rsblock1 = (() => {
         const baseConfig = {
           container: "relatedsearches1",
           relatedSearches: 5,
           adLoadedCallback: adLoadedCallback("C_AC", { query: queryString })
         };
-
         return baseConfig;
       })();
 

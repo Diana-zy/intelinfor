@@ -186,7 +186,7 @@ export default {
     if (searchParams.has("channel")) {
       this.channelId = searchParams.get("channel");
     } else {
-      this.channelId = this.categoryInfo?.channel || "";
+      this.channelId = this.categoryInfo?.seo_category?.channel || "";
     }
     this.$nextTick(() => {
       this.addAdSenseScript();
@@ -209,11 +209,10 @@ export default {
       }
       const ignoredPageParams = paramKeys.join(",");
 
-      const channelId = this.channelId;
       const hiSource = window.getParam("hi_source");
       const hiPc = window.getParam("hi_pc");
       const resultsPageBaseUrl = window.getResultsPageUrl({
-        channel: channelId,
+        channel: this.channelId,
         from: "detail",
         hi_source: hiSource,
         hi_pc: hiPc
