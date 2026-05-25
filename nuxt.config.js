@@ -26,7 +26,6 @@ export default {
         const urls = [...categoryPaths, ...detailPaths];
         return urls;
       } catch (error) {
-        // Fallback: Skip dynamic routes during static generation if API unavailable
         console.warn("API fetch failed, using root-only routes for testing:", error.message);
         return [];
       }
@@ -37,7 +36,14 @@ export default {
       process.env.NODE_ENV === "production" ? process.env.PROD_API_URL : process.env.TEST_API_URL
   },
   router: {
-    trailingSlash: true
+    trailingSlash: true,
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: "category-detail",
+        path: "/:category/:detail",
+        component: resolve(__dirname, "pages/detail/_detail.vue")
+      });
+    }
   },
   head: {
     title: "Intelinfor - world news in the palm of your hand!",
@@ -88,7 +94,6 @@ export default {
     ],
     link: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-      // Preload critical fonts
       {
         rel: "preload",
         as: "font",
@@ -97,7 +102,6 @@ export default {
         crossorigin: true
       }
     ],
-    // Performance & Security Headers
     noscript: [{ innerHTML: "This site requires JavaScript to be enabled." }]
   },
   image: {
@@ -105,7 +109,6 @@ export default {
     cloudflare: {
       baseURL: "https://bunchthings.com"
     },
-    // Image optimization settings
     screens: {
       xs: 320,
       sm: 640,
@@ -163,7 +166,7 @@ export default {
             cacheName: "images-cache",
             cacheExpiration: {
               maxEntries: 100,
-              maxAgeSeconds: 2592000 // 30 days
+              maxAgeSeconds: 2592000
             }
           }
         },
@@ -175,14 +178,13 @@ export default {
             cacheName: "api-cache",
             cacheExpiration: {
               maxEntries: 50,
-              maxAgeSeconds: 3600 // 1 hour
+              maxAgeSeconds: 3600
             }
           }
         }
       ]
     }
   },
-  // Performance optimizations
   build: {
     parallel: true,
     cache: true,
@@ -208,7 +210,6 @@ export default {
         minSize: 10000,
         maxSize: 244000,
         cacheGroups: {
-          // Vendor separation for better caching
           vendor: {
             name: "vendors",
             test: /[\\/]node_modules[\\/]/,
@@ -216,21 +217,18 @@ export default {
             maxSize: 244000,
             priority: 20
           },
-          // Vue related
           vue: {
             test: /[\\/]node_modules[\\/](vue|nuxt)[\\/]/,
             name: "vue",
             priority: 21,
             chunks: "all"
           },
-          // Styles
           styles: {
             name: "styles",
             test: /\.(css|vue)$/,
             chunks: "all",
             enforce: true
           },
-          // Common used modules
           common: {
             minChunks: 2,
             priority: 10,
@@ -261,7 +259,6 @@ export default {
         })
       ]
     },
-    // Webpack bundle analysis for debugging
     analyze: {
       analyzerMode: "disabled",
       generateStatsFile: false
@@ -270,11 +267,9 @@ export default {
   purgeCSS: {
     whitelistPatterns: [/^swiper-container/, /^swiper-wrapper/, /^nuxt/]
   },
-  // Loading behavior
   loading: {
     color: "#3B8070",
     height: "2px"
   },
-  // Telemetry - disable in production
   telemetry: false
 };
