@@ -5,30 +5,24 @@
         <img :src="icon" alt="" />
       </div>
       <div class="website-info">
-        <div
-          >Intelinfor is committed to delivering comprehensive world news and information across
-          various domains including politics, economics, technology, culture, and sports.</div
-        >
-        <div
-          >We provide the latest global developments with a focus on accurate reporting and in-depth
-          analysis to help you stay informed about important events worldwide.</div
-        >
+        <div>「高齢者ライフ」は、シニア世代の皆様が直面するお金や暮らしの不安を解消し、より豊かで安心なセカンドライフを送るための総合情報サイトです。</div>
+        <div> 保険の見直し、相続対策、年金の仕組みといった専門的な経済知識から、日々の生活を彩るライフスタイルや再就職のヒントまで、シニアライフに役立つ最新资讯を分かりやすくお届けします。</div>
       </div>
       <div class="link-info">
         <ul>
           <li class="link-item">
-            <CustomLink :to="'/cookies.html'" target="_blank">Privacy Policy</CustomLink>
+            <CustomLink :to="'/cookies.html'" target="_blank">プライバシーポリシー</CustomLink>
           </li>
           <li class="link-item">
-            <CustomLink :to="'/eula.html'" target="_blank">Terms of Use</CustomLink>
+            <CustomLink :to="'/eula.html'" target="_blank">利用規約</CustomLink>
           </li>
           <li class="link-item">
-            <a href="mailto:service@intelinfor.com">Contact Us</a>
+            <a href="mailto:service@intelinfor.com">お問い合わせ</a>
           </li>
         </ul>
       </div>
       <div class="link-info link-info-social">
-        <div class="m-hidden-block">Related Services:</div>
+        <div class="m-hidden-block">関連サービス：</div>
         <ul>
           <li class="link-item">
             <span @click="handleClick('twitter')">X (Twitter)</span>
@@ -58,7 +52,7 @@ export default {
   props: {
     lang: {
       type: String,
-      default: "en"
+      default: "ja"
     },
     channelId: {
       type: String,
@@ -108,13 +102,13 @@ export default {
           case "facebook":
             url = `https://www.facebook.com/sharer/sharer.php?u=${
               window.location.origin + window.location.pathname
-            }&t=${this.info?.name || "Article"}`;
+            }&t=${this.info?.name}`;
             window.open(url);
             break;
           case "twitter":
             url = `https://twitter.com/intent/tweet?url=${
               window.location.origin + window.location.pathname
-            }&text=${this.info?.name || "Check this out"}`;
+            }&text=${this.info?.name}`;
             window.open(url);
             break;
         }

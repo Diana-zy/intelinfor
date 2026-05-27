@@ -4,7 +4,7 @@
     <main class="main">
       <div id="afscontainer1"> </div>
       <div id="relatedsearches1"> </div>
-      <h3 class="title-h3">Web Results</h3>
+      <h3 class="title-h3">検索結果</h3>
       <section class="news-box-3">
         <news-item-3 v-for="(item, i) in news" :key="i" :item="item"> </news-item-3>
       </section>

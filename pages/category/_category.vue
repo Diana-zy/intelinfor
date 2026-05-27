@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <AppHeader />
+    <Header />
     <main class="main">
       <div class="layout-left">
         <breadcrumb
@@ -14,7 +14,7 @@
           is-category
         ></breadcrumb>
         <common-page-label
-          :title="`「${capitalizeFirstLetter(categoryInfo?.seo_category?.name)}」Articles`"
+          :title="`「${capitalizeFirstLetter(categoryInfo?.seo_category?.name)}」の記事一覧`"
         />
         <div id="relatedsearches1"></div>
         <section>
@@ -22,7 +22,7 @@
             api-endpoint="/api/article/get_seo_category_page"
             :initial-page="2"
             :page-size="10"
-            :show-more="false"
+            :showMore="true"
             :query="{
               seo_category_id: id
             }"
@@ -100,10 +100,13 @@ export default {
     }
   },
   head() {
-    const categoryName = this.categoryInfo?.seo_category?.name || "";
+    const category = this.categoryInfo && this.categoryInfo.seo_category;
+    const categoryName = (category && category.name) || "";
     const categoryUrl = this.categoryPath
       ? `https://www.intelinfor.com/category/${this.categoryPath}/`
       : "https://www.intelinfor.com/";
+    const seoTitle = (category && category.seo_title) || `「${categoryName}」の記事一覧 | 高齢者ライフ`;
+    const seoDesc = (category && category.seo_desc) || `${categoryName}に関する最新記事の一覧です。老後の生活に役立つ情報を専門家が解説します。`;
 
     const itemListElements =
       this.categoryInfo?.list
@@ -116,22 +119,32 @@ export default {
         })) || [];
 
     return {
-      title: categoryName ? `${categoryName} - Intelinfor` : "Intelinfor",
+      title: seoTitle,
       meta: [
         {
           hid: "description",
           name: "description",
-          content: `Read the latest ${categoryName} articles on Intelinfor.`
+          content: seoDesc
         },
         {
           hid: "og:title",
           property: "og:title",
-          content: categoryName ? `${categoryName} - Intelinfor` : "Intelinfor"
+          content: seoTitle
+        },
+        {
+          hid: "og:description",
+          property: "og:description",
+          content: seoDesc
         },
         {
           hid: "og:url",
           property: "og:url",
           content: categoryUrl
+        },
+        {
+          hid: "og:type",
+          property: "og:type",
+          content: "website"
         }
       ],
       script: [
@@ -146,7 +159,7 @@ export default {
                 position: 1,
                 item: {
                   "@id": "https://www.intelinfor.com/",
-                  name: "Home"
+                  name: "ホーム"
                 }
               },
               {
@@ -167,7 +180,6 @@ export default {
                 json: {
                   "@context": "https://schema.org",
                   "@type": "ItemList",
-                  name: categoryName,
                   itemListElement: itemListElements
                 }
               }

@@ -2,8 +2,8 @@
   <div class="page">
     <Header />
     <main class="main">
-      <h1>Contact Us</h1>
-      <p>Please feel free to contact us at service@intelinfor.com </p>
+      <h1>お問い合わせ</h1>
+      <p>お気軽にお問い合わせください：service@intelinfor.com</p>
     </main>
     <Footer />
   </div>

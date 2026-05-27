@@ -1,6 +1,6 @@
 <template>
   <div class="bread-crumb">
-    <CustomLink to="/" class="type">Home</CustomLink>
+    <CustomLink to="/" class="type">ホーム</CustomLink>
     <template v-if="categoryName">
       <span> / </span>
       <span>

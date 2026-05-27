@@ -17,14 +17,14 @@
             <div v-if="newInfo.seo_desc" class="article-summary">
               <div class="summary-icon">📋</div>
               <div class="summary-content">
-                <h3 class="summary-title">Article Summary</h3>
+                <h3 class="summary-title">記事の概要</h3>
                 <p class="summary-text">{{ newInfo.seo_desc }}</p>
               </div>
             </div>
 
             <div id="relatedsearches1"> </div>
             <aside v-if="toc.length" class="toc-container">
-              <h3 class="toc-title">Table of Contents</h3>
+              <h3 class="toc-title">目次</h3>
               <nav class="toc-nav">
                 <ul class="toc-list">
                   <li
@@ -53,7 +53,7 @@
 
             <!-- FAQ 区块 - GEO 优化 -->
             <section v-if="articleFaqs && articleFaqs.length" class="faq-section">
-              <h2 class="faq-title">Related Questions</h2>
+              <h2 class="faq-title">よくある質問</h2>
               <div class="faq-list">
                 <div v-for="(faq, index) in articleFaqs" :key="index" class="faq-item">
                   <h3 class="faq-question">{{ faq.question }}</h3>
@@ -63,7 +63,7 @@
             </section>
           </article>
           <section v-if="newInfo?.related_articles?.length">
-            <h3 class="title-h2">Related Articles</h3>
+            <h3 class="title-h2">関連記事</h3>
             <div class="related-articles">
               <news-item-5 v-for="(item, i) in newInfo.related_articles" :key="i" :item="item">
               </news-item-5>
@@ -174,19 +174,19 @@ export default {
 
       const articleFaqs = data.faqs || [
         {
-          question: "Would you like to know more about this topic?",
+          question: "このトピックについてもっと知りたいですか？",
           answer:
-            "Our website provides comprehensive information on various global news topics. You can find more related articles in our categories."
+            "当サイトでは、老後の生活に関するさまざまな情報を幅広く掲載しています。カテゴリーページで関連記事をご覧ください。"
         },
         {
-          question: "How can I stay updated with the latest news?",
+          question: "最新情報を受け取るにはどうすればよいですか？",
           answer:
-            "You can subscribe to our newsletter and follow our social media channels to receive the latest updates on global news and developments."
+            "当サイトをブックマークしていただくか、カテゴリーページをご利用ください。保険・年金・相続など各分野の最新記事を随時掲載しています。"
         },
         {
-          question: "Where can I find more information?",
+          question: "さらに詳しい情報はどこで見つけられますか？",
           answer:
-            "You can explore our category pages and search feature to find more articles related to your interests."
+            "カテゴリーページや検索機能を活用して、ご興味のあるテーマの関連記事をお探しください。"
         }
       ];
 
@@ -223,7 +223,7 @@ export default {
   },
   head() {
     return {
-      title: this.newInfo?.name ? this.newInfo.name + " - Intelinfor" : "Intelinfor",
+      title: this.newInfo?.name ? this.newInfo.name + " - 高齢者ライフ" : "高齢者ライフ",
       meta: [
         { hid: "description", name: "description", content: this.newInfo?.seo_desc },
         { hid: "og:title", property: "og:title", content: this.newInfo?.seo_title },
@@ -323,7 +323,7 @@ export default {
               {
                 "@type": "ListItem",
                 position: 1,
-                item: { "@id": "https://www.intelinfor.com/", name: "Home" }
+                item: { "@id": "https://www.intelinfor.com/", name: "ホーム" }
               },
               ...(this.newInfo?.seo_category_path
                 ? [

@@ -7,11 +7,11 @@
       </div>
 
       <div class="category"
-        >Category
+        >カテゴリー
         <ul class="dropdown">
           <li v-for="(item, i) in navData.list" :key="i"
             ><CustomLink :to="`/category/${item.path}/`">{{
-              capitalizeFirstLetter(item.locale_name.en)
+              capitalizeFirstLetter(item.name)
             }}</CustomLink></li
           >
         </ul>
@@ -19,7 +19,7 @@
 
       <div class="search-box">
         <!-- <transition name="slide"> -->
-        <input v-model="input" placeholder="Search..." class="search" @keyup.enter="search" />
+        <input v-model="input" placeholder="検索..." class="search" @keyup.enter="search" />
         <!-- </transition> -->
         <i v-show="input != ''" class="icon-clear" @click="clear"></i>
         <i class="icon-search" @click="search"></i>
@@ -76,7 +76,7 @@ export default {
     search() {
       if (this.input.length < 1) {
         this.$globalMethod.showNotification({
-          message: "Please enter at least 1 characters",
+          message: "1文字以上入力してください",
           type: "warning"
         });
         return;

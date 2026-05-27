@@ -26,7 +26,7 @@
         </div>
         <span>
           {{ copyRightText1[lang] }}
-          ©&nbsp; 2024 Intelinfor &nbsp;
+          ©&nbsp; 2026 Intelinfor &nbsp;
           {{ copyRightText2[lang] }}
         </span>
       </div>
@@ -63,7 +63,7 @@ export default {
   props: {
     lang: {
       type: String,
-      default: "en"
+      default: "ja"
     },
     channelId: {
       type: String,
@@ -163,12 +163,12 @@ export default {
           email: this.input
         });
         this.$globalMethod.showNotification({
-          message: "Thank you for subscribing!",
+          message: "ご登録ありがとうございます！",
           type: "success"
         });
       } else {
         this.$globalMethod.showNotification({
-          message: "Please enter a valid email address",
+          message: "有効なメールアドレスを入力してください",
           type: "warning"
         });
       }

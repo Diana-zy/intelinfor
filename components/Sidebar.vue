@@ -7,7 +7,7 @@
       <div class="search-box">
         <input
           v-model="input"
-          placeholder="Search..."
+          placeholder="検索..."
           class="search"
           name="search"
           @keyup.enter="search"
@@ -16,16 +16,16 @@
         <i class="icon-search" @click="search"></i>
       </div>
 
-      <h2 class="title-h2">Category</h2>
+      <h2 class="title-h2">カテゴリー</h2>
       <ul class="categories">
         <li v-for="(item, i) in navData.list" :key="i">
           <CustomLink :to="`/category/${item.path}/`">{{
-            capitalizeFirstLetter(item.locale_name.en)
+            capitalizeFirstLetter(item.name)
           }}</CustomLink>
         </li>
       </ul>
       <div v-if="showInstallButton" class="download" @click="installPWA"
-        ><i class="icon-download" />Download</div
+        ><i class="icon-download" />ダウンロード</div
       >
     </div>
   </div>

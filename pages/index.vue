@@ -6,7 +6,7 @@
         <div class="search-group">
           <input
             v-model="input"
-            placeholder="Search..."
+            placeholder="検索..."
             class="search"
             name="search"
             @keyup.enter="search"
@@ -30,13 +30,13 @@
         </div>
       </section>
 
-      <h2 class="title-h2">Trending</h2>
+      <h2 class="title-h2">トレンド</h2>
       <section class="news-box-2">
         <item-home-module v-for="(item, i) in trendingNews.list" :key="i" :item="item">
         </item-home-module>
       </section>
 
-      <h2 class="title-h2">All Articles</h2>
+      <h2 class="title-h2">すべての記事</h2>
       <section>
         <InfiniteScrollList
           api-endpoint="/api/article/menu"
@@ -157,7 +157,7 @@ export default {
                 json: {
                   "@context": "https://schema.org",
                   "@type": "ItemList",
-                  name: "Trending Articles",
+                  name: "トレンド記事",
                   itemListElement: trendingItems
                 }
               }
@@ -171,7 +171,7 @@ export default {
     search() {
       if (this.input.length < 1) {
         this.$globalMethod.showNotification({
-          message: "Please enter at least 1 characters",
+          message: "1文字以上入力してください",
           type: "warning"
         });
         return;
