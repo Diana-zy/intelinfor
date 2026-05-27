@@ -46,7 +46,7 @@ export default {
     }
   },
   head: {
-    title: "Intelinfor - world news in the palm of your hand!",
+    title: "高齢者ライフ | シニアの経済と暮らしを支える情報サイト",
     meta: [
       {
         name: "version",
@@ -69,7 +69,7 @@ export default {
         hid: "description",
         name: "description",
         content:
-          "We are committed to delivering the latest developments in various fields such as politics, economy, technology, culture and sports!"
+          "老後のお金や暮らしの不安を解消！保険、年金、相続の最新情報を専門家が解説します。"
       },
       {
         hid: "keywords",
