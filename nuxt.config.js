@@ -89,7 +89,7 @@ export default {
         hid: "twitter:description",
         name: "twitter:description",
         content:
-          "We are committed to delivering the latest developments in various fields such as politics, economy, technology, culture and sports!"
+          "老後のお金や暮らしの不安を解消！保険、年金、相続の最新情報を専門家が解説します。後悔しないための準備を今すぐ始めましょう。"
       }
     ],
     link: [
