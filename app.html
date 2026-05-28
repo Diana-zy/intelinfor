@@ -201,6 +201,81 @@
           return await originalFetch(resource, config);
         };
       })();
+
+      //seo自然流量计时
+      (function (uuid) {
+        let new_time = new Date().getTime();
+        const hi_user_source = getValueByURLOrCookie("hi_source");
+        if (hi_user_source === "unknown") {
+          if (window.location.pathname === "/") {
+            window.dataLayer.push({
+              event: "Home_Page_View_SEO"
+            });
+          }
+          if (window.location.pathname.startsWith("/category/")) {
+            let path = window.location.pathname.split("/")[2];
+            const lastDashIndex = path.lastIndexOf("-");
+            const id = path.substring(lastDashIndex + 1, path.length);
+            window.dataLayer.push({
+              event: "Category_Page_View_SEO",
+              SEO_category: "category_" + id
+            });
+          }
+          if (window.location.pathname.startsWith("/detail/")) {
+            let path = window.location.pathname.split("/")[2];
+            const lastDashIndex = path.lastIndexOf("-");
+            const id = path.substring(lastDashIndex + 1, path.length);
+            window.dataLayer.push({
+              event: "Detail_Page_View_SEO",
+              SEO_detail: "detail_" + id
+            });
+          }
+
+          try {
+            let seo_user_id = JSON.parse(window.getCookie("seo_user_id-" + uuid)) || {};
+            if (!seo_user_id.first_time) {
+              seo_user_id.first_time = new_time;
+            }
+            if (!seo_user_id.Page_View_SEO) {
+              window.dataLayer.push({
+                event: "Page_View_SEO"
+              });
+              seo_user_id.Page_View_SEO = "yes";
+            }
+            window.setCookie("seo_user_id-" + uuid, JSON.stringify(seo_user_id));
+            if (!seo_user_id.User_Stay_10s_SEO || !seo_user_id.User_Stay_20s_SEO) {
+              new_time = new Date().getTime();
+              const timer = setInterval(() => {
+                new_time += 1;
+                if (
+                  new_time - Number(seo_user_id.first_time) >= 10000 &&
+                  !seo_user_id.User_Stay_10s_SEO
+                ) {
+                  window.dataLayer.push({
+                    event: "User_Stay_10s_SEO"
+                  });
+                  seo_user_id.User_Stay_10s_SEO = "yes";
+                  window.setCookie("seo_user_id-" + uuid, JSON.stringify(seo_user_id));
+                }
+                if (
+                  new_time - Number(seo_user_id.first_time) >= 20000 &&
+                  !seo_user_id.User_Stay_20s_SEO
+                ) {
+                  window.dataLayer.push({
+                    event: "User_Stay_20s_SEO"
+                  });
+                  seo_user_id.User_Stay_20s_SEO = "yes";
+                  window.setCookie("seo_user_id-" + uuid, JSON.stringify(seo_user_id));
+                  clearInterval(timer);
+                }
+                if (new_time - Number(seo_user_id.first_time) >= 30000) {
+                  clearInterval(timer);
+                }
+              }, 1);
+            }
+          } catch (e) {}
+        }
+      })(uuid);
     </script>
     <script>
       //Detail_pv_user
