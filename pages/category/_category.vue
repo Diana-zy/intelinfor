@@ -213,7 +213,7 @@ export default {
       const hiPc = window.getParam("hi_pc");
       const resultsPageBaseUrl = window.getResultsPageUrl({
         channel: this.channelId,
-        from: "detail",
+        from: "category",
         hi_source: hiSource,
         hi_pc: hiPc
       });
@@ -226,8 +226,8 @@ export default {
         relatedSearchTargeting: "content",
         resultsPageBaseUrl,
         resultsPageQueryParam: "query",
-        terms: terms || this.newInfo?.terms,
-        referrerAdCreative: headline || terms || this.newInfo?.referrer_ad_creative,
+        terms: terms || "",
+        referrerAdCreative: headline || terms || "",
         ivt: false
       };
 
@@ -235,7 +235,7 @@ export default {
       _googCsa("relatedsearch", adSenseConfig, {
         container: "relatedsearches1",
         relatedSearches: 10,
-        adLoadedCallback: function (loaded, response, isExperimentVariant, callbackOptions) {
+        adLoadedCallback: function (loaded, response) {
           if (response) {
             window.trackEventToPixel("D_C_AC");
             window.pushEventParamsToGtm("C_AC");
