@@ -177,19 +177,30 @@ export default {
 .swiper-box {
   position: relative;
   overflow: hidden;
-  .swiper-button-prev {
-    top: 209px;
-    @include icon(50px, 50px, "icon-left.png");
-    &:after {
-      content: "";
-    }
-  }
+  .swiper-button-prev,
   .swiper-button-next {
     top: 209px;
-    @include icon(50px, 50px, "icon-right.png");
-    &:after {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: $color1;
+    @include center;
+    &::after {
       content: "";
+      display: block;
+      width: 12px;
+      height: 12px;
+      border-top: 3px solid #fff;
+      border-right: 3px solid #fff;
     }
+  }
+  .swiper-button-prev::after {
+    transform: rotate(-135deg);
+    margin-left: 4px;
+  }
+  .swiper-button-next::after {
+    transform: rotate(45deg);
+    margin-right: 4px;
   }
 }
 .news-box-2 {
@@ -218,18 +229,14 @@ export default {
   .swiper-box {
     margin-top: vw(32);
     width: 100%;
-    .swiper-button-prev {
-      top: vw(186);
-      @include icon(vw(64), vw(64), "icon-left.png");
-      &:after {
-        content: "";
-      }
-    }
+    .swiper-button-prev,
     .swiper-button-next {
       top: vw(186);
-      @include icon(vw(64), vw(64), "icon-right.png");
-      &:after {
-        content: "";
+      width: vw(64);
+      height: vw(64);
+      &::after {
+        width: vw(18);
+        height: vw(18);
       }
     }
   }
