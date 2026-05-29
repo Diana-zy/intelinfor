@@ -62,12 +62,18 @@ $class-names: ("block", "flex", "grid");
   margin-bottom: 16px;
   padding-left: 64px;
   &::before {
-    content: "";
-    height: 100%;
+    content: "NEW";
     position: absolute;
     left: 0;
-    top: 0;
-    @include icon(52px, 52px, "icon-new-tag.png");
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: $color1;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+    padding: 5px 8px;
+    border-radius: 4px;
   }
 }
 .title-h3 {
@@ -191,7 +197,8 @@ $class-names: ("block", "flex", "grid");
     margin-bottom: vw(20);
     padding-left: vw(76);
     &::before {
-      @include icon(vw(60), vw(60), "icon-new-tag.png");
+      font-size: vw(28);
+      padding: vw(8) vw(12);
     }
   }
   .title-h3 {
