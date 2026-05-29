@@ -20,7 +20,7 @@
       <ul class="categories">
         <li v-for="(item, i) in navData.list" :key="i">
           <CustomLink :to="`/category/${item.path}/`">{{
-            capitalizeFirstLetter(item.locale_name.en)
+            capitalizeFirstLetter(item.name)
           }}</CustomLink>
         </li>
       </ul>
