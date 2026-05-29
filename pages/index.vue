@@ -1,58 +1,43 @@
 <template>
   <div class="page home-page">
     <Header />
+    <h1 style="display: none">高齢者の暮らしとお金ガイド</h1>
     <main class="main">
-      <section class="home-search">
-        <div class="search-group">
-          <input
-            v-model="input"
-            placeholder="Search..."
-            class="search"
-            name="search"
-            @keyup.enter="search"
-          />
-          <i v-show="input != ''" class="icon-clear" @click="clear"></i>
-          <i class="icon-search" @click="search"></i>
+      <div class="layout-left">
+        <section v-swiper:mySwiper="swiperOption" class="swiper-box">
+          <div class="swiper-wrapper">
+            <item-swiper-rec
+              v-for="(item, i) in recNews && recNews.list"
+              :key="i"
+              class="swiper-slide"
+              :item="item"
+              :index="i"
+            >
+            </item-swiper-rec>
+          </div>
+        </section>
+
+        <h2 class="title-new-tag">Latest Articles</h2>
+        <section class="news-box-new">
+          <item-text-new v-for="(item, i) in trendingNews && trendingNews.list" :key="i" :item="item">
+          </item-text-new>
+        </section>
+
+        <div v-for="(items, index) in categoryList" class="category-box" :key="items.id">
+          <h2 class="title-h2">{{ items.seo_category && items.seo_category.name }}</h2>
+          <section>
+            <div class="news-box-2">
+              <news-item-2 v-for="(item, i) in items && items.list" :key="i" :item="item" :index="index">
+              </news-item-2>
+            </div>
+          </section>
         </div>
-      </section>
-
-      <h1 class="site-h1">高齢者の暮らしとお金ガイド</h1>
-
-      <section v-swiper:mySwiper="swiperOption" class="swiper-box">
-        <div class="swiper-wrapper">
-          <item-home-swiper
-            v-for="(item, i) in recNews.list"
-            :key="i"
-            class="swiper-slide"
-            :item="item"
-          >
-          </item-home-swiper>
-        </div>
-      </section>
-
-      <h2 class="title-h2">Trending</h2>
-      <section class="news-box-2">
-        <item-home-module v-for="(item, i) in trendingNews.list" :key="i" :item="item">
-        </item-home-module>
-      </section>
-
-      <h2 class="title-h2">All Articles</h2>
-      <section>
-        <InfiniteScrollList
-          api-endpoint="/api/article/menu"
-          :initial-page="2"
-          :page-size="8"
-          mod-id="all"
-          :initial-items="allNews.list"
-          class="news-box-2"
-        >
-          <template #default="{ items }">
-            <item-home-module v-for="(item, i) in items" :key="i" :item="item"> </item-home-module>
-          </template>
-        </InfiniteScrollList>
-      </section>
+      </div>
+      <div class="layout-right">
+        <right-side-box :rec-news="(trendingNews && trendingNews.list) || []" :trending-news="(recNews && recNews.list) || []" />
+      </div>
     </main>
-    <Footer />
+    <FooterSeo />
   </div>
 </template>
 
@@ -67,42 +52,37 @@ export default {
   },
   async asyncData({ $axios, env }) {
     try {
-      // 並行処理で複数の非同期リクエストを処理
-      const [recNewsResponse, trendingNewsResponse, allNewsResponse] = await Promise.all([
+      const [recNewsResponse, trendingNewsResponse, categoryResponse] = await Promise.all([
         $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_ID,
-            mod_id: "rec"
-          }
-        }),
-        $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_ID,
-            mod_id: "trending",
-            size: 30
-          }
-        }),
-        $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_ID,
-            mod_id: "all",
-            page: 1,
-            size: 8
-          }
-        })
+          params: { site_id: env.SITE_ID, mod_id: "rec" }
+        }).catch(() => null),
+        $axios.$get("/api/article/get_all_articles", {
+          params: { site_id: env.SITE_ID, size: 4, page: 1 }
+        }).catch(() => null),
+        $axios.$get("/api/article/get_all_seo_category", {
+          params: { site_id: env.SITE_ID }
+        }).catch(() => null)
       ]);
+
+      const categoryItems = (categoryResponse && categoryResponse.list) || [];
+      const categoryRequests = categoryItems.map((item) =>
+        $axios.$get("/api/article/get_seo_category_page", {
+          params: { site_id: env.SITE_ID, seo_category_id: item.id, size: 4, page: 1 }
+        }).catch(() => null)
+      );
+      const list = await Promise.all(categoryRequests);
 
       return {
         recNews: recNewsResponse,
         trendingNews: trendingNewsResponse,
-        allNews: allNewsResponse
+        categoryList: list.filter((item) => item != null)
       };
     } catch (error) {
       console.error("Error fetching data:", error);
       return {
-        recNews: { list: [] },
-        trendingNews: { list: [] },
-        allNews: { list: [] }
+        recNews: null,
+        trendingNews: null,
+        categoryList: []
       };
     }
   },
@@ -110,22 +90,12 @@ export default {
     return {
       swiperOption: {
         slidesPerView: "auto",
-        autoplay: {
-          delay: 3000
-        }
+        autoplay: { delay: 3000 }
       },
       input: ""
     };
   },
   head() {
-    const trendingItems =
-      this.trendingNews?.list?.map((item, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        url: item.path_v2 ? `https://www.intelinfor.com/${item.path_v2}/` : undefined,
-        name: item.name || ""
-      })) || [];
-
     return {
       title: '高齢者ライフ | シニアの経済と暮らしを支える情報サイト',
       meta: [
@@ -134,39 +104,9 @@ export default {
           name: 'description',
           content: '老後のお金や暮らしの不安を解消！保険、年金、相続の最新情報を専門家が解説します。後悔しないための準備を今すぐ始めましょう。'
         }
-      ],
-      script: [
-        {
-          type: "application/ld+json",
-          json: {
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "高齢者ライフ",
-            url: "https://www.intelinfor.com/",
-            potentialAction: {
-              "@type": "SearchAction",
-              target: "https://www.intelinfor.com/search/?query={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          }
-        },
-        ...(trendingItems.length
-          ? [
-              {
-                type: "application/ld+json",
-                json: {
-                  "@context": "https://schema.org",
-                  "@type": "ItemList",
-                  name: "Trending Articles",
-                  itemListElement: trendingItems
-                }
-              }
-            ]
-          : [])
       ]
     };
   },
-
   methods: {
     search() {
       if (this.input.length < 1) {
@@ -176,7 +116,6 @@ export default {
         });
         return;
       }
-
       simulateAFSSearch(this.input);
     },
     clear() {
@@ -190,206 +129,48 @@ export default {
   padding-bottom: 32px;
   border-bottom: 1px solid #ececee;
 }
-
-.site-h1 {
-  font-size: 22px;
-  font-weight: 700;
-  color: $font1;
-  margin: 24px 0 16px;
-  padding: 0;
-}
-
-.home-search {
-  width: 100%;
-  height: 315px;
-  background-image: url("~/assets/images/bg-pc.webp");
-  background-size: cover;
-  margin-bottom: 32px;
-  background-position: center;
+.category-box {
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  .search-group {
-    position: relative;
-  }
-  .search {
-    margin-top: 110px;
-    width: 560px;
-    height: 48px;
-    background: #ffffff;
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0);
-    border-radius: 4px 4px 4px 4px;
-    padding-left: 16px;
-    padding-right: 126px;
-    &::placeholder {
-      color: rgba($font1, 0.6);
-    }
-  }
-  .icon-search {
-    display: block;
-    position: absolute;
-    right: -1px;
-    top: 110px;
-    width: 64px;
-    height: 48px;
-    cursor: pointer;
-    border-radius: 0 4px 4px 0;
-    background-color: $color1;
-    background-image: url("~/assets/images/icon-search.png");
-    background-size: 30px;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  .icon-clear {
-    position: absolute;
-    right: 76px;
-    top: 122px;
-    cursor: pointer;
-    background-image: url("~/assets/images/icon-clear.png");
-    width: 24px;
-    height: 24px;
-    background-size: cover;
-  }
-
-  .words-container {
-    margin-top: 24px;
-    width: 560px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow: hidden;
-  }
-
-  .marquee {
-    display: flex;
-    overflow: hidden;
-    user-select: none;
-    gap: 12px;
-  }
-
-  .marquee-group {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 12px;
-    min-width: 100%;
-    animation: scrollLeft 40s linear infinite;
-  }
-  .marquee:nth-child(even) {
-    margin-left: calc(vw(176) / -2);
-  }
-  .hot-words {
-    background: rgba(23, 23, 23, 0.35);
-    border-radius: 4px 4px 4px 4px;
-    padding: 6px 8px;
-    font-family: "se3";
-    font-size: 12px;
-    color: #ffffff;
-    text-align: left;
-    cursor: pointer;
-  }
+  gap: 0px;
 }
-
+.swiper-box {
+  position: relative;
+  overflow: hidden;
+}
 .swiper-slide {
-  width: 282px;
-  border-radius: 16px 16px 16px 16px;
-  border: 1px solid rgba(23, 23, 23, 0.1);
-  margin-right: 24px;
   overflow: hidden;
 }
 .news-box-2 {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
-
-.rec {
-  display: none;
-}
-
-@keyframes scrollLeft {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-100% - vw(16)));
-  }
-}
-@media screen and (max-width: 1100px) {
-  .news-box-2 {
-    display: flex;
-    flex-wrap: wrap;
-  }
+.news-box-new {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 @media screen and (max-width: 750px) {
   .main {
     padding-bottom: vw(32);
     border-bottom: none;
   }
-
-  .site-h1 {
-    font-size: vw(32);
-    margin: vw(24) 0 vw(16);
-  }
-
-  .home-search {
-    width: 100vw;
-    height: vw(392);
-    background-image: url("~/assets/images/bg-m.webp");
-    margin-bottom: vw(48);
-    margin-left: vw(-46);
-    margin-top: vw(-48);
-    .search {
-      margin-top: vw(66);
-      width: vw(658);
-      height: vw(80);
-      box-shadow: 0 0 vw(16) 0 rgba(0, 0, 0, 0);
-      border-radius: vw(8);
-      padding-left: vw(34);
-      padding-right: vw(210);
-    }
-    .icon-search {
-      top: vw(66);
-      width: vw(128);
-      height: vw(80);
-      border-radius: 0 vw(8) vw(8) 0;
-      background-size: vw(48);
-    }
-    .icon-clear {
-      top: vw(90);
-      right: vw(144);
-      width: vw(32);
-      height: vw(32);
-    }
-    .words-container {
-      margin-top: vw(16);
-      width: 100%;
-    }
-  }
-
-  .rec {
-    margin-top: vw(24);
-    display: inline-block;
-    text-align: center;
-    font-family: "hem";
-    font-size: 12px;
-    color: #ffffff;
-  }
   .swiper-box {
-    width: 100vw;
-    margin-left: vw(-46);
-    padding-left: vw(32);
+    margin-top: vw(32);
+    width: 100%;
   }
   .swiper-slide {
-    width: vw(614);
-    border-radius: vw(16);
-    border: vw(2) solid #ececee;
-    margin-right: vw(32);
+    width: 100%;
+    height: vw(764);
   }
   .news-box-2 {
-    gap: vw(32);
+    gap: vw(28) vw(14);
+  }
+  .news-box-new {
+    grid-template-columns: repeat(1, 1fr);
+    gap: vw(20);
   }
 }
 </style>

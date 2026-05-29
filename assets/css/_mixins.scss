@@ -4,6 +4,9 @@ $font1: #41414c;
 $font2: #ffffff;
 $font3: #171717;
 $font4: rgba(#171717, 0.4);
+$tagColor1: #C6F3E2;
+$tagColor2: #F0DFBA;
+$tagColor3: #C0E8B2;
 @function vw($size) {
   @return calc($size/750) * 100vw;
 }
@@ -23,6 +26,19 @@ $font4: rgba(#171717, 0.4);
 @mixin bg($url) {
   background-image: url("~/assets/images/" + $url);
   background-size: 100% 100%;
+}
+
+@mixin author-icon($width, $height) {
+  padding-left: calc($width * 1.1);
+  line-height: $height;
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include icon($width, $height, 'icon-logo-m.png')
+  }
 }
 
 @mixin btn-img($width, $height, $url) {
@@ -64,9 +80,6 @@ $font4: rgba(#171717, 0.4);
   }
 }
 
-// 性能优化相关mixins
-
-// 响应式断点
 @mixin media-mobile {
   @media (max-width: 640px) {
     @content;
@@ -85,7 +98,6 @@ $font4: rgba(#171717, 0.4);
   }
 }
 
-// 响应式图片容器（避免CLS）
 @mixin img-container($ratio: 16/9) {
   position: relative;
   width: 100%;
@@ -101,20 +113,6 @@ $font4: rgba(#171717, 0.4);
   }
 }
 
-// 延迟加载图片占位符
-@mixin img-placeholder($bg-color: #f0f0f0) {
-  background-color: $bg-color;
-
-  &.lazy-loading {
-    opacity: 0.5;
-  }
-
-  &.lazy-loaded {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-}
-
-// 性能优化：使用transform和will-change
 @mixin gpu-accelerate {
   will-change: transform, opacity;
   transform: translateZ(0);
@@ -122,30 +120,22 @@ $font4: rgba(#171717, 0.4);
   perspective: 1000px;
 }
 
-// 避免布局抖动的固定尺寸
 @mixin fixed-dimensions($width, $height) {
   width: $width;
   height: $height;
   aspect-ratio: $width / $height;
 }
 
-// 关键内容样式优化（最小化重排）
 @mixin critical-content {
   contain: layout style paint;
   will-change: auto;
 }
 
-// 淡入动画（用于懒加载图片）
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-// 减少动画性能消耗
 @mixin optimize-animation {
   animation-fill-mode: both;
   animation-duration: 0.3s;
