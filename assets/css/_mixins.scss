@@ -4,6 +4,10 @@ $font1: #41414c;
 $font2: #ffffff;
 $font3: #171717;
 $font4: rgba(#171717, 0.4);
+$font5: #1a1a1a;
+$tagColor1: #c6f3e2;
+$tagColor2: #f0dfba;
+$tagColor3: #c0e8b2;
 @function vw($size) {
   @return calc($size/750) * 100vw;
 }
@@ -23,6 +27,19 @@ $font4: rgba(#171717, 0.4);
 @mixin bg($url) {
   background-image: url("~/assets/images/" + $url);
   background-size: 100% 100%;
+}
+
+@mixin author-icon($width, $height) {
+  padding-left: calc($width * 1.1);
+  line-height: $height;
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include icon($width, $height, "icon-logo-m.png");
+  }
 }
 
 @mixin btn-img($width, $height, $url) {

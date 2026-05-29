@@ -16,6 +16,24 @@ main {
 .pc-hidden {
   display: none;
 }
+.layout-left {
+  flex: 1;
+  min-width: 0;
+}
+.layout-right,
+.aside-box {
+  width: 329px;
+  flex-shrink: 0;
+}
+$class-names: ("block", "flex", "grid");
+@each $class-name in $class-names {
+  .pc-hidden-#{$class-name} {
+    display: none !important;
+  }
+  .m-hidden-#{$class-name} {
+    display: #{$class-name} !important;
+  }
+}
 .title-h2 {
   position: relative;
   font-family: "hem";
@@ -33,6 +51,23 @@ main {
     position: absolute;
     left: 0;
     top: 0;
+  }
+}
+.title-new-tag {
+  position: relative;
+  font-family: Helvetica Neue, Helvetica Neue;
+  font-size: 24px;
+  line-height: 52px;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  padding-left: 64px;
+  &::before {
+    content: "";
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    @include icon(52px, 52px, "icon-new-tag.png");
   }
 }
 .title-h3 {
@@ -87,10 +122,32 @@ main {
     margin-bottom: 4px;
   }
 }
+@media screen and (max-width: 1100px) {
+  .layout-right {
+    display: none !important;
+  }
+  .aside-box {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 750px) {
   main {
     overflow: unset;
     min-height: calc(100vh - vw(700));
+  }
+  $class-names: ("block", "flex", "grid");
+  @each $class-name in $class-names {
+    .pc-hidden-#{$class-name} {
+      display: #{$class-name} !important;
+    }
+    .m-hidden-#{$class-name} {
+      display: none !important;
+    }
+  }
+  .btn-tag {
+    padding: vw(12) vw(16) !important;
+    font-size: vw(24) !important;
+    line-height: 1.5 !important;
   }
   .news-detail {
     font-family: "se3" !important;
@@ -125,6 +182,16 @@ main {
     padding-left: vw(24);
     &::before {
       width: vw(8);
+    }
+  }
+  .title-new-tag {
+    font-size: vw(32);
+    line-height: vw(60);
+    margin-top: vw(28);
+    margin-bottom: vw(20);
+    padding-left: vw(76);
+    &::before {
+      @include icon(vw(60), vw(60), "icon-new-tag.png");
     }
   }
   .title-h3 {
