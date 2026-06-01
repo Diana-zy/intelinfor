@@ -1,4 +1,4 @@
-/* Swiper core layout - inlined to avoid dependency on swiper package CSS path */
+/* Swiper core layout - inlined instead of importing from package */
 .swiper-container {
   overflow: hidden;
   position: relative;
@@ -43,23 +43,6 @@ a, a:link, a:visited {
   color: inherit;
   text-decoration: none;
 }
-.table-container-parent,
-.table-scroll-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-h1 {
-  font-size: 1.4em !important;
-}
-h2 {
-  font-size: 1.2em !important;
-}
-.no-scroll {
-  position: fixed;
-  width: 100%;
-  overflow: hidden;
-}
 main {
   overflow: hidden;
   min-height: calc(100vh - 390px);
@@ -73,14 +56,21 @@ main {
   flex: 1;
   min-width: 0;
 }
-.content-box {
-  flex: 1;
-  min-width: 0;
-}
-.layout-right,
-.aside-box {
+.layout-right {
   width: 329px;
   flex-shrink: 0;
+}
+.no-scroll {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+.page {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: content-box;
 }
 $class-names: ("block", "flex", "grid");
 @each $class-name in $class-names {
@@ -91,33 +81,21 @@ $class-names: ("block", "flex", "grid");
     display: #{$class-name} !important;
   }
 }
-.page {
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: content-box;
-}
 .pc-hidden {
   display: none;
-}
-.btn-tag {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 13px;
-  border-radius: 4px;
 }
 .title-h2 {
   position: relative;
   font-family: "hem";
-  font-size: 20px;
-  line-height: 30px;
+  font-size: 16px;
+  line-height: 22px;
   margin-top: 32px;
   margin-bottom: 24px;
-  padding-left: 13px;
+  padding-left: 12px;
   &::before {
     content: "";
     display: block;
-    width: 5px;
+    width: 4px;
     height: 100%;
     background-color: $color1;
     position: absolute;
@@ -142,6 +120,12 @@ $class-names: ("block", "flex", "grid");
   margin-top: 32px;
   margin-bottom: 24px;
   color: $font1;
+}
+.btn-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
 }
 .slide-enter-active,
 .slide-leave-active {
@@ -217,13 +201,9 @@ $class-names: ("block", "flex", "grid");
     flex-direction: column;
     margin: 0 auto;
   }
-  .aside-box {
-    width: 100%;
-  }
 }
 @media screen and (max-width: 750px) {
   main {
-    width: 100%;
     overflow: unset;
     min-height: calc(100vh - vw(700));
     padding: 0 vw(32);
@@ -249,11 +229,6 @@ $class-names: ("block", "flex", "grid");
     .google-ad {
       margin-bottom: vw(10);
     }
-  }
-  .btn-tag {
-    padding: vw(12) vw(16) !important;
-    font-size: vw(24) !important;
-    line-height: 1.5 !important;
   }
   body {
     font-size: vw(28);
@@ -291,30 +266,16 @@ $class-names: ("block", "flex", "grid");
     margin-bottom: vw(32);
     color: $font3;
   }
-  main {
-    .layout-left {
-      .news-author {
-        display: flex;
-        margin-top: vw(8);
-        justify-content: space-between;
-        font-size: vw(26);
-        font-weight: 300;
-        line-height: vw(26);
-        padding-bottom: vw(24);
-        @include author-icon(vw(28), vw(26));
-      }
-      .news-style-2 {
-        .news-author {
-          display: flex;
-          margin-top: vw(8);
-          justify-content: space-between;
-          font-size: vw(26);
-          line-height: vw(26);
-          font-weight: 300;
-          padding-bottom: vw(24);
-          @include author-icon(vw(26), vw(26));
-        }
-      }
-    }
+  .btn-tag {
+    padding: vw(12) vw(16) !important;
+    font-size: vw(24) !important;
+    line-height: 1.5 !important;
   }
+}
+
+.table-container-parent,
+.table-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
