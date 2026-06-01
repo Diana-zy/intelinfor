@@ -37,6 +37,9 @@ export default {
 
 <style lang="scss" scoped>
 .news-style-2 {
+  display: block;
+  color: $font3;
+  text-decoration: none;
   padding-right: 16px;
   .img {
     width: 100%;
@@ -59,6 +62,7 @@ export default {
     font-size: 16px;
     font-family: "se3";
     line-height: 22px;
+    color: $font3;
     @include ellipsis(3);
     transition: color 0.2s;
   }
@@ -88,6 +92,7 @@ export default {
         width: 100%;
         font-size: vw(32);
         line-height: vw(36);
+        color: $font3;
         @include ellipsis();
       }
       .m-news-author {

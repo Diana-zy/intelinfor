@@ -2,6 +2,10 @@ body {
   color: $font3;
   font-size: 16px;
 }
+a, a:link, a:visited {
+  color: inherit;
+  text-decoration: none;
+}
 main {
   overflow: hidden;
   min-height: calc(100vh - 390px);
@@ -194,7 +198,7 @@ $class-names: ("block", "flex", "grid");
     font-family: "se3";
   }
   .page {
-    padding: 0 vw(46);
+    padding: 0;
     max-width: 100vw;
     overflow: hidden;
   }
