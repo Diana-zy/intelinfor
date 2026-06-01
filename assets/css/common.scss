@@ -1,40 +1,3 @@
-/* Swiper core layout - inlined instead of importing from package */
-.swiper-container {
-  overflow: hidden;
-  position: relative;
-}
-.swiper-wrapper {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  box-sizing: content-box;
-}
-.swiper-slide {
-  flex-shrink: 0;
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-.swiper-button-prev,
-.swiper-button-next {
-  position: absolute;
-  top: 50%;
-  margin-top: -25px;
-  z-index: 10;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.swiper-button-prev {
-  left: 10px;
-}
-.swiper-button-next {
-  right: 10px;
-}
-
 body {
   color: $font3;
   font-size: 16px;
@@ -51,6 +14,7 @@ main {
   justify-content: space-between;
   gap: 54px;
   max-width: 1200px;
+  margin: 0 auto;
 }
 .layout-left {
   flex: 1;
