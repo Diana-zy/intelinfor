@@ -138,7 +138,8 @@ export default {
     height: 76px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    position: relative;
     .logo {
       display: block;
       width: 240px;
@@ -146,8 +147,8 @@ export default {
       background-image: url("~/assets/images/logo.png");
       background-size: contain;
       background-repeat: no-repeat;
-      background-position: left center;
-      flex-shrink: 0;
+      background-position: center;
+      margin-right: 56px;
     }
   }
 }
@@ -180,21 +181,21 @@ export default {
   }
 }
 .search-box {
-  position: relative;
-  flex-shrink: 0;
+  position: absolute;
+  top: 14px;
+  right: 0;
   width: 360px;
   height: 48px;
   border-radius: 8px;
   border: 1px solid $font3;
   padding-left: 16px;
-  padding-right: 56px;
-  overflow: hidden;
+  padding-right: 60px;
 }
 .search {
   position: absolute;
   top: 0;
   left: 16px;
-  right: 56px;
+  width: 80%;
   height: 100%;
   font-family: "hem";
   &::placeholder { font-family: "hem"; color: rgba($font1, 0.4); }
@@ -212,19 +213,14 @@ export default {
 }
 .icon-search {
   position: absolute;
-  right: 0;
-  top: 0;
-  width: 48px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  right: -1px;
+  top: -1px;
+  display: block;
   cursor: pointer;
+  border-radius: 0 8px 8px 0;
   background-color: $color1;
-  background-image: url("~/assets/images/icon-search.png");
+  @include btn-img(48px, 48px, "icon-search.png");
   background-size: 24px 24px;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 .dropdown li:hover { color: $color1; }
 @media screen and (max-width: 1100px) {
@@ -244,7 +240,7 @@ export default {
     .header-top {
       height: 100%;
       justify-content: start;
-      .logo { width: vw(280); height: vw(60); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; }
+      .logo { width: vw(280); height: vw(60); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; margin-right: 0; }
     }
   }
   .menu-nav-list {
