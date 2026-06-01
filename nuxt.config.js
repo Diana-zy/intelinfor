@@ -132,7 +132,12 @@ export default {
     "@nuxtjs/pwa",
     "@nuxtjs/google-fonts"
   ],
-  css: ["@/assets/css/fonts.css", "@/assets/css/reset.css", "@/assets/css/common.scss"],
+  css: [
+    "@/assets/css/fonts.css",
+    "@/assets/css/reset.css",
+    "@/assets/css/common.scss",
+    "swiper/dist/css/swiper.min.css"
+  ],
   styleResources: {
     scss: ["~/assets/css/_mixins.scss"]
   },
@@ -285,7 +290,7 @@ export default {
     }
   },
   purgeCSS: {
-    whitelistPatterns: [/^swiper-container/, /^swiper-wrapper/, /^nuxt/]
+    whitelistPatterns: [/^swiper/, /^nuxt/]
   },
   loading: {
     color: "#3B8070",

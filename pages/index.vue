@@ -45,7 +45,6 @@
 
 <script>
 import { directive } from "vue-awesome-swiper";
-import "swiper/css/swiper.min.css";
 import { simulateAFSSearch } from "~/utils/utils";
 
 export default {
@@ -143,6 +142,7 @@ export default {
   position: relative;
   overflow: hidden;
   .swiper-button-prev {
+    position: absolute;
     top: 209px;
     width: 50px;
     height: 50px;
@@ -155,6 +155,7 @@ export default {
     }
   }
   .swiper-button-next {
+    position: absolute;
     top: 209px;
     width: 50px;
     height: 50px;
