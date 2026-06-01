@@ -138,16 +138,17 @@ export default {
     height: 76px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     position: relative;
     .logo {
       display: block;
-      width: 200px;
+      width: 240px;
       height: 56px;
       background-image: url("~/assets/images/logo.png");
       background-size: contain;
       background-repeat: no-repeat;
-      background-position: left center;
+      background-position: center;
+      margin-right: 56px;
     }
   }
 }
@@ -169,23 +170,26 @@ export default {
       flex-wrap: nowrap;
       gap: 40px;
       overflow-x: auto;
+      list-style: none;
+      padding: 0;
+      margin: 0;
     }
     li {
       white-space: nowrap;
-      flex: 1;
       a { display: block; width: 100%; height: 100%; }
     }
   }
 }
 .search-box {
-  width: 380px;
+  position: absolute;
+  top: 14px;
+  right: 0;
+  width: 360px;
   height: 48px;
   border-radius: 8px;
   border: 1px solid $font3;
-  margin: 0;
   padding-left: 16px;
   padding-right: 60px;
-  position: relative;
 }
 .search {
   position: absolute;
@@ -235,7 +239,8 @@ export default {
     z-index: 11;
     .header-top {
       height: 100%;
-      .logo { width: vw(280); height: vw(60); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; }
+      justify-content: start;
+      .logo { width: vw(280); height: vw(60); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; margin-right: 0; }
     }
   }
   .menu-nav-list {
@@ -255,7 +260,6 @@ export default {
   }
   .category { display: none; }
   .icon-sidebar { @include icon(vw(48), vw(48), "icon-sidebar.png"); cursor: pointer; }
-  .pc-hidden { margin-left: auto; }
   .menu { height: 100%; width: auto; }
   .search-m-box { width: auto; height: vw(64); display: flex; align-items: center; gap: vw(20); }
   .search {

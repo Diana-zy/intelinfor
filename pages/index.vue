@@ -15,6 +15,8 @@
             >
             </item-swiper-rec>
           </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </section>
 
         <h2 class="title-new-tag">Latest Articles</h2>
@@ -90,7 +92,10 @@ export default {
     return {
       swiperOption: {
         slidesPerView: "auto",
-        autoplay: { delay: 3000 }
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
+        }
       },
       input: ""
     };
@@ -137,6 +142,30 @@ export default {
 .swiper-box {
   position: relative;
   overflow: hidden;
+  .swiper-button-prev {
+    top: 209px;
+    width: 50px;
+    height: 50px;
+    background-color: $color1;
+    border-radius: 50%;
+    &:after {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+    }
+  }
+  .swiper-button-next {
+    top: 209px;
+    width: 50px;
+    height: 50px;
+    background-color: $color1;
+    border-radius: 50%;
+    &:after {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+    }
+  }
 }
 .swiper-slide {
   overflow: hidden;
@@ -160,6 +189,18 @@ export default {
   .swiper-box {
     margin-top: vw(32);
     width: 100%;
+    .swiper-button-prev {
+      top: vw(186);
+      width: vw(60);
+      height: vw(60);
+      &:after { font-size: vw(24); }
+    }
+    .swiper-button-next {
+      top: vw(186);
+      width: vw(60);
+      height: vw(60);
+      &:after { font-size: vw(24); }
+    }
   }
   .swiper-slide {
     width: 100%;
