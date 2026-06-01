@@ -135,8 +135,7 @@ export default {
   css: [
     "@/assets/css/fonts.css",
     "@/assets/css/reset.css",
-    "@/assets/css/common.scss",
-    "swiper/dist/css/swiper.min.css"
+    "@/assets/css/common.scss"
   ],
   styleResources: {
     scss: ["~/assets/css/_mixins.scss"]
