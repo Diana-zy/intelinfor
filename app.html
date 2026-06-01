@@ -8,6 +8,117 @@
     <script src="/commonsEvent.js"></script>
     <script src="/dataMonitor.js"></script>
     <script>
+      // Utility functions required by inline scripts below
+      function getHostname() {
+        const currentHostName = window.location.hostname;
+        if (currentHostName.startsWith("www")) {
+          const list = currentHostName.split(".");
+          if (list[0] === "www") {
+            return currentHostName.replace("www.", "");
+          }
+          return currentHostName.replace("www", "");
+        }
+        return currentHostName;
+      }
+      function setCookieTomorrow(name, value) {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        date.setHours(0, 0, 0, 0);
+        const expires = "; expires=" + date.toUTCString();
+        document.cookie =
+          name + "=" + (value || "") + expires + "; path=/; domain=" + window.getMainDomain();
+      }
+      function getValueByURLOrCookie(val) {
+        let key = "hi_" + val;
+        if (val.includes("hi_")) {
+          key = val;
+        }
+        const buffer = window.getParam(val) || window.getCookie(key) || "unknown";
+        setCookieTomorrow(key, buffer);
+        return buffer;
+      }
+      function getInfoBySource(source) {
+        if (source === "tiktok") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("ttclid"),
+            hi_source_aid: getValueByURLOrCookie("ad_id"),
+            hi_source_site: "unknown",
+            hi_source_site_name: "unknown",
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        } else if (source === "taboola") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("tblci"),
+            hi_source_aid: getValueByURLOrCookie("campaign_id"),
+            hi_source_site: getValueByURLOrCookie("site_id"),
+            hi_source_site_name: getValueByURLOrCookie("site_name"),
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        } else if (source === "outbrain") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("dicbo"),
+            hi_source_aid: getValueByURLOrCookie("campaign_id"),
+            hi_source_site: getValueByURLOrCookie("site_id"),
+            hi_source_site_name: getValueByURLOrCookie("site_name"),
+            hi_section_id: getValueByURLOrCookie("section_id"),
+            hi_section_name: getValueByURLOrCookie("section_name")
+          };
+        } else if (source === "facebook") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("fbclid"),
+            hi_source_aid: "unknown",
+            hi_source_site: "unknown",
+            hi_source_site_name: "unknown",
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        } else {
+          return {
+            hi_source_clid: "unknown",
+            hi_source_aid: "unknown",
+            hi_source_site: "unknown",
+            hi_source_site_name: "unknown",
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        }
+      }
+      function pushEventToGTM(event, param) {
+        param = param || {};
+        const hi_channel = getValueByURLOrCookie("channel");
+        const hi_gaid = window.getCookie("_ga") || "unknown";
+        const hi_source = getValueByURLOrCookie("hi_source");
+        const {
+          hi_source_clid,
+          hi_source_aid,
+          hi_source_site,
+          hi_source_site_name,
+          hi_section_id,
+          hi_section_name
+        } = getInfoBySource(hi_source);
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push(
+          Object.assign(
+            {
+              event: event,
+              hi_channel: hi_channel,
+              hi_gaid: hi_gaid,
+            hi_source: hi_source,
+              hi_source_clid: hi_source_clid,
+              hi_source_aid: hi_source_aid,
+              hi_source_site: hi_source_site,
+              hi_source_site_name: hi_source_site_name,
+              hi_section_id: hi_section_id,
+              hi_section_name: hi_section_name
+            },
+            param
+          )
+        );
+      }
+    </script>
+    <script>
       const searchParams = new URLSearchParams(window.location.search);
       const ttclid = searchParams.get("ttclid"); //TikTok
       const tblci = searchParams.get("tblci"); //Taboola
@@ -342,7 +453,6 @@
               window.trackEventToPixel("T_AR");
               const searchParams = new URLSearchParams(window.location.search);
               const ttclid = searchParams.get("ttclid");
-              // window.pushEventParamsToGtm("T_AR");
               pushEventToGTM("T_AR", {
                 hi_country: window.youknowwho_ip_country || "unknown",
                 hi_ip: window.youknowwho_ip || "unknown",
