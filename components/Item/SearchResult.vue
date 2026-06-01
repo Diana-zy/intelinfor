@@ -16,7 +16,8 @@ export default {
   },
   computed: {
     formattedPath() {
-      return `${window.location.origin}/${this.item.path_v2}/`;
+      const origin = process.client ? window.location.origin : 'https://intelinfor.com';
+      return `${origin}/${this.item.path_v2}/`;
     }
   }
 };
