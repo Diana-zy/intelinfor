@@ -45,7 +45,6 @@
 
 <script>
 import { directive } from "vue-awesome-swiper";
-import "swiper/css/swiper.min.css";
 import { simulateAFSSearch } from "~/utils/utils";
 
 export default {

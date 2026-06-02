@@ -98,7 +98,7 @@ export default {
         as: "font",
         href: "/fonts/heb.woff2",
         type: "font/woff2",
-        crossorigin: true
+        crossorigin: "anonymous"
       }
     ],
     noscript: [{ innerHTML: "This site requires JavaScript to be enabled." }]
@@ -128,13 +128,13 @@ export default {
   buildModules: [
     "@nuxtjs/style-resources",
     "@nuxt/image",
-    "@nuxtjs/pwa",
-    "@nuxtjs/google-fonts"
+    "@nuxtjs/pwa"
   ],
   css: [
     "@/assets/css/fonts.css",
     "@/assets/css/reset.css",
-    "@/assets/css/common.scss"
+    "@/assets/css/common.scss",
+    "swiper/css/swiper.css"
   ],
   styleResources: {
     scss: ["~/assets/css/_mixins.scss"]
