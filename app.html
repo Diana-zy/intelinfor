@@ -8,6 +8,142 @@
     <script src="/commonsEvent.js"></script>
     <script src="/dataMonitor.js"></script>
     <script>
+      function getMainDomain() {
+        const hostname = window.location.hostname;
+        const parts = hostname.split(".");
+        if (parts.length >= 2) {
+          return parts.slice(-2).join(".");
+        }
+        return hostname;
+      }
+      function getParam(queryKey) {
+        try {
+          const searchParams = new URLSearchParams(window.location.search);
+          return searchParams.has(queryKey) ? searchParams.get(queryKey).trim() : "";
+        } catch (c) {
+          return "";
+        }
+      }
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === " ") c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+      function setCookie(name, value, daysToExpire = 1) {
+        const date = new Date();
+        date.setTime(date.getTime() + daysToExpire * 24 * 60 * 60 * 1000);
+        const expires = "; expires=" + date.toUTCString();
+        document.cookie = name + "=" + (value || "") + expires + "; path=/; domain=" + getMainDomain();
+      }
+      function setCookieTomorrow(name, value) {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        date.setHours(0, 0, 0, 0);
+        const expires = "; expires=" + date.toUTCString();
+        document.cookie = name + "=" + (value || "") + expires + "; path=/; domain=" + getMainDomain();
+      }
+      function getHostname() {
+        const currentHostName = window.location.hostname;
+        if (currentHostName.startsWith("www")) {
+          const list = currentHostName.split(".");
+          if (list[0] === "www") {
+            return currentHostName.replace("www.", "");
+          }
+          return currentHostName.replace("www", "");
+        }
+        return currentHostName;
+      }
+      function getValueByURLOrCookie(val) {
+        let key = "hi_" + val;
+        if (val.includes("hi_")) {
+          key = val;
+        }
+        const buffer = getParam(val) || getCookie(key) || "unknown";
+        setCookieTomorrow(key, buffer);
+        return buffer;
+      }
+      function getInfoBySource(source) {
+        if (source === "tiktok") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("ttclid"),
+            hi_source_aid: getValueByURLOrCookie("ad_id"),
+            hi_source_site: "unknown",
+            hi_source_site_name: "unknown",
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        } else if (source === "taboola") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("tblci"),
+            hi_source_aid: getValueByURLOrCookie("campaign_id"),
+            hi_source_site: getValueByURLOrCookie("site_id"),
+            hi_source_site_name: getValueByURLOrCookie("site_name"),
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        } else if (source === "outbrain") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("dicbo"),
+            hi_source_aid: getValueByURLOrCookie("campaign_id"),
+            hi_source_site: getValueByURLOrCookie("site_id"),
+            hi_source_site_name: getValueByURLOrCookie("site_name"),
+            hi_section_id: getValueByURLOrCookie("section_id"),
+            hi_section_name: getValueByURLOrCookie("section_name")
+          };
+        } else if (source === "facebook") {
+          return {
+            hi_source_clid: getValueByURLOrCookie("fbclid"),
+            hi_source_aid: "unknown",
+            hi_source_site: "unknown",
+            hi_source_site_name: "unknown",
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        } else {
+          return {
+            hi_source_clid: "unknown",
+            hi_source_aid: "unknown",
+            hi_source_site: "unknown",
+            hi_source_site_name: "unknown",
+            hi_section_id: "unknown",
+            hi_section_name: "unknown"
+          };
+        }
+      }
+      function pushEventToGTM(event, param = {}) {
+        const hi_channel = getValueByURLOrCookie("channel");
+        const hi_gaid = getCookie("_ga") || "unknown";
+        const hi_source = getValueByURLOrCookie("hi_source");
+        const {
+          hi_source_clid,
+          hi_source_aid,
+          hi_source_site,
+          hi_source_site_name,
+          hi_section_id,
+          hi_section_name
+        } = getInfoBySource(hi_source);
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event,
+          hi_channel,
+          hi_gaid,
+          hi_source,
+          hi_source_clid,
+          hi_source_aid,
+          hi_source_site,
+          hi_source_site_name,
+          hi_section_id,
+          hi_section_name,
+          ...param
+        });
+      }
+    </script>
+    <script>
       const searchParams = new URLSearchParams(window.location.search);
       const ttclid = searchParams.get("ttclid"); //TikTok
       const tblci = searchParams.get("tblci"); //Taboola
@@ -342,7 +478,6 @@
               window.trackEventToPixel("T_AR");
               const searchParams = new URLSearchParams(window.location.search);
               const ttclid = searchParams.get("ttclid");
-              // window.pushEventParamsToGtm("T_AR");
               pushEventToGTM("T_AR", {
                 hi_country: window.youknowwho_ip_country || "unknown",
                 hi_ip: window.youknowwho_ip || "unknown",

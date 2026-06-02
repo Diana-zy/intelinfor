@@ -17,7 +17,7 @@ export default {
 .page-title {
   padding-left: 12px;
   margin-bottom: 40px;
-  font-size: 28px;
+  font-size: 20px;
   line-height: 1.5;
   border-bottom: $font4 1px solid;
   border-left: solid 12px $color1;

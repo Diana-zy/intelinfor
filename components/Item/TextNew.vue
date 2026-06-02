@@ -11,34 +11,35 @@
         loading="lazy"
         class="img"
       />
-      <p class="category btn-tag">{{ capitalizeFirstLetter(item.seo_category_name || item.category_locale_name) }}</p>
+      <p class="category btn-tag">{{ item.seo_category_name || item.category_locale_name }}</p>
       <p class="title">{{ item.name }}</p>
     </div>
     <div class="pc-hidden-flex m-news-style">
       <div class="m-news-left">
         <div class="m-news-title">{{ item.name }}</div>
         <div class="m-news-author">
-          <div>{{ item.author.name }}</div>
+          <div>{{ item.author && item.author.name }}</div>
           <div>{{ item.updated_at }}</div>
         </div>
       </div>
-      <div class="m-news-right"> View </div>
+      <div class="m-news-right"> 見る </div>
     </div>
   </CustomLink>
 </template>
 
 <script>
-import { capitalizeFirstLetter } from "~/utils/utils";
 export default {
   props: {
     item: { type: Object, required: true }
-  },
-  methods: { capitalizeFirstLetter }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .news-style-2 {
+  display: block;
+  color: $font3;
+  text-decoration: none;
   padding-right: 16px;
   .img {
     width: 100%;
@@ -59,8 +60,9 @@ export default {
   }
   .title {
     font-size: 16px;
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     line-height: 22px;
+    color: $font3;
     @include ellipsis(3);
     transition: color 0.2s;
   }
@@ -90,6 +92,7 @@ export default {
         width: 100%;
         font-size: vw(32);
         line-height: vw(36);
+        color: $font3;
         @include ellipsis();
       }
       .m-news-author {

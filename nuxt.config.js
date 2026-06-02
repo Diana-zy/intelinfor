@@ -3,7 +3,6 @@ import OptimizeCSSAssetsPlugin from "optimize-css-assets-webpack-plugin";
 
 export default {
   target: "static",
-  ssr: true,
   server: {
     host: "0.0.0.0"
   },
@@ -99,7 +98,7 @@ export default {
         as: "font",
         href: "/fonts/heb.woff2",
         type: "font/woff2",
-        crossorigin: true
+        crossorigin: "anonymous"
       }
     ],
     noscript: [{ innerHTML: "This site requires JavaScript to be enabled." }]
@@ -132,7 +131,19 @@ export default {
     "@nuxtjs/pwa",
     "@nuxtjs/google-fonts"
   ],
-  css: ["@/assets/css/fonts.css", "@/assets/css/reset.css", "@/assets/css/common.scss"],
+  googleFonts: {
+    families: {
+      "Noto+Sans+JP": [400, 700]
+    },
+    display: "swap",
+    download: false
+  },
+  css: [
+    "swiper/css/swiper.css",
+    "@/assets/css/fonts.css",
+    "@/assets/css/reset.css",
+    "@/assets/css/common.scss"
+  ],
   styleResources: {
     scss: ["~/assets/css/_mixins.scss"]
   },
@@ -285,7 +296,7 @@ export default {
     }
   },
   purgeCSS: {
-    whitelistPatterns: [/^swiper-container/, /^swiper-wrapper/, /^nuxt/]
+    whitelistPatterns: [/^swiper/, /^nuxt/]
   },
   loading: {
     color: "#3B8070",

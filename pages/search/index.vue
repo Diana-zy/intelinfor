@@ -1,26 +1,60 @@
 <template>
   <div class="page">
     <Header />
-    <main class="main">
-      <div id="afscontainer1"> </div>
-      <div id="relatedsearches1"> </div>
-      <h3 class="title-h3">Web Results</h3>
-      <section class="news-box-3">
-        <news-item-3 v-for="(item, i) in news" :key="i" :item="item"> </news-item-3>
-      </section>
+    <main>
+      <div class="layout-left">
+        <common-page-label :title="`&quot;${input}&quot; Search Results`" />
+        <div id="afscontainer1"> </div>
+        <div id="relatedsearches1"> </div>
+        <h3 class="title-h3">{{ searchTitle }}</h3>
+        <section>
+          <item-search-result v-for="(item, i) in searchResultNews" :key="i" :item="item">
+          </item-search-result>
+        </section>
+      </div>
+      <div class="layout-right">
+        <right-side-box :rec-news="(trendingNews && trendingNews.list) || []" :trending-news="(recNews && recNews.list) || []" />
+      </div>
     </main>
-    <Footer />
+    <FooterSeo />
   </div>
 </template>
 
 <script>
 export default {
+  async asyncData({ $axios, env }) {
+    try {
+      const [recNewsResponse, trendingNewsResponse] = await Promise.all([
+        $axios.$get("/api/article/menu", {
+          params: { site_id: env.SITE_ID, mod_id: "rec" }
+        }).catch(() => null),
+        $axios.$get("/api/article/get_all_articles", {
+          params: { site_id: env.SITE_ID, size: 4, page: 1 }
+        }).catch(() => null)
+      ]);
+      return {
+        recNews: recNewsResponse,
+        trendingNews: trendingNewsResponse
+      };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return { recNews: null, trendingNews: null };
+    }
+  },
   data() {
     return {
-      news: [],
+      searchResultNews: [],
       input: "",
-      channelId: ""
+      channelId: "",
+      isShowResults: false
     };
+  },
+  computed: {
+    searchTitle() {
+      return this.isShowResults
+        ? `Found ${this.searchResultNews.length} results for "${this.input}"`
+        : "Loading search results...";
+    }
   },
   mounted() {
     window.handleRequestAdByChannel("first", 3, true);
@@ -50,10 +84,7 @@ export default {
       try {
         if (this.channelId) {
           const purchaseValueResponse = await this.$axios.$get("/api/common/qdhzhygz", {
-            params: {
-              site_id: process.env.SITE_ID,
-              qdh: this.channelId
-            }
+            params: { site_id: process.env.SITE_ID, qdh: this.channelId }
           });
           window.purchaseValue = purchaseValueResponse.ygz;
         }
@@ -62,20 +93,20 @@ export default {
           site_id: process.env.SITE_ID,
           key: this.input
         });
-        this.news = response.list
+        this.searchResultNews = (response.list || [])
           .filter(item => item.seo_category_path)
           .map(item => ({
             ...item,
             path_v2: `${item.seo_category_path}/${item.path_v2.replace(/^\//, "")}`
           }));
+        this.isShowResults = true;
       } catch (error) {
+        this.isShowResults = true;
         console.error("Error fetching data:", error);
       }
     },
-
     addAdSenseScript() {
       const queryString = this.input;
-
       const channelId = window.getParam("channel");
       const from = window.getParam("from");
       const hiSource = window.getParam("hi_source");
@@ -136,14 +167,11 @@ export default {
         }
       };
 
-      const rsblock1 = (() => {
-        const baseConfig = {
-          container: "relatedsearches1",
-          relatedSearches: 5,
-          adLoadedCallback: adLoadedCallback("C_AC", { query: queryString })
-        };
-        return baseConfig;
-      })();
+      const rsblock1 = {
+        container: "relatedsearches1",
+        relatedSearches: 5,
+        adLoadedCallback: adLoadedCallback("C_AC", { query: queryString })
+      };
 
       // eslint-disable-next-line no-undef
       _googCsa("ads", adSenseConfig, adblock1, rsblock1);
@@ -153,15 +181,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
+main {
   padding-bottom: 32px;
   border-bottom: 1px solid #ececee;
 }
 .title-h3 {
-  color: rgba($font3, 0.6);
+  color: $font4;
 }
 @media screen and (max-width: 750px) {
-  .main {
+  main {
     padding-bottom: vw(32);
     border-bottom: vw(2) solid #ececee;
   }

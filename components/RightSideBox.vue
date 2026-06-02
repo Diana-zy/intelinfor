@@ -9,7 +9,7 @@
           :key="i"
           :to="`/category/${item.path}/`"
           class="category-item"
-          >{{ capitalizeFirstLetter(item.name) }}</custom-link
+          >{{ item.name }}</custom-link
         >
       </div>
     </div>
@@ -17,13 +17,15 @@
       <h2 class="title-h2"> 新着記事 </h2>
       <div class="new-content">
         <item-mode-new v-for="(item, i) in recNews" :key="i" :item="item"></item-mode-new>
+        <p v-if="recNews.length === 0" class="empty-message">No articles found</p>
       </div>
     </div>
     <div class="rec-box">
       <h2 class="title-h2"> イチオシ記事 </h2>
       <div class="rec-content">
-        <item-mode-new v-for="(item, i) in trendingNews" :key="i" :item="item"></item-mode-new
-      ></div>
+        <item-mode-new v-for="(item, i) in trendingNews" :key="i" :item="item"></item-mode-new>
+        <p v-if="trendingNews.length === 0" class="empty-message">No articles found</p>
+      </div>
     </div>
   </div>
 </template>
@@ -36,22 +38,13 @@ export default {
   name: "RightSideBox",
   components: { CustomLink },
   props: {
-    recNews: {
-      type: Array,
-      default: () => []
-    },
-    trendingNews: {
-      type: Array,
-      default: () => []
-    }
+    recNews: { type: Array, default: () => [] },
+    trendingNews: { type: Array, default: () => [] }
   },
   data() {
     return {
-      navData: this.$root.$options.navData || this.$navData
+      navData: this.$root.$options.navData || this.$navData || { list: [] }
     };
-  },
-  mounted() {
-    console.log(this.navData, 1111);
   },
   methods: {
     capitalizeFirstLetter
@@ -62,28 +55,30 @@ export default {
 <style scoped lang="scss">
 .right-sider {
   .right-title {
-    background: $color1;
+    background: #FAF7F2;
+    border-top: 1px solid #E6DFD5;
+    border-bottom: 1px solid #E6DFD5;
     line-height: 45px;
     margin-bottom: 20px;
-    font-weight: normal;
-    font-size: 20px;
+    font-weight: 600;
+    font-size: 16px;
     display: block;
-    color: #ffffff;
-    padding-left: 16px;
+    color: #2C2A29;
+    padding-left: 12px;
   }
   .category-box {
     width: 100%;
     margin-bottom: 20px;
     .category-content {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-direction: column;
+      gap: 0;
       .category-item {
-        border: 1px solid rgba(#000, 0.65);
-        padding: 6px 10px;
-        font-size: 12px;
-        color: #000;
-        border-radius: 20px;
+        font-size: 14px;
+        color: #2C2A29;
+        padding: 10px 12px;
+        border-bottom: 1px solid #E6DFD5;
+        &:hover { color: #C98A11; }
       }
     }
   }
@@ -103,6 +98,12 @@ export default {
       flex-direction: column;
       gap: 20px;
     }
+  }
+  .empty-message {
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
   }
 }
 </style>

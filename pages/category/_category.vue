@@ -1,20 +1,20 @@
 <template>
   <div class="page">
-    <AppHeader />
+    <Header />
     <main class="main">
       <div class="layout-left">
         <breadcrumb
           :info="{
             category_id: id,
-            seo_category_name: categoryInfo?.seo_category?.name,
-            category_locale_name: categoryInfo?.seo_category?.name,
+            seo_category_name: categoryInfo && categoryInfo.seo_category && categoryInfo.seo_category.name,
+            category_locale_name: categoryInfo && categoryInfo.seo_category && categoryInfo.seo_category.name,
             is_seo_category_on_site: true,
             seo_category_path: categoryPath
           }"
           is-category
         ></breadcrumb>
         <common-page-label
-          :title="`「${capitalizeFirstLetter(categoryInfo?.seo_category?.name)}」Articles`"
+          :title="`「${capitalizeFirstLetter(categoryInfo && categoryInfo.seo_category && categoryInfo.seo_category.name)}」の記事一覧`"
         />
         <div id="relatedsearches1"></div>
         <section>
@@ -26,7 +26,7 @@
             :query="{
               seo_category_id: id
             }"
-            :initial-items="categoryInfo?.list"
+            :initial-items="categoryInfo && categoryInfo.list"
             class="news-box-4"
           >
             <template #default="{ items }">
@@ -41,7 +41,7 @@
         </section>
       </div>
       <div class="layout-right">
-        <right-side-box :rec-news="trendingNews?.list" :trending-news="recNews?.list" />
+        <right-side-box :rec-news="(trendingNews && trendingNews.list) || []" :trending-news="(recNews && recNews.list) || []" />
       </div>
     </main>
     <FooterSeo />
@@ -60,25 +60,13 @@ export default {
     try {
       const [recNewsResponse, trendingNewsResponse, categoryInfoResponse] = await Promise.all([
         $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_ID,
-            mod_id: "rec"
-          }
+          params: { site_id: env.SITE_ID, mod_id: "rec" }
         }).catch(() => null),
         $axios.$get("/api/article/get_all_articles", {
-          params: {
-            site_id: env.SITE_ID,
-            size: 4,
-            page: 1
-          }
+          params: { site_id: env.SITE_ID, size: 4, page: 1 }
         }).catch(() => null),
         $axios.$get("/api/article/get_seo_category_page", {
-          params: {
-            site_id: env.SITE_ID,
-            seo_category_id: id,
-            size: 10,
-            page: 1
-          }
+          params: { site_id: env.SITE_ID, seo_category_id: id, size: 10, page: 1 }
         }).catch(() => null)
       ]);
       return {
@@ -100,20 +88,20 @@ export default {
     }
   },
   head() {
-    const categoryName = this.categoryInfo?.seo_category?.name || "";
+    const categoryName = (this.categoryInfo && this.categoryInfo.seo_category && this.categoryInfo.seo_category.name) || "";
     const categoryUrl = this.categoryPath
       ? `https://www.intelinfor.com/category/${this.categoryPath}/`
       : "https://www.intelinfor.com/";
 
     const itemListElements =
-      this.categoryInfo?.list
-        ?.filter((item) => item.path_v2)
+      (this.categoryInfo && this.categoryInfo.list || [])
+        .filter((item) => item.path_v2)
         .map((item, index) => ({
           "@type": "ListItem",
           position: index + 1,
           url: `https://www.intelinfor.com/${item.path_v2}/`,
           name: item.name || ""
-        })) || [];
+        }));
 
     return {
       title: categoryName ? `${categoryName} - Intelinfor` : "Intelinfor",
@@ -186,7 +174,7 @@ export default {
     if (searchParams.has("channel")) {
       this.channelId = searchParams.get("channel");
     } else {
-      this.channelId = this.categoryInfo?.seo_category?.channel || "";
+      this.channelId = (this.categoryInfo && this.categoryInfo.seo_category && this.categoryInfo.seo_category.channel) || "";
     }
     this.$nextTick(() => {
       this.addAdSenseScript();

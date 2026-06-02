@@ -25,7 +25,7 @@
     <div class="swiper-rec-author">
       <div class="author-org">
         <div class="author-icon"></div>
-        <div>{{ item.author.name }}</div>
+        <div>{{ item.author && item.author.name }}</div>
       </div>
       <div class="edit-date">{{ item.updated_at }}</div>
     </div>

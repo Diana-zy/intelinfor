@@ -2,9 +2,32 @@ body {
   color: $font3;
   font-size: 16px;
 }
+a, a:link, a:visited {
+  color: inherit;
+  text-decoration: none;
+}
 main {
   overflow: hidden;
   min-height: calc(100vh - 390px);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 54px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.layout-left {
+  flex: 1;
+  min-width: 0;
+}
+.layout-right {
+  width: 329px;
+  flex-shrink: 0;
+}
+.no-scroll {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
 }
 .page {
   position: relative;
@@ -12,18 +35,6 @@ main {
   margin: 0 auto;
   padding: 0 20px;
   box-sizing: content-box;
-}
-.pc-hidden {
-  display: none;
-}
-.layout-left {
-  flex: 1;
-  min-width: 0;
-}
-.layout-right,
-.aside-box {
-  width: 329px;
-  flex-shrink: 0;
 }
 $class-names: ("block", "flex", "grid");
 @each $class-name in $class-names {
@@ -33,6 +44,9 @@ $class-names: ("block", "flex", "grid");
   .m-hidden-#{$class-name} {
     display: #{$class-name} !important;
   }
+}
+.pc-hidden {
+  display: none;
 }
 .title-h2 {
   position: relative;
@@ -55,26 +69,13 @@ $class-names: ("block", "flex", "grid");
 }
 .title-new-tag {
   position: relative;
-  font-family: Helvetica Neue, Helvetica Neue;
-  font-size: 24px;
-  line-height: 52px;
-  margin-top: 40px;
-  margin-bottom: 16px;
-  padding-left: 64px;
-  &::before {
-    content: "NEW";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: $color1;
-    color: #fff;
-    font-size: 14px;
-    line-height: 1;
-    font-weight: 700;
-    padding: 5px 8px;
-    border-radius: 4px;
-  }
+  font-family: "hem";
+  font-size: 16px;
+  line-height: 22px;
+  margin-top: 32px;
+  margin-bottom: 24px;
+  padding-left: 12px;
+  border-left: 4px solid $color1;
 }
 .title-h3 {
   font-family: "hem";
@@ -84,13 +85,41 @@ $class-names: ("block", "flex", "grid");
   margin-bottom: 24px;
   color: $font1;
 }
+.btn-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+}
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.6s ease;
+}
+.slide-enter {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+.slide-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.opacity-enter-active,
+.opacity-leave-active {
+  transition: all 0.6s ease;
+}
+.opacity-enter {
+  opacity: 0;
+}
+.opacity-leave-to {
+  opacity: 0;
+}
 .news-detail {
   font-size: 16px;
   line-height: 26px;
   margin-bottom: 2em;
   color: rgba(23, 23, 23, 0.8) !important;
   * {
-    font-family: "se3",
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif,
       "Rubik,-apple-system,Framedcn,Helvetica Neue,Condensed,DisplayRegular,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif" !important;
   }
   img {
@@ -102,7 +131,6 @@ $class-names: ("block", "flex", "grid");
     height: 0 !important;
   }
   p {
-    text-indent: 1em;
     min-height: 1em;
     margin-bottom: 4px;
   }
@@ -132,14 +160,16 @@ $class-names: ("block", "flex", "grid");
   .layout-right {
     display: none !important;
   }
-  .aside-box {
-    width: 100%;
+  main {
+    flex-direction: column;
+    margin: 0 auto;
   }
 }
 @media screen and (max-width: 750px) {
   main {
     overflow: unset;
     min-height: calc(100vh - vw(700));
+    padding: 0 vw(32);
   }
   $class-names: ("block", "flex", "grid");
   @each $class-name in $class-names {
@@ -150,18 +180,13 @@ $class-names: ("block", "flex", "grid");
       display: none !important;
     }
   }
-  .btn-tag {
-    padding: vw(12) vw(16) !important;
-    font-size: vw(24) !important;
-    line-height: 1.5 !important;
-  }
   .news-detail {
-    font-family: "se3" !important;
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif !important;
     font-size: vw(30) !important;
     line-height: vw(48) !important;
     margin-bottom: vw(48);
     p {
-      font-family: "se3" !important;
+      font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif !important;
       margin-bottom: vw(10);
     }
     .google-ad {
@@ -170,10 +195,10 @@ $class-names: ("block", "flex", "grid");
   }
   body {
     font-size: vw(28);
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
   }
   .page {
-    padding: 0 vw(46);
+    padding: 0;
     max-width: 100vw;
     overflow: hidden;
   }
@@ -195,11 +220,7 @@ $class-names: ("block", "flex", "grid");
     line-height: vw(60);
     margin-top: vw(28);
     margin-bottom: vw(20);
-    padding-left: vw(76);
-    &::before {
-      font-size: vw(28);
-      padding: vw(8) vw(12);
-    }
+    padding-left: vw(20);
   }
   .title-h3 {
     font-size: vw(32);
@@ -207,6 +228,11 @@ $class-names: ("block", "flex", "grid");
     margin-top: vw(48);
     margin-bottom: vw(32);
     color: $font3;
+  }
+  .btn-tag {
+    padding: vw(12) vw(16) !important;
+    font-size: vw(24) !important;
+    line-height: 1.5 !important;
   }
 }
 

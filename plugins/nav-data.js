@@ -1,5 +1,4 @@
-// plugins/navData.js
-export default async function ({ $axios, env, isServer }, inject) {
+export default async function ({ $axios, env }, inject) {
   try {
     const data = await $axios.$get("/api/article/get_all_seo_category", {
       params: {

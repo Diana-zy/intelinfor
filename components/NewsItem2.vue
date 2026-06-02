@@ -13,8 +13,8 @@
     <p
       v-if="item.seo_category_name || item.category_locale_name || item.category_name"
       class="category btn-tag"
-      :style="{ background: colorList[index % colorList.length] }"
-      >{{ capitalizeFirstLetter(item.seo_category_name || item.category_locale_name || item.category_name) }}</p
+      :style="{ background: colorList[index] }"
+      >{{ item.seo_category_name || item.category_locale_name || item.category_name }}</p
     >
     <p class="title">{{ item && item.name }}</p>
     <div class="m-news-author pc-hidden-flex">
@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { capitalizeFirstLetter } from "~/utils/utils";
 export default {
   props: {
     item: { type: Object, required: true },
@@ -35,13 +34,15 @@ export default {
     return {
       colorList: ["#C6F3E2", "#C9CDF2", "#C0E8B2", "#D2F0FD", "#FDD8DE"]
     };
-  },
-  methods: { capitalizeFirstLetter }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .news-style-2 {
+  display: block;
+  color: $font3;
+  text-decoration: none;
   padding-right: 16px;
   .img {
     width: 100%;
@@ -63,8 +64,9 @@ export default {
   .title {
     margin-top: 10px;
     font-size: 16px;
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     line-height: 22px;
+    color: $font3;
     @include ellipsis(3);
     transition: color 0.2s;
   }
@@ -87,14 +89,15 @@ export default {
       width: 100%;
       height: auto;
       object-fit: cover;
-      border-radius: 0;
+      border-radius: vw(16);
       margin-right: 0;
     }
     .category {
+      align-self: flex-start;
       font-size: vw(24);
       line-height: vw(44);
       padding: vw(8) vw(16);
-      border-radius: 0;
+      border-radius: vw(8);
       margin: vw(20) 0 0;
     }
     .title {
@@ -107,7 +110,7 @@ export default {
     .m-news-author {
       display: flex;
       justify-content: space-between;
-      margin-top: auto;
+      margin-top: vw(12);
       font-size: vw(26);
       font-weight: 300;
       padding-bottom: vw(10);

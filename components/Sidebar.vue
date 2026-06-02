@@ -139,7 +139,7 @@ export default {
 }
 .categories {
   li a {
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     font-size: vw(32);
     height: vw(80);
     display: flex;

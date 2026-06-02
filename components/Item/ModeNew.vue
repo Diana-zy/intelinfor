@@ -1,5 +1,5 @@
 <template>
-  <CustomLink :to="`/${item.path_v2}/`">
+  <CustomLink :to="`/${item.path_v2}/`" class="mode-new-link">
     <div class="mode-new">
       <div>
         <div class="img-box">
@@ -26,7 +26,7 @@
       </div>
       <div class="right-info">
         <p class="title">{{ item.name }}</p>
-        <div class="tag">{{ capitalizeFirstLetter(item.seo_category_name || item.category_locale_name) }}</div>
+        <div class="tag">{{ item.seo_category_name || item.category_locale_name }}</div>
         <div class="date"> {{ item.updated_at }}</div>
       </div>
     </div>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import { capitalizeFirstLetter } from "~/utils/utils";
 export default {
   name: "ModeNew",
   props: {
@@ -42,14 +41,20 @@ export default {
       type: Object,
       required: true
     }
-  },
-  methods: {
-    capitalizeFirstLetter
   }
 };
 </script>
 
 <style scoped lang="scss">
+.mode-new-link {
+  display: block;
+  color: $font3;
+  text-decoration: none;
+  &:hover .title {
+    color: $color1;
+    text-decoration: underline;
+  }
+}
 .mode-new {
   width: 100%;
   height: auto;
@@ -57,16 +62,14 @@ export default {
   flex-wrap: nowrap;
   justify-content: center;
   gap: 10px;
-  &:hover {
-    .img {
-      transform: scale(1.2);
-    }
-  }
   .img-box {
     flex-shrink: 0;
     width: 140px;
     height: 80px;
     overflow: hidden;
+    &:hover .img {
+      transform: scale(1.2);
+    }
   }
   .img {
     width: 140px;
@@ -80,7 +83,9 @@ export default {
       line-height: 20px;
       font-size: 16px;
       margin-bottom: 4px;
+      color: $font3;
       @include ellipsis(2);
+      transition: color 0.2s;
     }
     .tag {
       width: fit-content;
