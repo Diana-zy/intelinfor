@@ -141,6 +141,7 @@ export default {
     margin-bottom: 20px;
     img {
       object-fit: contain;
+      object-position: left center;
       width: 100%;
       height: 100%;
     }
