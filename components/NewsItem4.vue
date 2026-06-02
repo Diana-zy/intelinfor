@@ -7,9 +7,7 @@
       height="440"
       :src="item.cover"
       :alt="item.name"
-      :loading="index === 0 ? 'eager' : 'lazy'"
-      :preload="index === 0"
-      :fetchpriority="index === 0 ? 'high' : 'low'"
+      loading="lazy"
       class="img"
     />
     <p class="category btn-tag" v-if="item.seo_category_name || item.category_locale_name">{{
