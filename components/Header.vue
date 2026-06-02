@@ -203,7 +203,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid $color1;
   .category {
     width: 100%;
     overflow: visible;
@@ -271,7 +270,7 @@ export default {
 }
 .dropdown-item {
   position: relative;
-  &:hover > a { color: $color1; background: rgba($color1, 0.12); border-radius: 20px; padding: 6px 14px; }
+  &:hover > a { color: $color1; }
 }
 .dropdown-panel {
   position: absolute;
