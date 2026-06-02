@@ -1,20 +1,25 @@
 <template>
-  <CustomLink class="news-style-4" :to="`/detail/${item.path}/`">
+  <CustomLink class="news-style-4" :to="`/${item.path_v2}/`">
     <NuxtImg
       format="auto"
       fit="cover"
-      width="328"
-      height="218"
+      width="658"
+      height="440"
       :src="item.cover"
       :alt="item.name"
-      loading="lazy"
+      :loading="index === 0 ? 'eager' : 'lazy'"
+      :preload="index === 0"
+      :fetchpriority="index === 0 ? 'high' : 'low'"
       class="img"
     />
-    <p class="category">{{ capitalizeFirstLetter(item.category_locale_name) }}</p>
+    <p class="category btn-tag" v-if="item.seo_category_name || item.category_locale_name">{{
+      capitalizeFirstLetter(item.seo_category_name || item.category_locale_name)
+    }}</p>
     <p class="title">{{ item.name }}</p>
-    <!-- <p class="desc">
-      {{ item.first_paragraph }}
-    </p> -->
+    <div v-if="item.author" class="news-author">
+      <div>{{ item.author.name }}</div>
+      <div>{{ item.updated_at }}</div>
+    </div>
   </CustomLink>
 </template>
 
@@ -26,6 +31,10 @@ export default {
     item: {
       type: Object,
       required: true
+    },
+    index: {
+      type: Number,
+      default: 0
     }
   },
 
@@ -37,97 +46,75 @@ export default {
 
 <style lang="scss" scoped>
 .news-style-4 {
-  position: relative;
-  padding-right: 344px;
-  margin-bottom: 24px;
-  height: 243px;
-  &::after {
-    content: "";
-    position: absolute;
-    right: left;
-    bottom: 0;
-    // width: calc(100% - 344px);
-    width: 100%;
-    height: 1px;
-    background: rgba($font1, 0.1);
-  }
+  padding-right: 16px;
   .img {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 328px;
-    height: 218px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
     border-radius: 8px 8px 8px 8px;
-    float: right;
   }
   .category {
     display: inline-block;
-    padding: 1px 4px;
-    line-height: 16px;
-    font-size: 12px;
+    padding: 4px 8px;
+    line-height: 18px;
+    font-size: 13px;
     font-family: "hem";
-    color: $color1;
-    background: rgba($color1, 0.2);
+    color: $font1;
+    background: $tagColor3;
     border-radius: 4px 4px 4px 4px;
-    margin: 16px 0 12px;
+    margin: 16px 0 10px;
   }
   .title {
-    width: 846px;
-    font-size: 24px;
-    font-family: "se3";
-    line-height: 32px;
-    @include ellipsis(2);
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: bold;
+    @include ellipsis(3);
     transition: color 0.2s;
   }
-  // .desc {
-  //   color: rgba($font1, 0.6);
-  //   line-height: 19px;
-  //   font-family: "hem";
-  //   @include ellipsis(5);
-  // }
   &:hover {
     .title {
       color: $color1;
       text-decoration: underline;
     }
   }
+  .news-author {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 13px;
+    font-size: 14px;
+    padding-bottom: 16px;
+    @include author-icon(25px, 25px);
+  }
+}
+@media screen and (max-width: 1100px) {
+  .news-style-4 {
+    width: 100%;
+  }
 }
 @media screen and (max-width: 750px) {
   .news-style-4 {
-    padding-right: vw(258);
-    margin-bottom: vw(32);
-    height: vw(194);
-    &::after {
-      width: 100%;
-      height: vw(2);
-    }
+    padding-right: 0;
+    width: 100%;
     .img {
-      width: vw(242);
-      height: vw(160);
-      border-radius: vw(16);
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 0;
+      margin-right: 0;
     }
     .category {
-      padding: 0 vw(8);
-      height: vw(40);
-      line-height: vw(40);
       font-size: vw(24);
-      border-radius: vw(8);
-      margin: 0 0 vw(6);
+      line-height: vw(44);
+      padding: vw(8) vw(16);
+      border-radius: 0;
+      margin: vw(24) 0 vw(24);
     }
     .title {
-      width: vw(396);
-      font-size: vw(28);
-      line-height: vw(38);
-      margin-bottom: 0;
-      @include ellipsis(3);
-    }
-    // .desc {
-    //   display: none;
-    // }
-    &:hover {
-      .title {
-        color: $color1;
-      }
+      font-size: vw(36);
+      line-height: vw(48);
+      min-height: vw(96);
+      margin-bottom: vw(26);
+      @include ellipsis(2);
     }
   }
 }
