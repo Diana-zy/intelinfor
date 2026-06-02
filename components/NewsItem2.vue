@@ -110,7 +110,7 @@ export default {
     .m-news-author {
       display: flex;
       justify-content: space-between;
-      margin-top: auto;
+      margin-top: vw(12);
       font-size: vw(26);
       font-weight: 300;
       padding-bottom: vw(10);
