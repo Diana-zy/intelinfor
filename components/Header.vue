@@ -243,7 +243,7 @@ export default {
   display: block;
   cursor: pointer;
   border-radius: 0 8px 8px 0;
-  background-color: $color1;
+  background-color: #555;
   @include btn-img(48px, 48px, "icon-search.png");
   background-size: 24px 24px;
 }
