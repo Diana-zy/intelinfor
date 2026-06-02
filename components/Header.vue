@@ -162,6 +162,7 @@ export default {
   justify-content: space-between;
   background: $color1;
   border-radius: 4px;
+  margin-top: 12px;
   .category {
     width: 100%;
     overflow: visible;
