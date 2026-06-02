@@ -55,14 +55,16 @@ export default {
 <style scoped lang="scss">
 .right-sider {
   .right-title {
-    background: #555;
+    background: #FAF7F2;
+    border-top: 1px solid #E6DFD5;
+    border-bottom: 1px solid #E6DFD5;
     line-height: 45px;
     margin-bottom: 20px;
-    font-weight: normal;
-    font-size: 20px;
+    font-weight: 600;
+    font-size: 16px;
     display: block;
-    color: #ffffff;
-    padding-left: 16px;
+    color: #2C2A29;
+    padding-left: 12px;
   }
   .category-box {
     width: 100%;
