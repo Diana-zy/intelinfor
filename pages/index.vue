@@ -210,8 +210,8 @@ export default {
     margin-top: vw(32);
     width: 100%;
     .swiper-button-prev {
-      top: 50%;
-      transform: translateY(-50%);
+      top: vw(150);
+      transform: none;
       width: vw(60);
       height: vw(60);
       &:after {
@@ -220,8 +220,8 @@ export default {
       }
     }
     .swiper-button-next {
-      top: 50%;
-      transform: translateY(-50%);
+      top: vw(150);
+      transform: none;
       width: vw(60);
       height: vw(60);
       &:after {
