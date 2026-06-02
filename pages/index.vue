@@ -143,47 +143,17 @@ export default {
   position: relative;
   overflow: hidden;
   .swiper-button-prev {
-    position: absolute;
     top: 209px;
-    left: 10px;
-    width: 50px;
-    height: 50px;
-    background-color: $color1;
-    border-radius: 50%;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0;
+    @include icon(50px, 50px, "icon-left.png");
     &:after {
       content: "";
-      display: block;
-      border-style: solid;
-      border-width: 8px 12px 8px 0;
-      border-color: transparent #fff transparent transparent;
-      margin-right: 3px;
     }
   }
   .swiper-button-next {
-    position: absolute;
     top: 209px;
-    right: 10px;
-    width: 50px;
-    height: 50px;
-    background-color: $color1;
-    border-radius: 50%;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0;
+    @include icon(50px, 50px, "icon-right.png");
     &:after {
       content: "";
-      display: block;
-      border-style: solid;
-      border-width: 8px 0 8px 12px;
-      border-color: transparent transparent transparent #fff;
-      margin-left: 3px;
     }
   }
 }
@@ -211,22 +181,16 @@ export default {
     width: 100%;
     .swiper-button-prev {
       top: vw(150);
-      transform: none;
-      width: vw(60);
-      height: vw(60);
+      @include icon(vw(60), vw(60), "icon-left.png");
       &:after {
-        border-width: vw(10) vw(15) vw(10) 0;
-        margin-right: vw(4);
+        content: "";
       }
     }
     .swiper-button-next {
       top: vw(150);
-      transform: none;
-      width: vw(60);
-      height: vw(60);
+      @include icon(vw(60), vw(60), "icon-right.png");
       &:after {
-        border-width: vw(10) 0 vw(10) vw(15);
-        margin-left: vw(4);
+        content: "";
       }
     }
   }
