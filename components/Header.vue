@@ -160,9 +160,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: $color1;
-  border-radius: 4px;
+  background: #FAF7F2;
+  border-radius: 0;
   margin-top: 12px;
+  border-top: 1px solid #E6DFD5;
+  border-bottom: 1px solid #E6DFD5;
   .category {
     width: 100%;
     overflow: visible;
@@ -192,15 +194,16 @@ export default {
         top: 20%;
         height: 60%;
         width: 1px;
-        background: rgba(#fff, 0.4);
+        background: #E6DFD5;
       }
       a {
         display: block;
         width: 100%;
         height: 100%;
-        color: #fff;
+        color: #2C2A29;
         padding: 0 8px;
-        &:hover { background: rgba(#000, 0.15); }
+        transition: color 0.2s;
+        &:hover { color: #C98A11; background: none; }
       }
     }
   }
@@ -266,7 +269,7 @@ export default {
       .logo { width: vw(420); height: vw(80); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; margin-right: 0; }
     }
   }
-  .menu { background: none; border-radius: 0; }
+  .menu { background: none; border: none; border-radius: 0; }
   .menu-nav-list {
     position: absolute;
     top: 0;
