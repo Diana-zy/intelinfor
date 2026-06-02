@@ -478,7 +478,6 @@
               window.trackEventToPixel("T_AR");
               const searchParams = new URLSearchParams(window.location.search);
               const ttclid = searchParams.get("ttclid");
-              // window.pushEventParamsToGtm("T_AR");
               pushEventToGTM("T_AR", {
                 hi_country: window.youknowwho_ip_country || "unknown",
                 hi_ip: window.youknowwho_ip || "unknown",

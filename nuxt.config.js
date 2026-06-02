@@ -3,7 +3,6 @@ import OptimizeCSSAssetsPlugin from "optimize-css-assets-webpack-plugin";
 
 export default {
   target: "static",
-  ssr: true,
   server: {
     host: "0.0.0.0"
   },
