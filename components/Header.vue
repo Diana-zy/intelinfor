@@ -11,9 +11,27 @@
     <div class="menu">
       <div class="category">
         <ul class="dropdown">
-          <li v-for="(item, i) in (navData && navData.list || []).slice(0, 6)" :key="i"
-            ><CustomLink :to="`/category/${item.path}/`">{{ item.name }}</CustomLink></li
+          <li
+            v-for="(item, i) in (navData && navData.list || []).slice(0, 6)"
+            :key="i"
+            class="dropdown-item"
+            @mouseenter="onCategoryEnter(item)"
+            @mouseleave="onCategoryLeave"
           >
+            <CustomLink :to="`/category/${item.path}/`">{{ item.name }}</CustomLink>
+            <div v-if="activeCategory === item.path" class="dropdown-panel" @mouseenter="onPanelEnter" @mouseleave="onCategoryLeave">
+              <div v-if="loadingCategory === item.path" class="dropdown-loading">読み込み中...</div>
+              <template v-else-if="categoryArticles[item.path]">
+                <CustomLink
+                  v-for="(article, ai) in categoryArticles[item.path]"
+                  :key="ai"
+                  :to="`/${article.path_v2}/`"
+                  class="dropdown-article"
+                >{{ article.name }}</CustomLink>
+                <CustomLink :to="`/category/${item.path}/`" class="dropdown-more">もっと見る →</CustomLink>
+              </template>
+            </div>
+          </li>
         </ul>
       </div>
 
@@ -68,7 +86,11 @@ export default {
       showInstallButton: false,
       isSidebarOpen: false,
       showSearch: false,
-      navData: this.$root.$options.navData || this.$navData || { list: [] }
+      navData: this.$root.$options.navData || this.$navData || { list: [] },
+      activeCategory: null,
+      loadingCategory: null,
+      categoryArticles: {},
+      leaveTimer: null
     };
   },
   mounted() {
@@ -122,7 +144,32 @@ export default {
     },
     closeSidebar() { this.isSidebarOpen = false; },
     handleClick() {},
-    clear() { this.input = ""; }
+    clear() { this.input = ""; },
+    async onCategoryEnter(item) {
+      clearTimeout(this.leaveTimer);
+      this.activeCategory = item.path;
+      if (!this.categoryArticles[item.path]) {
+        this.loadingCategory = item.path;
+        try {
+          const lastDash = item.path.lastIndexOf("-");
+          const id = item.path.substring(lastDash + 1);
+          const res = await this.$axios.$get("/api/article/get_seo_category_page", {
+            params: { seo_category_id: id, page: 1, page_size: 3, site_id: process.env.SITE_ID }
+          });
+          this.$set(this.categoryArticles, item.path, res && res.list ? res.list.slice(0, 3) : []);
+        } catch (e) {
+          this.$set(this.categoryArticles, item.path, []);
+        } finally {
+          this.loadingCategory = null;
+        }
+      }
+    },
+    onPanelEnter() {
+      clearTimeout(this.leaveTimer);
+    },
+    onCategoryLeave() {
+      this.leaveTimer = setTimeout(() => { this.activeCategory = null; }, 150);
+    }
   }
 };
 </script>
@@ -159,7 +206,7 @@ export default {
   border-bottom: 2px solid $color1;
   .category {
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     font-size: 16px;
     line-height: 72px;
     cursor: pointer;
@@ -223,7 +270,48 @@ export default {
   @include btn-img(48px, 48px, "icon-search.png");
   background-size: 24px 24px;
 }
-.dropdown li:hover { color: $color1; background: rgba($color1, 0.1); border-radius: 4px; padding: 0 8px; }
+.dropdown-item {
+  position: relative;
+  &:hover > a { color: $color1; background: rgba($color1, 0.12); border-radius: 20px; padding: 6px 14px; }
+}
+.dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 260px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  padding: 12px 0;
+  z-index: 100;
+  margin-top: 2px;
+}
+.dropdown-loading {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #999;
+}
+.dropdown-article {
+  display: block;
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: $font3;
+  text-decoration: none;
+  @include ellipsis(2);
+  &:hover { color: $color1; background: rgba($color1, 0.06); }
+}
+.dropdown-more {
+  display: block;
+  margin: 8px 16px 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba($font3, 0.15);
+  font-size: 13px;
+  color: $color1;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
 @media screen and (max-width: 1100px) {
   .search-box { width: 240px; }
 }
