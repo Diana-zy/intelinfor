@@ -71,14 +71,14 @@ export default {
     margin-bottom: 20px;
     .category-content {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-direction: column;
+      gap: 0;
       .category-item {
-        border: 1px solid rgba(#000, 0.65);
-        padding: 6px 10px;
-        font-size: 12px;
-        color: #000;
-        border-radius: 20px;
+        font-size: 14px;
+        color: #2C2A29;
+        padding: 10px 12px;
+        border-bottom: 1px solid #E6DFD5;
+        &:hover { color: #C98A11; }
       }
     }
   }
