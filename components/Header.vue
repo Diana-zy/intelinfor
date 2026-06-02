@@ -168,7 +168,7 @@ export default {
       display: flex;
       align-items: center;
       flex-wrap: nowrap;
-      gap: 40px;
+      justify-content: space-between;
       overflow-x: auto;
       list-style: none;
       padding: 0;
