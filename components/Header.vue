@@ -266,6 +266,7 @@ export default {
       .logo { width: vw(420); height: vw(80); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; margin-right: 0; }
     }
   }
+  .menu { background: none; border-radius: 0; }
   .menu-nav-list {
     position: absolute;
     top: 0;
