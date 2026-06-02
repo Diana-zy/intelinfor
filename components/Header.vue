@@ -156,6 +156,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 2px solid $color1;
   .category {
     width: 100%;
     overflow: hidden;
@@ -222,7 +223,7 @@ export default {
   @include btn-img(48px, 48px, "icon-search.png");
   background-size: 24px 24px;
 }
-.dropdown li:hover { color: $color1; }
+.dropdown li:hover { color: $color1; background: rgba($color1, 0.1); border-radius: 4px; padding: 0 8px; }
 @media screen and (max-width: 1100px) {
   .search-box { width: 240px; }
 }
