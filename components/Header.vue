@@ -189,8 +189,8 @@ export default {
     position: relative;
     .logo {
       display: block;
-      width: 240px;
-      height: 56px;
+      width: 300px;
+      height: 70px;
       background-image: url("~/assets/images/logo.png");
       background-size: contain;
       background-repeat: no-repeat;
