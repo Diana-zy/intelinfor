@@ -55,7 +55,7 @@ export default {
 <style scoped lang="scss">
 .right-sider {
   .right-title {
-    background: $color1;
+    background: #555;
     line-height: 45px;
     margin-bottom: 20px;
     font-weight: normal;
