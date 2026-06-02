@@ -203,17 +203,19 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: $color1;
+  border-radius: 4px;
   .category {
     width: 100%;
     overflow: visible;
     font-size: 16px;
-    line-height: 72px;
+    line-height: 52px;
     cursor: pointer;
     position: relative;
     z-index: 2;
     .dropdown {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       flex-wrap: nowrap;
       justify-content: space-between;
       list-style: none;
@@ -222,7 +224,26 @@ export default {
     }
     li {
       white-space: nowrap;
-      a { display: block; width: 100%; height: 100%; }
+      flex: 1;
+      text-align: center;
+      position: relative;
+      & + li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 20%;
+        height: 60%;
+        width: 1px;
+        background: rgba(#fff, 0.4);
+      }
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: #fff;
+        padding: 0 8px;
+        &:hover { background: rgba(#000, 0.15); }
+      }
     }
   }
 }
@@ -270,7 +291,6 @@ export default {
 }
 .dropdown-item {
   position: relative;
-  &:hover > a { color: $color1; }
 }
 .dropdown-panel {
   position: absolute;
