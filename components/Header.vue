@@ -217,7 +217,6 @@ export default {
       align-items: center;
       flex-wrap: nowrap;
       justify-content: space-between;
-      overflow-x: auto;
       list-style: none;
       padding: 0;
       margin: 0;
