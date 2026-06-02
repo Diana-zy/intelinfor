@@ -131,6 +131,13 @@ export default {
     "@nuxtjs/pwa",
     "@nuxtjs/google-fonts"
   ],
+  googleFonts: {
+    families: {
+      "Noto+Sans+JP": [400, 700]
+    },
+    display: "swap",
+    download: false
+  },
   css: [
     "swiper/css/swiper.css",
     "@/assets/css/fonts.css",

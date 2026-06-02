@@ -3,7 +3,7 @@
     <div class="header-top">
       <CustomLink to="/" class="logo"></CustomLink>
       <div class="search-box m-hidden-block">
-        <input v-model="input" placeholder="Search..." class="search" @keyup.enter="search" />
+        <input v-model="input" placeholder="ウェブ検索" class="search" @keyup.enter="search" />
         <i v-show="input != ''" class="icon-clear" @click="clear"></i>
         <i class="icon-search" @click="search"></i>
       </div>
@@ -38,7 +38,7 @@
                 <div class="search-box-nav" @click.stop="handleClick">
                   <input
                     v-model="input"
-                    placeholder="Search..."
+                    placeholder="ウェブ検索"
                     class="search-nav"
                     @keyup.enter="search"
                   />
@@ -240,7 +240,7 @@ export default {
     .header-top {
       height: 100%;
       justify-content: start;
-      .logo { width: vw(280); height: vw(60); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; margin-right: 0; }
+      .logo { width: vw(320); height: vw(48); background-image: url("~/assets/images/logo.png"); background-size: contain; background-repeat: no-repeat; background-position: left center; margin-right: 0; }
     }
   }
   .menu-nav-list {
@@ -273,7 +273,7 @@ export default {
   }
   .icon-search-m {
     top: 0; right: 0; position: relative; display: block;
-    @include icon(vw(48), vw(48), "icon-search.png");
+    @include icon(vw(48), vw(48), "icon-search4.png");
     cursor: pointer;
   }
   .search-box-nav {

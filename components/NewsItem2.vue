@@ -64,7 +64,7 @@ export default {
   .title {
     margin-top: 10px;
     font-size: 16px;
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     line-height: 22px;
     color: $font3;
     @include ellipsis(3);
@@ -89,14 +89,15 @@ export default {
       width: 100%;
       height: auto;
       object-fit: cover;
-      border-radius: 0;
+      border-radius: vw(16);
       margin-right: 0;
     }
     .category {
+      align-self: flex-start;
       font-size: vw(24);
       line-height: vw(44);
       padding: vw(8) vw(16);
-      border-radius: 0;
+      border-radius: vw(8);
       margin: vw(20) 0 0;
     }
     .title {

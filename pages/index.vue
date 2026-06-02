@@ -19,7 +19,7 @@
           <div class="swiper-button-next"></div>
         </section>
 
-        <h2 class="title-new-tag">Latest Articles</h2>
+        <h2 class="title-new-tag">新着記事</h2>
         <section class="news-box-new">
           <item-text-new v-for="(item, i) in trendingNews && trendingNews.list" :key="i" :item="item">
           </item-text-new>
@@ -210,7 +210,8 @@ export default {
     margin-top: vw(32);
     width: 100%;
     .swiper-button-prev {
-      top: vw(186);
+      top: 50%;
+      transform: translateY(-50%);
       width: vw(60);
       height: vw(60);
       &:after {
@@ -219,7 +220,8 @@ export default {
       }
     }
     .swiper-button-next {
-      top: vw(186);
+      top: 50%;
+      transform: translateY(-50%);
       width: vw(60);
       height: vw(60);
       &:after {

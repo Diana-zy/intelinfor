@@ -14,7 +14,7 @@
           is-category
         ></breadcrumb>
         <common-page-label
-          :title="`「${capitalizeFirstLetter(categoryInfo && categoryInfo.seo_category && categoryInfo.seo_category.name)}」Articles`"
+          :title="`「${capitalizeFirstLetter(categoryInfo && categoryInfo.seo_category && categoryInfo.seo_category.name)}」の記事一覧`"
         />
         <div id="relatedsearches1"></div>
         <section>

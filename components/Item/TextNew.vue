@@ -22,7 +22,7 @@
           <div>{{ item.updated_at }}</div>
         </div>
       </div>
-      <div class="m-news-right"> View </div>
+      <div class="m-news-right"> 見る </div>
     </div>
   </CustomLink>
 </template>
@@ -60,7 +60,7 @@ export default {
   }
   .title {
     font-size: 16px;
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     line-height: 22px;
     color: $font3;
     @include ellipsis(3);

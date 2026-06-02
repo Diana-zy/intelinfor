@@ -17,14 +17,14 @@
             <div v-if="newInfo.seo_desc" class="article-summary">
               <div class="summary-icon">📋</div>
               <div class="summary-content">
-                <h3 class="summary-title">Article Summary</h3>
+                <h3 class="summary-title">この記事の要約</h3>
                 <p class="summary-text">{{ newInfo.seo_desc }}</p>
               </div>
             </div>
 
             <div id="relatedsearches1"> </div>
             <aside v-if="toc.length" class="toc-container">
-              <h3 class="toc-title">Table of Contents</h3>
+              <h3 class="toc-title">この記事の内容</h3>
               <nav class="toc-nav">
                 <ul class="toc-list">
                   <li
@@ -514,8 +514,8 @@ export default {
 
   .toc-nav {
     .toc-list {
-      list-style: none;
-      padding: 0;
+      list-style: disc;
+      padding-left: 1.2em;
       margin: 0;
     }
 
@@ -548,13 +548,11 @@ export default {
 
 .news-detail {
   p {
-    text-indent: 1em;
     line-height: 1.6;
   }
 }
 
 .first_paragraph {
-  text-indent: 1em;
   font-size: 14px;
   line-height: 19px;
 }

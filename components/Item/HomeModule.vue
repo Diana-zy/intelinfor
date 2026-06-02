@@ -54,7 +54,7 @@ export default {
   }
   .title {
     font-size: 16px;
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     line-height: 22px;
     @include ellipsis(3);
     transition: color 0.2s;

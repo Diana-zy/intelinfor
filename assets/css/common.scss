@@ -119,7 +119,7 @@ $class-names: ("block", "flex", "grid");
   margin-bottom: 2em;
   color: rgba(23, 23, 23, 0.8) !important;
   * {
-    font-family: "se3",
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif,
       "Rubik,-apple-system,Framedcn,Helvetica Neue,Condensed,DisplayRegular,Helvetica,Arial,PingFang SC,Hiragino Sans GB,WenQuanYi Micro Hei,Microsoft Yahei,sans-serif" !important;
   }
   img {
@@ -181,12 +181,12 @@ $class-names: ("block", "flex", "grid");
     }
   }
   .news-detail {
-    font-family: "se3" !important;
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif !important;
     font-size: vw(30) !important;
     line-height: vw(48) !important;
     margin-bottom: vw(48);
     p {
-      font-family: "se3" !important;
+      font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif !important;
       margin-bottom: vw(10);
     }
     .google-ad {
@@ -195,7 +195,7 @@ $class-names: ("block", "flex", "grid");
   }
   body {
     font-size: vw(28);
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
   }
   .page {
     padding: 0;

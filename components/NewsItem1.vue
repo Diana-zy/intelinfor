@@ -42,7 +42,7 @@ export default {
   }
   .title {
     font-size: 18px;
-    font-family: "se3";
+    font-family: "Noto Sans JP", "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     line-height: 24px;
     @include ellipsis(3);
     margin: 6px 8px 4px;
