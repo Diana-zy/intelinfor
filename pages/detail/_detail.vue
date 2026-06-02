@@ -53,7 +53,7 @@
 
             <!-- FAQ 区块 - GEO 优化 -->
             <section v-if="articleFaqs && articleFaqs.length" class="faq-section">
-              <h2 class="faq-title">Related Questions</h2>
+              <h2 class="faq-title">関連質問</h2>
               <div class="faq-list">
                 <div v-for="(faq, index) in articleFaqs" :key="index" class="faq-item">
                   <h3 class="faq-question">{{ faq.question }}</h3>
@@ -174,19 +174,17 @@ export default {
 
       const articleFaqs = data.faqs || [
         {
-          question: "Would you like to know more about this topic?",
-          answer:
-            "Our website provides comprehensive information on various global news topics. You can find more related articles in our categories."
+          question: "この文章の内容について、もっと詳しく知りたいですか？",
+          answer: "本站点は老後資金準備に関する最新情報を提供ています。相关文章为您详细介绍。"
         },
         {
-          question: "How can I stay updated with the latest news?",
+          question: "老後の資金準備はいつから始めるべきですか？",
           answer:
-            "You can subscribe to our newsletter and follow our social media channels to receive the latest updates on global news and developments."
+            "一般的に、３０代から老後の資金準備を始めることが推奨されています。早ければ早いほど、複利効果により 적은 부담で目標を達成できます。"
         },
         {
-          question: "Where can I find more information?",
-          answer:
-            "You can explore our category pages and search feature to find more articles related to your interests."
+          question: "老後資金についての更多信息はどこで見つけられますか？",
+          answer: "本站点のカテゴリ頁面，您可以找到更多关于老後資金準備的相关文章。"
         }
       ];
 
