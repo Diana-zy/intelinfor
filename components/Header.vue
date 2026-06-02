@@ -207,14 +207,15 @@ export default {
 }
 .search-box {
   position: absolute;
-  top: 14px;
+  top: 9px;
   right: 0;
-  width: 360px;
+  width: 380px;
   height: 48px;
   border-radius: 8px;
   border: 1px solid $font3;
+  margin: 0 0 0 24px;
   padding-left: 16px;
-  padding-right: 60px;
+  padding-right: 120px;
 }
 .search {
   position: absolute;
@@ -238,14 +239,12 @@ export default {
 }
 .icon-search {
   position: absolute;
-  right: -1px;
-  top: -1px;
+  right: 13px;
+  top: 8px;
   display: block;
   cursor: pointer;
-  border-radius: 0 8px 8px 0;
-  background-color: #555;
-  @include btn-img(48px, 48px, "icon-search.png");
-  background-size: 24px 24px;
+  @include icon(32px, 32px, "icon-search4.png");
+  background-size: 32px 32px;
 }
 @media screen and (max-width: 1100px) {
   .search-box { width: 240px; }
