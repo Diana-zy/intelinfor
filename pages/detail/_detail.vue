@@ -491,8 +491,8 @@ export default {
     }
 
     .summary-text {
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 16px;
+      line-height: 26px;
       color: #666;
       margin: 0;
     }
@@ -553,8 +553,8 @@ export default {
 }
 
 .first_paragraph {
-  font-size: 14px;
-  line-height: 19px;
+  font-size: 16px;
+  line-height: 26px;
 }
 
 .faq-section {
