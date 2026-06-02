@@ -128,13 +128,14 @@ export default {
   buildModules: [
     "@nuxtjs/style-resources",
     "@nuxt/image",
-    "@nuxtjs/pwa"
+    "@nuxtjs/pwa",
+    "@nuxtjs/google-fonts"
   ],
   css: [
+    "swiper/css/swiper.css",
     "@/assets/css/fonts.css",
     "@/assets/css/reset.css",
-    "@/assets/css/common.scss",
-    "swiper/css/swiper.css"
+    "@/assets/css/common.scss"
   ],
   styleResources: {
     scss: ["~/assets/css/_mixins.scss"]
