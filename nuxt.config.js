@@ -132,7 +132,6 @@ export default {
     "@nuxtjs/google-fonts"
   ],
   css: [
-    "swiper/css/swiper.css",
     "@/assets/css/fonts.css",
     "@/assets/css/reset.css",
     "@/assets/css/common.scss"
