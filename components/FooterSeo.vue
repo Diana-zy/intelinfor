@@ -140,7 +140,7 @@ export default {
     height: 32px;
     margin-bottom: 20px;
     img {
-      object-fit: cover;
+      object-fit: contain;
       width: 100%;
       height: 100%;
     }
