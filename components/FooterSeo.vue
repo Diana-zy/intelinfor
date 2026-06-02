@@ -136,8 +136,8 @@ export default {
   margin-top: 32px;
   color: rgba(#000, 0.65);
   .icon-logo {
-    width: 212px;
-    height: 32px;
+    width: 260px;
+    height: 48px;
     margin-bottom: 20px;
     img {
       object-fit: contain;
@@ -192,8 +192,8 @@ export default {
     margin-top: vw(32);
     .icon-logo {
       margin-left: vw(32);
-      width: vw(320);
-      height: vw(48);
+      width: vw(460);
+      height: vw(80);
     }
     .website-info {
       padding: 0 vw(32);
