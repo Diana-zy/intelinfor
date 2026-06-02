@@ -210,7 +210,8 @@ export default {
 }
 .search-box {
   position: absolute;
-  top: 9px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 0;
   width: 380px;
   height: 48px;
