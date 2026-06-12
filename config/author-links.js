@@ -26,32 +26,32 @@ export const authorData = {
     linkedin: ""
   },
 
-  // ===== 美国站点（待补充） =====
+  // ===== 美国站点 =====
   7: {
-    name: "",
-    avatar: "",
-    avatar_seo_alt: "",
+    name: "Alice Knisley Matthias",
+    avatar: "https://bunchthings.com/common/1767512645407.png",
+    avatar_seo_alt: "Alice Knisley Matthias",
     intro: "",
     linkedin: "https://www.linkedin.com/in/alice-knisley-matthias-169033416/"
   },
   8: {
-    name: "",
+    name: "Amanda Capritto",
     avatar: "",
-    avatar_seo_alt: "",
+    avatar_seo_alt: "Amanda Capritto",
     intro: "",
     linkedin: "https://www.linkedin.com/in/amanda-capritto-a61039416/"
   },
   10: {
-    name: "",
+    name: "Ryan Smith",
     avatar: "",
-    avatar_seo_alt: "",
+    avatar_seo_alt: "Ryan Smith",
     intro: "",
     linkedin: ""
   },
   11: {
-    name: "",
+    name: "Dr. Lindsay Malzone",
     avatar: "",
-    avatar_seo_alt: "",
+    avatar_seo_alt: "Dr. Lindsay Malzone",
     intro: "",
     linkedin: ""
   }
