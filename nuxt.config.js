@@ -237,7 +237,7 @@ export default {
       splitChunks: {
         chunks: "all",
         automaticNameDelimiter: ".",
-        name: true,
+        name: false,
         minSize: 10000,
         maxSize: 244000,
         cacheGroups: {
@@ -261,7 +261,6 @@ export default {
             enforce: true
           },
           common: {
-            name: "common",
             minChunks: 2,
             priority: 10,
             reuseExistingChunk: true
