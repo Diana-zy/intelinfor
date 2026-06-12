@@ -45,7 +45,7 @@ import AppHeader from "../../components/Header";
 import RightSideBox from "../../components/RightSideBox";
 import FooterSeo from "../../components/FooterSeo";
 import Loading from "../../components/Loading";
-import { authorLinks } from "../../config/author-links";
+import { authorData } from "../../config/author-links";
 
 export default {
   components: { AppHeader, RightSideBox, FooterSeo, Loading },
@@ -87,26 +87,19 @@ export default {
       return this.author?.name?.charAt(0).toUpperCase() || "A";
     },
     linkedin() {
-      return authorLinks[this.authorId]?.linkedin || "";
+      return authorData[this.authorId]?.linkedin || "";
     }
   },
-  async mounted() {
+  mounted() {
     const slug = this.$route.params.author;
     const lastDash = slug.lastIndexOf("-");
     const id = Number(slug.substring(lastDash + 1));
     this.authorId = id;
-    try {
-      const baseUrl = this.$axios.defaults.baseURL || "";
-      const res = await fetch(`${baseUrl}/api/article/seo/getAuthor?id=${id}`);
-      const json = await res.json();
-      if (json.code === 0 && json.data) {
-        this.author = json.data;
-      }
-    } catch (e) {
-      console.error("Failed to load author:", e);
-    } finally {
-      this.loading = false;
+    const data = authorData[id];
+    if (data && data.name) {
+      this.author = data;
     }
+    this.loading = false;
   }
 };
 </script>
