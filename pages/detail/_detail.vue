@@ -8,7 +8,12 @@
           <article v-if="newInfo" class="article">
             <h1 class="article-title">{{ newInfo.name }}</h1>
             <div class="news-author">
-              <div>{{ newInfo.author?.name }}</div>
+              <nuxt-link
+                v-if="newInfo.author?.id"
+                :to="`/author/${toAuthorSlug(newInfo.author.name, newInfo.author.id)}/`"
+                class="author-name-link"
+              >{{ newInfo.author.name }}</nuxt-link>
+              <span v-else>{{ newInfo.author?.name }}</span>
               <div>{{ newInfo.updated_at }}</div>
             </div>
             <div class="news-detail first_paragraph">{{ newInfo.first_paragraph }}</div>
@@ -85,7 +90,7 @@ import AppHeader from "../../components/Header";
 import NewsItem5 from "../../components/NewsItem5";
 import RightSideBox from "../../components/RightSideBox";
 import FooterSeo from "../../components/FooterSeo";
-import { shuffleArray } from "../../utils/utils";
+import { shuffleArray, toAuthorSlug } from "../../utils/utils";
 import { processHtmlWithToc, generateNestedToc } from "../../utils/cheerio-toc.js";
 import tableScrollMixin from "../../mixins/tableScroll";
 
@@ -230,8 +235,8 @@ export default {
           hid: "og:url",
           property: "og:url",
           content: this.newInfo?.path_v2
-            ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-            : "https://www.intelinfor.com/"
+            ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+            : "https://intelinfor.com/"
         },
         { hid: "og:locale", property: "og:locale", content: this.newInfo?.language },
         {
@@ -255,8 +260,8 @@ export default {
           hid: "twitter:url",
           property: "twitter:url",
           content: this.newInfo?.path_v2
-            ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-            : "https://www.intelinfor.com/"
+            ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+            : "https://intelinfor.com/"
         },
         { hid: "twitter:locale", property: "twitter:locale", content: this.newInfo?.language }
       ],
@@ -291,20 +296,23 @@ export default {
                 "@type": "Person",
                 name: this.newInfo?.author?.name || "",
                 description: this.newInfo?.author?.intro || "",
-                image: `https://bunchthings.com/${this.newInfo?.author?.avatar || ""}`
+                image: `https://bunchthings.com/${this.newInfo?.author?.avatar || ""}`,
+                url: this.newInfo?.author?.id
+                  ? `https://intelinfor.com/author/${toAuthorSlug(this.newInfo.author.name, this.newInfo.author.id)}/`
+                  : undefined
               }
             ],
             mainEntityOfPage: {
               "@type": "WebPage",
               "@id": this.newInfo?.path_v2
-                ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-                : "https://www.intelinfor.com/"
+                ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+                : "https://intelinfor.com/"
             },
             publisher: {
               "@type": "NewsMediaOrganization",
               name: "Intelinfor",
-              url: "https://www.intelinfor.com",
-              publishingPrinciples: "https://www.intelinfor.com/us/"
+              url: "https://intelinfor.com",
+              publishingPrinciples: "https://intelinfor.com/us/"
             },
             image: [
               `https://bunchthings.com/cdn-cgi/image/f=auto,fit=cover/${this.newInfo?.cover || ""}`,
@@ -321,7 +329,7 @@ export default {
               {
                 "@type": "ListItem",
                 position: 1,
-                item: { "@id": "https://www.intelinfor.com/", name: "Home" }
+                item: { "@id": "https://intelinfor.com/", name: "Home" }
               },
               ...(this.newInfo?.seo_category_path
                 ? [
@@ -329,7 +337,7 @@ export default {
                       "@type": "ListItem",
                       position: 2,
                       item: {
-                        "@id": `https://www.intelinfor.com/category/${this.newInfo.seo_category_path}/`,
+                        "@id": `https://intelinfor.com/category/${this.newInfo.seo_category_path}/`,
                         name:
                           this.newInfo?.seo_category_name ||
                           this.newInfo?.category_locale_name ||
@@ -343,8 +351,8 @@ export default {
                 position: this.newInfo?.seo_category_path ? 3 : 2,
                 item: {
                   "@id": this.newInfo?.path_v2
-                    ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-                    : "https://www.intelinfor.com/",
+                    ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+                    : "https://intelinfor.com/",
                   name: this.newInfo?.name || ""
                 }
               }
@@ -367,6 +375,7 @@ export default {
     });
   },
   methods: {
+    toAuthorSlug,
     scrollToAnchor(anchorId) {
       const target = document.getElementById(anchorId);
       if (!target) return;
@@ -457,6 +466,14 @@ export default {
   margin-bottom: 16px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
+
+  .author-name-link {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      color: $color1;
+    }
+  }
 }
 
 .article-summary {

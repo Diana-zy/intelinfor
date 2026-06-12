@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ 待办事项
+
+### [待办] 作者接口对外暴露
+- 当前状态：`/api/article/seo/getAuthor?id=` 仅内网可用（`api.tapmygame.com` 返回 404）
+- 临时方案：作者数据硬编码在 `config/author-links.js`，作者页直接读配置文件
+- 后续改动：后端将接口暴露到外网后，修改 `pages/author/_author.vue` 的 `mounted()` 函数，改回 API 调用方式（参考注释中的代码），同时清空 `config/author-links.js` 中的冗余字段
+
+### [待办] 发布日期区分（datePublished vs dateModified）
+- 当前 NewsArticle Schema 中 `datePublished` 和 `dateModified` 都使用 `updated_at`
+- 后端需在 `/api/article/detail` 响应中新增 `create_time` 字段（文章首次入库时间，更新后不变）
+- 前端改动：`pages/detail/_detail.vue` 第 287 行，将 `datePublished` 改为 `this.newInfo?.create_time || this.newInfo?.updated_at`
+
 ## Project Overview
 
 This is **Intelinfor**, a Nuxt.js 2 static site for a news/content website. It generates SEO-optimized static pages for articles, categories, and search.

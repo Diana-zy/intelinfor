@@ -68,3 +68,14 @@ export function capitalizeFirstLetter(str) {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function toAuthorSlug(name, id) {
+  if (!name || !id) return `author-${id}`;
+  const slug = name
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  return slug ? `${slug}-${id}` : `author-${id}`;
+}

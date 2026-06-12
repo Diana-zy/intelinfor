@@ -12,6 +12,17 @@ export default {
       maxScrollPercentage: 0
     };
   },
+  head() {
+    return {
+      link: [
+        {
+          rel: 'canonical',
+          hid: 'canonical',
+          href: `https://intelinfor.com${this.$nuxt.context.route.path}`
+        }
+      ]
+    };
+  },
   mounted() {
     this.handleListenerScroll();
     // 判断用户是否使用vpn

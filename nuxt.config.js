@@ -229,15 +229,13 @@ export default {
         minifyURLs: true
       }
     },
-    extractCSS: {
-      ignoreOrder: true
-    },
+    extractCSS: process.env.NODE_ENV === "production" ? { ignoreOrder: true } : false,
     optimization: {
       runtimeChunk: "single",
       splitChunks: {
         chunks: "all",
         automaticNameDelimiter: ".",
-        name: true,
+        name: false,
         minSize: 10000,
         maxSize: 244000,
         cacheGroups: {
@@ -253,12 +251,6 @@ export default {
             name: "vue",
             priority: 21,
             chunks: "all"
-          },
-          styles: {
-            name: "styles",
-            test: /\.(css|vue)$/,
-            chunks: "all",
-            enforce: true
           },
           common: {
             minChunks: 2,
