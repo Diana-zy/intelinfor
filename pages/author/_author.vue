@@ -23,6 +23,13 @@
           <div class="author-badge">AUTHOR &amp; EXPERT</div>
           <h1 class="author-name">{{ author.name }}</h1>
           <p class="author-intro">{{ author.intro }}</p>
+          <a
+            v-if="linkedin"
+            :href="linkedin"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="linkedin-link"
+          >LinkedIn</a>
         </div>
       </div>
       <div class="layout-right">
@@ -38,17 +45,28 @@ import AppHeader from "../../components/Header";
 import RightSideBox from "../../components/RightSideBox";
 import FooterSeo from "../../components/FooterSeo";
 import Loading from "../../components/Loading";
+import { authorLinks } from "../../config/author-links";
 
 export default {
   components: { AppHeader, RightSideBox, FooterSeo, Loading },
   data() {
     return {
       author: null,
+      authorId: null,
       loading: true
     };
   },
   head() {
     if (!this.author) return {};
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: this.author.name,
+      description: this.author.intro,
+      image: `https://bunchthings.com/${this.author.avatar}`,
+      url: `https://intelinfor.com/author/${this.$route.params.author}/`
+    };
+    if (this.linkedin) schema.sameAs = [this.linkedin];
     return {
       title: `${this.author.name} - Intelinfor`,
       meta: [
@@ -61,30 +79,22 @@ export default {
           content: `https://bunchthings.com/cdn-cgi/image/w=200,f=auto,fit=cover/${this.author.avatar}`
         }
       ],
-      script: [
-        {
-          type: "application/ld+json",
-          json: {
-            "@context": "https://schema.org",
-            "@type": "Person",
-            name: this.author.name,
-            description: this.author.intro,
-            image: `https://bunchthings.com/${this.author.avatar}`,
-            url: `https://intelinfor.com/author/${this.$route.params.author}/`
-          }
-        }
-      ]
+      script: [{ type: "application/ld+json", json: schema }]
     };
   },
   computed: {
     initial() {
       return this.author?.name?.charAt(0).toUpperCase() || "A";
+    },
+    linkedin() {
+      return authorLinks[this.authorId]?.linkedin || "";
     }
   },
   async mounted() {
     const slug = this.$route.params.author;
     const lastDash = slug.lastIndexOf("-");
-    const id = slug.substring(lastDash + 1);
+    const id = Number(slug.substring(lastDash + 1));
+    this.authorId = id;
     try {
       const res = await this.$axios.$get("/api/article/seo/getAuthor", { params: { id } });
       this.author = res;
@@ -166,7 +176,23 @@ export default {
   font-size: 15px;
   line-height: 1.7;
   color: rgba($font3, 0.7);
-  margin: 0;
+  margin: 0 0 16px;
+}
+
+.linkedin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  background: #0a66c2;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  &:hover {
+    background: #004182;
+  }
 }
 
 @media screen and (max-width: 750px) {
