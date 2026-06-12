@@ -8,7 +8,12 @@
           <article v-if="newInfo" class="article">
             <h1 class="article-title">{{ newInfo.name }}</h1>
             <div class="news-author">
-              <div>{{ newInfo.author?.name }}</div>
+              <nuxt-link
+                v-if="newInfo.author?.id"
+                :to="`/author/${toAuthorSlug(newInfo.author.name, newInfo.author.id)}/`"
+                class="author-name-link"
+              >{{ newInfo.author.name }}</nuxt-link>
+              <span v-else>{{ newInfo.author?.name }}</span>
               <div>{{ newInfo.updated_at }}</div>
             </div>
             <div class="news-detail first_paragraph">{{ newInfo.first_paragraph }}</div>
@@ -85,7 +90,7 @@ import AppHeader from "../../components/Header";
 import NewsItem5 from "../../components/NewsItem5";
 import RightSideBox from "../../components/RightSideBox";
 import FooterSeo from "../../components/FooterSeo";
-import { shuffleArray } from "../../utils/utils";
+import { shuffleArray, toAuthorSlug } from "../../utils/utils";
 import { processHtmlWithToc, generateNestedToc } from "../../utils/cheerio-toc.js";
 import tableScrollMixin from "../../mixins/tableScroll";
 
@@ -291,7 +296,10 @@ export default {
                 "@type": "Person",
                 name: this.newInfo?.author?.name || "",
                 description: this.newInfo?.author?.intro || "",
-                image: `https://bunchthings.com/${this.newInfo?.author?.avatar || ""}`
+                image: `https://bunchthings.com/${this.newInfo?.author?.avatar || ""}`,
+                url: this.newInfo?.author?.id
+                  ? `https://intelinfor.com/author/${toAuthorSlug(this.newInfo.author.name, this.newInfo.author.id)}/`
+                  : undefined
               }
             ],
             mainEntityOfPage: {
@@ -367,6 +375,7 @@ export default {
     });
   },
   methods: {
+    toAuthorSlug,
     scrollToAnchor(anchorId) {
       const target = document.getElementById(anchorId);
       if (!target) return;
@@ -457,6 +466,14 @@ export default {
   margin-bottom: 16px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
+
+  .author-name-link {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      color: $color1;
+    }
+  }
 }
 
 .article-summary {
