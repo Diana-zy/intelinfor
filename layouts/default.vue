@@ -18,7 +18,7 @@ export default {
         {
           rel: 'canonical',
           hid: 'canonical',
-          href: `https://www.intelinfor.com${this.$nuxt.context.route.path}`
+          href: `https://intelinfor.com${this.$nuxt.context.route.path}`
         }
       ]
     };

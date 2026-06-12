@@ -230,8 +230,8 @@ export default {
           hid: "og:url",
           property: "og:url",
           content: this.newInfo?.path_v2
-            ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-            : "https://www.intelinfor.com/"
+            ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+            : "https://intelinfor.com/"
         },
         { hid: "og:locale", property: "og:locale", content: this.newInfo?.language },
         {
@@ -255,8 +255,8 @@ export default {
           hid: "twitter:url",
           property: "twitter:url",
           content: this.newInfo?.path_v2
-            ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-            : "https://www.intelinfor.com/"
+            ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+            : "https://intelinfor.com/"
         },
         { hid: "twitter:locale", property: "twitter:locale", content: this.newInfo?.language }
       ],
@@ -297,14 +297,14 @@ export default {
             mainEntityOfPage: {
               "@type": "WebPage",
               "@id": this.newInfo?.path_v2
-                ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-                : "https://www.intelinfor.com/"
+                ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+                : "https://intelinfor.com/"
             },
             publisher: {
               "@type": "NewsMediaOrganization",
               name: "Intelinfor",
-              url: "https://www.intelinfor.com",
-              publishingPrinciples: "https://www.intelinfor.com/us/"
+              url: "https://intelinfor.com",
+              publishingPrinciples: "https://intelinfor.com/us/"
             },
             image: [
               `https://bunchthings.com/cdn-cgi/image/f=auto,fit=cover/${this.newInfo?.cover || ""}`,
@@ -321,7 +321,7 @@ export default {
               {
                 "@type": "ListItem",
                 position: 1,
-                item: { "@id": "https://www.intelinfor.com/", name: "Home" }
+                item: { "@id": "https://intelinfor.com/", name: "Home" }
               },
               ...(this.newInfo?.seo_category_path
                 ? [
@@ -329,7 +329,7 @@ export default {
                       "@type": "ListItem",
                       position: 2,
                       item: {
-                        "@id": `https://www.intelinfor.com/category/${this.newInfo.seo_category_path}/`,
+                        "@id": `https://intelinfor.com/category/${this.newInfo.seo_category_path}/`,
                         name:
                           this.newInfo?.seo_category_name ||
                           this.newInfo?.category_locale_name ||
@@ -343,8 +343,8 @@ export default {
                 position: this.newInfo?.seo_category_path ? 3 : 2,
                 item: {
                   "@id": this.newInfo?.path_v2
-                    ? `https://www.intelinfor.com/${this.newInfo.path_v2}/`
-                    : "https://www.intelinfor.com/",
+                    ? `https://intelinfor.com/${this.newInfo.path_v2}/`
+                    : "https://intelinfor.com/",
                   name: this.newInfo?.name || ""
                 }
               }
