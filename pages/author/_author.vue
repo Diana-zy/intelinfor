@@ -96,8 +96,12 @@ export default {
     const id = Number(slug.substring(lastDash + 1));
     this.authorId = id;
     try {
-      const res = await this.$axios.$get("/api/article/seo/getAuthor", { params: { id } });
-      this.author = res;
+      const baseUrl = this.$axios.defaults.baseURL || "";
+      const res = await fetch(`${baseUrl}/api/article/seo/getAuthor?id=${id}`);
+      const json = await res.json();
+      if (json.code === 0 && json.data) {
+        this.author = json.data;
+      }
     } catch (e) {
       console.error("Failed to load author:", e);
     } finally {
