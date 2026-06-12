@@ -229,9 +229,7 @@ export default {
         minifyURLs: true
       }
     },
-    extractCSS: {
-      ignoreOrder: true
-    },
+    extractCSS: process.env.NODE_ENV === "production" ? { ignoreOrder: true } : false,
     optimization: {
       runtimeChunk: "single",
       splitChunks: {
