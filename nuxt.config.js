@@ -217,7 +217,7 @@ export default {
     }
   },
   build: {
-    parallel: true,
+    parallel: false,
     cache: true,
     html: {
       minify: {
