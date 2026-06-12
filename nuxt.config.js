@@ -217,7 +217,7 @@ export default {
     }
   },
   build: {
-    parallel: false,
+    parallel: true,
     cache: true,
     html: {
       minify: {
@@ -253,12 +253,6 @@ export default {
             name: "vue",
             priority: 21,
             chunks: "all"
-          },
-          styles: {
-            name: "styles",
-            test: /\.(css|vue)$/,
-            chunks: "all",
-            enforce: true
           },
           common: {
             minChunks: 2,
