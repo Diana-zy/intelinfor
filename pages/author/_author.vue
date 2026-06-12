@@ -20,7 +20,7 @@
             />
             <div v-else class="avatar-initial">{{ initial }}</div>
           </div>
-          <div class="author-badge">AUTHOR &amp; EXPERT</div>
+          <div class="author-badge">著者・専門家</div>
           <h1 class="author-name">{{ author.name }}</h1>
           <p class="author-intro">{{ author.intro }}</p>
           <a
@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="layout-right">
-        <right-side-box />
+        <right-side-box :rec-news="recNews" :trending-news="trendingNews" />
       </div>
     </main>
     <footer-seo :info="{}" />
@@ -53,7 +53,9 @@ export default {
     return {
       author: null,
       authorId: null,
-      loading: true
+      loading: true,
+      recNews: [],
+      trendingNews: []
     };
   },
   head() {
@@ -100,6 +102,20 @@ export default {
       this.author = data;
     }
     this.loading = false;
+    this.fetchSidebarData();
+  },
+  methods: {
+    async fetchSidebarData() {
+      try {
+        const siteId = process.env.SITE_ID;
+        const [rec, trending] = await Promise.all([
+          this.$axios.$get("/api/article/menu", { params: { site_id: siteId, mod_id: "rec" } }).catch(() => null),
+          this.$axios.$get("/api/article/get_all_articles", { params: { site_id: siteId, size: 4, page: 1 } }).catch(() => null)
+        ]);
+        this.recNews = (rec && rec.list) || [];
+        this.trendingNews = (trending && trending.list) || [];
+      } catch (e) {}
+    }
   }
 };
 </script>
