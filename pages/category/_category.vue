@@ -90,8 +90,8 @@ export default {
   head() {
     const categoryName = (this.categoryInfo && this.categoryInfo.seo_category && this.categoryInfo.seo_category.name) || "";
     const categoryUrl = this.categoryPath
-      ? `https://www.intelinfor.com/category/${this.categoryPath}/`
-      : "https://www.intelinfor.com/";
+      ? `https://intelinfor.com/category/${this.categoryPath}/`
+      : "https://intelinfor.com/";
 
     const itemListElements =
       (this.categoryInfo && this.categoryInfo.list || [])
@@ -99,7 +99,7 @@ export default {
         .map((item, index) => ({
           "@type": "ListItem",
           position: index + 1,
-          url: `https://www.intelinfor.com/${item.path_v2}/`,
+          url: `https://intelinfor.com/${item.path_v2}/`,
           name: item.name || ""
         }));
 
@@ -133,7 +133,7 @@ export default {
                 "@type": "ListItem",
                 position: 1,
                 item: {
-                  "@id": "https://www.intelinfor.com/",
+                  "@id": "https://intelinfor.com/",
                   name: "Home"
                 }
               },
