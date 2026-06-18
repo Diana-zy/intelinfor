@@ -98,7 +98,7 @@ export const authorData = {
     avatar: "",
     avatar_seo_alt: "Barbara Bellesi Zito",
     intro: "",
-    linkedin: ""
+    linkedin: "https://www.linkedin.com/in/barbara-bellesi-zito-814924417/"
   },
   12: {
     name: "Jenny Clark",
