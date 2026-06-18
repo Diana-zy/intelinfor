@@ -46,13 +46,29 @@ export const authorData = {
     avatar: "",
     avatar_seo_alt: "Ryan Smith",
     intro: "",
-    linkedin: ""
+    linkedin: "https://www.linkedin.com/in/ryan-smith-239827417/"
   },
   11: {
     name: "Dr. Lindsay Malzone",
     avatar: "",
     avatar_seo_alt: "Dr. Lindsay Malzone",
     intro: "",
+    linkedin: "https://www.linkedin.com/in/dr-lindsay-malzone-818910417/"
+  },
+
+  // ===== hacksforhome 站点 =====
+  9: {
+    name: "Barbara Bellesi Zito",
+    avatar: "",
+    avatar_seo_alt: "Barbara Bellesi Zito",
+    intro: "",
     linkedin: ""
+  },
+  12: {
+    name: "Jenny Clark",
+    avatar: "",
+    avatar_seo_alt: "Jenny Clark",
+    intro: "",
+    linkedin: "https://www.linkedin.com/in/jenny-clark-84991b417/"
   }
 };
