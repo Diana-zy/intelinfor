@@ -7,6 +7,42 @@
  * 详见 CLAUDE.md 待办事项。
  */
 
+/**
+ * 类目 ID → 作者 ID 映射（跨站点）
+ * 用于文章/类目页面没有 author 字段时的备用查询。
+ */
+export const categoryAuthorMap = {
+  // ===== intelinfor =====
+  23: 3, // 年金・老後資金 → 鈴木 美和
+  24: 3, // 相続・終活 → 鈴木 美和
+  25: 3, // 保険 → 鈴木 美和
+  26: 5, // 介護・高齢者支援 → 高橋 恒一郎
+  27: 5, // 健康・暮らし → 高橋 恒一郎
+  28: 5, // シニアの仕事 → 高橋 恒一郎
+
+  // ===== seniorsbetter =====
+  12: 10, // Medicare & Senior Benefits → Ryan Smith
+  13: 10, // Senior Discounts & Savings → Ryan Smith
+  14: 11, // Senior Health & Wellness → Dr. Lindsay Malzone
+  15: 10, // Retirement Income & Planning → Ryan Smith
+  16: 11, // Aging in Place & Long-Term Care → Dr. Lindsay Malzone
+
+  // ===== hacksforhome =====
+  7: 9,  // Pest Control → Barbara Bellesi Zito
+  8: 12, // Outdoor Living → Jenny Clark
+  9: 12, // Car Care & Maintenance → Jenny Clark
+  10: 12, // Gardening & Lawn Care → Jenny Clark
+  11: 9, // Housekeeping & Cleaning → Barbara Bellesi Zito
+
+  // ===== worldoinfo =====
+  17: 7,  // AI Wearables → Alice Knisley Matthias
+  18: 8,  // AI Smart Home → Amanda Capritto
+  19: 8,  // AI Companions & Toys → Amanda Capritto
+  20: 7,  // AI Productivity → Alice Knisley Matthias
+  21: 7,  // Buying Guides & Safety → Alice Knisley Matthias
+  22: 8   // AI for Everyday Life → Amanda Capritto
+};
+
 export const authorData = {
   // ===== intelinfor 站点 =====
   3: {
