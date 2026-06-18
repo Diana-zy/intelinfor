@@ -65,7 +65,7 @@ export const authorData = {
   // ===== worldoinfo 站点 =====
   7: {
     name: "Alice Knisley Matthias",
-    avatar: "https://bunchthings.com/common/1767512645407.png",
+    avatar: "https://bunchthings.com/tag/7/1781753946628.png",
     avatar_seo_alt: "Alice Knisley Matthias",
     intro:
       "Alice Knisley Matthias is a technology and consumer journalist who covers the evolving landscape of AI wearables and productivity tools. Driven by a single goal—to help consumers spend smarter—she cuts through marketing noise to provide honest, practical takes on which tech investments are worth buying, and which to skip.",
@@ -73,7 +73,7 @@ export const authorData = {
   },
   8: {
     name: "Amanda Capritto",
-    avatar: "",
+    avatar: "https://bunchthings.com/tag/8/1781754028629.png",
     avatar_seo_alt: "Amanda Capritto",
     intro:
       "Amanda Capritto is a technology writer who explores how AI and smart home ecosystems are transforming modern everyday life. Catering specifically to the curious yet cautious consumer, she delivers honest, practical guidance to help readers make informed, confident decisions before investing in new devices or connected home solutions.",
@@ -83,7 +83,7 @@ export const authorData = {
   // ===== seniorsbetter 站点 =====
   10: {
     name: "Ryan Smith",
-    avatar: "",
+    avatar: "https://bunchthings.com/tag/10/1781753603389.png",
     avatar_seo_alt: "Ryan Smith",
     intro:
       "Ryan Smith has spent over 20 years helping American families navigate retirement planning and senior benefits. He excels at breaking down complex financial topics—from Medicare confusion to hidden senior discounts—into clear, actionable steps, ensuring that every dollar in retirement works harder for seniors.",
@@ -91,7 +91,7 @@ export const authorData = {
   },
   11: {
     name: "Dr. Lindsay Malzone",
-    avatar: "",
+    avatar: "https://bunchthings.com/tag/11/1781753859187.png",
     avatar_seo_alt: "Dr. Lindsay Malzone",
     intro:
       "Dr. Lindsay Malzone is a physician with a dedicated focus on senior health and aging-in-place care. She specializes in translating complex medical guidance into everyday, accessible language, empowering older adults and their families to make confident, informed decisions about health, daily living, and long-term care options.",
@@ -101,7 +101,7 @@ export const authorData = {
   // ===== hacksforhome 站点 =====
   9: {
     name: "Barbara Bellesi Zito",
-    avatar: "",
+    avatar: "https://bunchthings.com/tag/9/1781751310562.png",
     avatar_seo_alt: "Barbara Bellesi Zito",
     intro:
       "Barbara Bellesi Zito is a home management writer who covers the essential, often overlooked side of homeownership—including pest control, deep cleaning, and home organization. She delivers straightforward, no-fuss advice tailored for anyone seeking a cleaner, healthier, and more manageable living space.",
@@ -109,7 +109,7 @@ export const authorData = {
   },
   12: {
     name: "Jenny Clark",
-    avatar: "",
+    avatar: "https://bunchthings.com/tag/12/1781753737065.png",
     avatar_seo_alt: "Jenny Clark",
     intro:
       "Jenny Clark is a hands-on home maintenance expert who shares practical, real-world advice on lawn care, outdoor living, and vehicle upkeep. Through extensive personal trial and error, she delivers reliable, field-tested insights designed to save homeowners valuable time, money, and unnecessary headaches.",
